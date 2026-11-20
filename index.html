@@ -136,9 +136,9 @@
       flex-shrink: 0;
     }
 
-    .dot.demo {
-      background: var(--accent-gold);
-      box-shadow: 0 0 8px var(--accent-gold);
+    .dot.error {
+      background: var(--danger);
+      box-shadow: 0 0 8px var(--danger);
     }
 
     .btn {
@@ -176,7 +176,7 @@
       font-weight: 700;
       color: var(--text-sub);
       letter-spacing: 0.04em;
-      margin-bottom: 13px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -208,11 +208,123 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 8px;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
       padding: 6px 10px;
+    }
+
+    /* 時間帯コントロールバー */
+    .time-control-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 14px;
+      background: rgba(96, 165, 250, 0.07);
+      border: 1px solid rgba(96, 165, 250, 0.22);
+      border-radius: 12px;
+      padding: 8px 10px;
+    }
+
+    .time-control-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .time-step-btn {
+      cursor: pointer;
+      padding: 5px 10px;
+      min-height: 32px;
+      border-radius: 9px;
+      border: 1px solid rgba(148, 179, 255, 0.24);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      font-size: 0.76rem;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .time-step-btn:hover:not(:disabled) {
+      background: rgba(94, 234, 212, 0.18);
+      border-color: var(--accent-cyan);
+    }
+
+    .time-step-btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .time-select-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .time-select {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--accent-cyan);
+      border: 1px solid rgba(94, 234, 212, 0.35);
+      border-radius: 9px;
+      padding: 5px 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .time-slider-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .time-slider-label {
+      font-size: 0.67rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .time-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      flex: 1;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg,
+        rgba(30, 58, 138, 0.8) 0%,
+        rgba(30, 58, 138, 0.8) 25%,
+        rgba(251, 191, 36, 0.45) 50%,
+        rgba(251, 191, 36, 0.45) 75%,
+        rgba(30, 58, 138, 0.85) 100%);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .time-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      border: 2px solid #040814;
+      box-shadow: 0 0 10px rgba(94, 234, 212, 0.65);
+      cursor: pointer;
+    }
+
+    .time-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      border: 2px solid #040814;
+      box-shadow: 0 0 10px rgba(94, 234, 212, 0.65);
+      cursor: pointer;
     }
 
     .nav-arrow-btn {
@@ -251,7 +363,7 @@
     }
 
     .date-nav-hint {
-      font-size: 0.68rem;
+      font-size: 0.67rem;
       color: var(--accent-cyan);
       opacity: 0.85;
     }
@@ -363,12 +475,18 @@
     }
 
     .best-tonight-chip {
+      cursor: pointer;
       font-size: 0.74rem;
       color: var(--accent-gold);
       background: rgba(251, 191, 36, 0.12);
-      border: 1px solid rgba(251, 191, 36, 0.3);
+      border: 1px solid rgba(251, 191, 36, 0.35);
       padding: 4px 10px;
       border-radius: 999px;
+      transition: all 0.16s ease;
+    }
+
+    .best-tonight-chip:hover {
+      background: rgba(251, 191, 36, 0.24);
     }
 
     .rank-title {
@@ -414,7 +532,6 @@
       gap: 12px;
     }
 
-    /* 日の出・日の入り・月の出・月の入り 4つ横並び */
     .rise-set-quad {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -475,7 +592,6 @@
       color: var(--text-sub);
     }
 
-    /* 潮汐ボックス */
     .tide-box {
       background: rgba(14, 165, 233, 0.07);
       border: 1px solid rgba(56, 189, 248, 0.2);
@@ -642,7 +758,7 @@
       color: var(--text-muted);
     }
 
-    /* マジックアワー & 詳細気象（風向・風速等） 2カラム */
+    /* マジックアワー & 詳細気象 2カラム */
     .magic-weather-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1214,20 +1330,20 @@
           <span id="statusText">気象データ読込中...</span>
         </div>
         <button class="btn" id="refreshBtn">↻ 更新</button>
-        <button class="btn" id="demoToggleBtn">デモ晴天</button>
       </div>
     </header>
 
     <!-- メインビュー -->
     <div class="hero-grid">
-      <!-- スワイプ対応 星空指数カード -->
+      <!-- スワイプ＋時間切替対応 星空指数カード -->
       <section class="glass-card swipe-card" id="heroSwipeCard">
         <div>
           <div class="section-title">
             <span>STARRY SKY INDEX / 星空指数</span>
-            <span class="best-tonight-chip" id="bestTonightChip">この日のベスト: --</span>
+            <button class="best-tonight-chip" id="bestTonightChip" title="タップでベスト時刻へ移動">この日のベスト: --</button>
           </div>
 
+          <!-- 日付切替バー -->
           <div class="date-nav-bar">
             <button class="nav-arrow-btn" id="prevDayBtn" aria-label="前日">◀</button>
             <div class="date-nav-center">
@@ -1235,6 +1351,23 @@
               <div class="date-nav-hint">◀ 左右スワイプで日付変更 ▶</div>
             </div>
             <button class="nav-arrow-btn" id="nextDayBtn" aria-label="翌日">▶</button>
+          </div>
+
+          <!-- 時間帯切替コントロール -->
+          <div class="time-control-bar">
+            <div class="time-control-top">
+              <button class="time-step-btn" id="prevHourBtn" aria-label="1時間前">◀ 1h前</button>
+              <div class="time-select-wrap">
+                <span style="font-size:0.74rem; color:var(--text-sub);">🕒 時刻:</span>
+                <select class="time-select" id="hourSelect" aria-label="時間帯選択"></select>
+              </div>
+              <button class="time-step-btn" id="nextHourBtn" aria-label="1時間後">1h後 ▶</button>
+            </div>
+            <div class="time-slider-row">
+              <span class="time-slider-label">00時</span>
+              <input type="range" class="time-slider" id="hourSlider" min="0" max="23" value="21" aria-label="時間帯スライダー" />
+              <span class="time-slider-label">23時</span>
+            </div>
           </div>
         </div>
 
@@ -1292,7 +1425,6 @@
           <span>SUN, MOON, TIDE & CLOUDS / 出没・潮汐・雲</span>
         </div>
 
-        <!-- 日の出・日の入り・月の出・月の入り 並べて表示 -->
         <div class="rise-set-quad">
           <div class="rs-box sun">
             <span class="rs-label">🌅 日の出</span>
@@ -1320,7 +1452,6 @@
           </div>
         </div>
 
-        <!-- 満潮・干潮・潮位パネル -->
         <div class="tide-box">
           <div class="tide-header">
             <span>🌊 潮汐（宮古島・平良推算）</span>
@@ -1371,12 +1502,12 @@
         <span id="timelineTitle">HOURLY TIMELINE / 選択日からの時間別予報</span>
         <span style="font-size:0.73rem; color:var(--text-muted);">青枠 = 夜間（タップで空を確認）</span>
       </div>
-      <div class="chart-wrap">
+      <div class="chart-wrap" id="timelineScrollWrap">
         <div class="hourly-strip" id="hourlyStrip"></div>
       </div>
     </section>
 
-    <!-- マジックアワー & 詳細気象（風向コンパス・風速・突風・露点等） -->
+    <!-- マジックアワー & 詳細気象 -->
     <div class="magic-weather-grid">
       <section class="glass-card">
         <div class="section-title">
@@ -1571,7 +1702,7 @@
     let dailySummaries = [];
     let selectedIndex = 0;
     let selectedDayIdx = 0;
-    let isDemoMode = false;
+    let currentTimelineStart = 0;
     let activeMeteorTab = "upcoming";
     const dayAstroCache = {};
 
@@ -1637,10 +1768,8 @@
       return `${String(j.getUTCHours()).padStart(2, '0')}:${String(j.getUTCMinutes()).padStart(2, '0')}`;
     }
 
-    // 太陽のゴールデンアワー・ブルーアワー・完全暗夜（天文薄明）を計算
     function calcSunMagicAndDark(dateStr) {
       const [y, m, d] = dateStr.split("-").map(Number);
-      // 朝 (04:00 〜 08:30 JST)
       const mornStartMs = Date.UTC(y, m - 1, d, 4 - 9, 0, 0);
       const mornEndMs = mornStartMs + 4.5 * 3600000;
       let mBlueStart = null, mBlueEnd = null, mGoldStart = null, mGoldEnd = null;
@@ -1654,7 +1783,6 @@
         prev = alt;
       }
 
-      // 夕〜翌朝 (16:30 JST 〜 翌07:00 JST)
       const eveStartMs = Date.UTC(y, m - 1, d, 16 - 9, 30, 0);
       const eveEndMs = eveStartMs + 14.5 * 3600000;
       let eGoldStart = null, eGoldEnd = null, eBlueStart = null, eBlueEnd = null;
@@ -1896,7 +2024,7 @@
       if (isDaytime) {
         return {
           title: "昼間（観測時間外）",
-          desc: "日中は星が見えませんが、夜の予報と連動する参考指数を表示しています。タイムラインから夜の時間を選択してください。",
+          desc: "日中は星が見えませんが、夜の予報と連動する参考指数を表示しています。上の時間スライダーやタイムラインから夜の時間をお選びください。",
           color: "#94a3b8"
         };
       }
@@ -1904,7 +2032,7 @@
       if (score >= 70) return { title: "絶好の星空日和", desc: "視界がクリアで多くの星が輝きます。月明かりがある場合は月と反対側の方角を眺めると綺麗です。", color: "#60a5fa" };
       if (score >= 50) return { title: "雲の切れ間が狙い目", desc: "雲が流れやすい空模様ですが、宮古島は風で雲が動くため雲間から美しい星が顔を出す可能性があります。", color: "#fbbf24" };
       if (score >= 30) return { title: "雲多め・部分的な観測", desc: "空の多くを雲が覆っています。明るい一等星や月が時折見える程度になりそうです。", color: "#f472b6" };
-      return { title: "観測困難な空模様", desc: "厚い雲や高い湿度・雨の気配があります。左右スワイプで別の日程をチェックしてみてください。", color: "#f87171" };
+      return { title: "観測困難な空模様", desc: "厚い雲や高い湿度・雨の気配があります。別の日付・時間帯をチェックしてみてください。", color: "#f87171" };
     }
 
     function isNightHour(isoTimeStr, dailyMap) {
@@ -1918,19 +2046,14 @@
     }
 
     // ==========================================
-    // データ取得（Open-Meteo 14日間 API + デモ）
+    // データ取得（Open-Meteo 14日間 API）
     // ==========================================
     async function fetchWeather() {
       const statusDot = document.getElementById("statusDot");
       const statusText = document.getElementById("statusText");
 
-      if (isDemoMode) {
-        loadDemoData();
-        return;
-      }
-
       statusText.textContent = "14日間予報取得中...";
-      statusDot.classList.remove("demo");
+      statusDot.classList.remove("error");
 
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${MIYAKO_LAT}&longitude=${MIYAKO_LON}` +
         `&hourly=cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,precipitation_probability,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,temperature_2m,dew_point_2m,surface_pressure,visibility` +
@@ -1944,71 +2067,12 @@
         const now = getMiyakoNow();
         statusText.textContent = `Open-Meteo 14日間ライブ (${String(now.hour).padStart(2, '0')}:00)`;
       } catch (err) {
-        console.warn("API取得失敗のためデモ表示へ切替:", err);
-        isDemoMode = true;
-        document.getElementById("demoToggleBtn").textContent = "ライブ気象";
-        loadDemoData("接続エラーのためデモ表示");
+        console.error("気象データの取得に失敗しました:", err);
+        statusDot.classList.add("error");
+        statusText.textContent = "気象データ取得失敗（↻ 更新で再試行）";
+        document.getElementById("rankTitle").textContent = "データの取得に失敗しました";
+        document.getElementById("rankDesc").textContent = "通信環境をご確認のうえ、右上の「↻ 更新」ボタンを押してください。";
       }
-    }
-
-    function loadDemoData(customMsg) {
-      const now = getMiyakoNow();
-      const baseUtcMs = Date.UTC(now.year, now.month - 1, now.day, now.hour - 9, 0, 0);
-      const times = [], cloud_cover = [], cloud_cover_low = [], cloud_cover_mid = [],
-            cloud_cover_high = [], precipitation_probability = [], relative_humidity_2m = [],
-            wind_speed_10m = [], wind_direction_10m = [], wind_gusts_10m = [],
-            temperature_2m = [], dew_point_2m = [], surface_pressure = [], visibility = [];
-
-      for (let i = -now.hour; i < 14 * 24 - now.hour; i++) {
-        const ms = baseUtcMs + i * 3600000;
-        const jst = new Date(ms + 9 * 3600000);
-        const iso = `${jst.getUTCFullYear()}-${String(jst.getUTCMonth() + 1).padStart(2, '0')}-${String(jst.getUTCDate()).padStart(2, '0')}T${String(jst.getUTCHours()).padStart(2, '0')}:00`;
-        times.push(iso);
-
-        const h = jst.getUTCHours();
-        const dayOffset = Math.floor((i + now.hour) / 24);
-        const wave = Math.max(0, Math.sin((i + 3) * 0.22)) * (dayOffset % 3 === 0 ? 12 : dayOffset % 3 === 1 ? 38 : 65);
-        const low = Math.round(wave * 0.42);
-        const mid = Math.round(wave * 0.35);
-        const high = Math.round(wave * 0.55);
-        const total = Math.min(100, Math.round(low + mid * 0.6 + high * 0.3));
-        const temp = 24 + Math.sin((h - 9) * Math.PI / 12) * 3;
-
-        cloud_cover.push(total);
-        cloud_cover_low.push(low);
-        cloud_cover_mid.push(mid);
-        cloud_cover_high.push(high);
-        precipitation_probability.push(dayOffset % 3 === 0 ? 5 : Math.min(65, Math.round(wave * 0.7)));
-        relative_humidity_2m.push(74);
-        wind_speed_10m.push(3.8 + (dayOffset % 3) * 1.2);
-        wind_direction_10m.push((55 + dayOffset * 28) % 360);
-        wind_gusts_10m.push(6.2 + (dayOffset % 3) * 1.8);
-        temperature_2m.push(Number(temp.toFixed(1)));
-        dew_point_2m.push(Number((temp - 4.5).toFixed(1)));
-        surface_pressure.push(1014);
-        visibility.push(24000);
-      }
-
-      const dailyTimes = [], sunrise = [], sunset = [];
-      for (let d = 0; d < 14; d++) {
-        const dt = new Date(Date.UTC(now.year, now.month - 1, now.day + d, 0, 0, 0));
-        const dStr = `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-${String(dt.getUTCDate()).padStart(2, '0')}`;
-        dailyTimes.push(dStr);
-        sunrise.push(`${dStr}T06:08`);
-        sunset.push(`${dStr}T18:55`);
-      }
-
-      processApiData({
-        hourly: {
-          time: times, cloud_cover, cloud_cover_low, cloud_cover_mid, cloud_cover_high,
-          precipitation_probability, relative_humidity_2m, wind_speed_10m,
-          wind_direction_10m, wind_gusts_10m, temperature_2m, dew_point_2m, surface_pressure, visibility
-        },
-        daily: { time: dailyTimes, sunrise, sunset }
-      });
-
-      document.getElementById("statusDot").classList.add("demo");
-      document.getElementById("statusText").textContent = customMsg || "デモ14日間シミュレーション";
     }
 
     function processApiData(json) {
@@ -2052,6 +2116,7 @@
           idx, time: t, utcMs,
           dateStr: t.slice(0, 10),
           hourStr: t.slice(11, 16),
+          hourNum: Number(t.slice(11, 13)),
           cloudTotal: Math.round(cTotal),
           cloudLow: Math.round(cLow),
           cloudMid: Math.round(cMid),
@@ -2072,6 +2137,7 @@
       });
 
       build14DaySummaries();
+      initHourSelectOptions();
 
       const nowIdx = hourlyData.findIndex(item => item.time >= now.isoHour);
       const startIdx = nowIdx >= 0 ? nowIdx : 0;
@@ -2089,6 +2155,18 @@
       selectDay(selectedDayIdx, initialPick);
     }
 
+    function initHourSelectOptions() {
+      const sel = document.getElementById("hourSelect");
+      sel.innerHTML = "";
+      for (let h = 0; h < 24; h++) {
+        const opt = document.createElement("option");
+        opt.value = String(h);
+        const tag = (h >= 19 || h <= 5) ? "🌙" : "☀";
+        opt.textContent = `${tag} ${String(h).padStart(2, '0')}:00`;
+        sel.appendChild(opt);
+      }
+    }
+
     function build14DaySummaries() {
       dailySummaries = [];
       const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
@@ -2096,7 +2174,7 @@
         const nightHours = hourlyData.filter(h => h.dateStr === d.date && h.isNight);
         if (nightHours.length === 0) return;
 
-        const eveningHours = nightHours.filter(h => Number(h.hourStr.slice(0, 2)) >= 19);
+        const eveningHours = nightHours.filter(h => h.hourNum >= 19);
         const targetPool = eveningHours.length > 0 ? eveningHours : nightHours;
         const bestHour = targetPool.reduce((a, b) => (b.score > a.score ? b : a), targetPool[0]);
 
@@ -2120,7 +2198,7 @@
     }
 
     // ==========================================
-    // 日付スワイプ & 時間選択
+    // 日付スワイプ & 時間帯変更
     // ==========================================
     function selectDay(dayIdx, specificHourIdx = null, swipeDir = 0) {
       if (dayIdx < 0 || dayIdx >= dailySummaries.length) return;
@@ -2141,23 +2219,42 @@
         });
       }
 
+      updateDayHeaderUI(dayIdx);
+
+      const pickIdx = specificHourIdx !== null ? specificHourIdx : summary.bestIdx;
+
+      // タイムラインは選択日の00:00〜48時間を表示（今日の場合は選択時刻が範囲内に入るよう調整）
+      let timelineStart = summary.firstIdxOfDay;
+      if (dayIdx === 0) {
+        const now = getMiyakoNow();
+        const nowIdx = hourlyData.findIndex(item => item.time >= now.isoHour);
+        if (nowIdx >= 0 && pickIdx >= nowIdx) timelineStart = nowIdx;
+      }
+      renderTimeline(timelineStart, summary.shortLabel);
+      selectHour(pickIdx);
+    }
+
+    function updateDayHeaderUI(dayIdx) {
+      const summary = dailySummaries[dayIdx];
+      if (!summary) return;
       document.getElementById("dateNavLabel").textContent = `${summary.dayLabel} (${dayIdx + 1}/${dailySummaries.length}日目)`;
       document.getElementById("prevDayBtn").disabled = dayIdx === 0;
       document.getElementById("nextDayBtn").disabled = dayIdx === dailySummaries.length - 1;
       document.getElementById("bestTonightChip").textContent = `この日のベスト: ${summary.bestHourStr} (指数 ${summary.peak})`;
-
       document.querySelectorAll(".swipe-dot").forEach((dot, i) => dot.classList.toggle("active", i === dayIdx));
+    }
 
-      const pickIdx = specificHourIdx !== null ? specificHourIdx : summary.bestIdx;
-
-      const now = getMiyakoNow();
-      let timelineStart = summary.firstIdxOfDay;
-      if (dayIdx === 0) {
-        const nowIdx = hourlyData.findIndex(item => item.time >= now.isoHour);
-        if (nowIdx >= 0) timelineStart = nowIdx;
+    function selectHourByDayAndHour(dayIdx, hourNum) {
+      const summary = dailySummaries[dayIdx];
+      if (!summary) return;
+      const targetIdx = hourlyData.findIndex(h => h.dateStr === summary.date && h.hourNum === hourNum);
+      if (targetIdx >= 0) {
+        // タイムライン表示範囲外なら再描画
+        if (targetIdx < currentTimelineStart || targetIdx >= currentTimelineStart + 48) {
+          renderTimeline(summary.firstIdxOfDay, summary.shortLabel);
+        }
+        selectHour(targetIdx);
       }
-      renderTimeline(timelineStart, summary.shortLabel);
-      selectHour(pickIdx);
     }
 
     function renderSwipeDots() {
@@ -2173,20 +2270,27 @@
     }
 
     function selectHour(idx) {
+      if (idx < 0 || idx >= hourlyData.length) return;
       selectedIndex = idx;
       const item = hourlyData[idx];
-      if (!item) return;
 
+      // 日付が変わった場合は日付UI・タイムラインも同期
       const matchingDayIdx = dailySummaries.findIndex(s => s.date === item.dateStr);
       if (matchingDayIdx >= 0 && matchingDayIdx !== selectedDayIdx) {
         selectedDayIdx = matchingDayIdx;
-        const summary = dailySummaries[matchingDayIdx];
-        document.getElementById("dateNavLabel").textContent = `${summary.dayLabel} (${matchingDayIdx + 1}/${dailySummaries.length}日目)`;
-        document.getElementById("prevDayBtn").disabled = matchingDayIdx === 0;
-        document.getElementById("nextDayBtn").disabled = matchingDayIdx === dailySummaries.length - 1;
-        document.getElementById("bestTonightChip").textContent = `この日のベスト: ${summary.bestHourStr} (指数 ${summary.peak})`;
-        document.querySelectorAll(".swipe-dot").forEach((dot, i) => dot.classList.toggle("active", i === matchingDayIdx));
+        updateDayHeaderUI(matchingDayIdx);
       }
+
+      if (idx < currentTimelineStart || idx >= currentTimelineStart + 48) {
+        const summary = dailySummaries[selectedDayIdx];
+        if (summary) renderTimeline(summary.firstIdxOfDay, summary.shortLabel);
+      }
+
+      // 時間帯コントロール同期
+      document.getElementById("hourSelect").value = String(item.hourNum);
+      document.getElementById("hourSlider").value = String(item.hourNum);
+      document.getElementById("prevHourBtn").disabled = idx <= 0;
+      document.getElementById("nextHourBtn").disabled = idx >= hourlyData.length - 1;
 
       const circumference = 2 * Math.PI * 66;
       document.getElementById("gaugeArc").style.strokeDashoffset = (circumference - (item.score / 100) * circumference).toFixed(1);
@@ -2209,7 +2313,6 @@
 
       const astro = getDayAstroData(item.dateStr);
 
-      // 日の出・日の入り・月の出・月の入り 並べて表示
       document.getElementById("sunriseText").textContent = item.sunrise;
       document.getElementById("sunsetText").textContent = item.sunset;
       document.getElementById("moonriseText").textContent = astro.moonRS.rise;
@@ -2230,7 +2333,19 @@
       document.getElementById("barLow").style.width = `${item.cloudLow}%`;
       document.getElementById("valLow").textContent = `${item.cloudLow}%`;
 
-      document.querySelectorAll(".hour-pill").forEach(el => el.classList.toggle("active", Number(el.dataset.idx) === idx));
+      // タイムラインのアクティブ更新＆横方向のみスムーズスクロール
+      let activePillEl = null;
+      document.querySelectorAll(".hour-pill").forEach(el => {
+        const isActive = Number(el.dataset.idx) === idx;
+        el.classList.toggle("active", isActive);
+        if (isActive) activePillEl = el;
+      });
+      if (activePillEl) {
+        const wrap = document.getElementById("timelineScrollWrap");
+        const targetLeft = activePillEl.offsetLeft - wrap.clientWidth / 2 + activePillEl.clientWidth / 2;
+        wrap.scrollTo({ left: Math.max(0, targetLeft), behavior: "smooth" });
+      }
+
       document.querySelectorAll(".day-row").forEach(el => el.classList.toggle("selected", el.dataset.date === item.dateStr));
 
       renderMagicHoursPanel(astro.sunMagic, mm, dd);
@@ -2277,7 +2392,6 @@
     function renderWindAndWeatherPanel(item, mm, dd) {
       document.getElementById("weatherTimeBadge").textContent = `${mm}/${dd} ${item.hourStr}`;
       const wd = getWindDirectionInfo(item.windDir);
-      // 気象風向(deg)は「風が吹いてくる方角」。矢印は風上(deg)から中心を通って風下(deg+180)へ抜けるように回転させる
       const arrowRot = (wd.deg + 180) % 360;
 
       document.getElementById("windCompassSvg").innerHTML = `
@@ -2440,13 +2554,13 @@
     }
 
     function renderTimeline(startIdx, dayLabelText) {
+      currentTimelineStart = Math.max(0, startIdx);
       document.getElementById("timelineTitle").textContent = `HOURLY TIMELINE / ${dayLabelText}からの時間別予報`;
       const strip = document.getElementById("hourlyStrip");
       strip.innerHTML = "";
-      const safeStart = Math.max(0, startIdx);
-      const sliceEnd = Math.min(hourlyData.length, safeStart + 48);
+      const sliceEnd = Math.min(hourlyData.length, currentTimelineStart + 48);
 
-      for (let i = safeStart; i < sliceEnd; i++) {
+      for (let i = currentTimelineStart; i < sliceEnd; i++) {
         const item = hourlyData[i];
         const pill = document.createElement("div");
         pill.className = `hour-pill ${item.isNight ? "is-night" : "is-day"} ${i === selectedIndex ? "active" : ""}`;
@@ -2581,15 +2695,20 @@
     }
 
     // ==========================================
-    // スワイプ操作（トップの星空指数カード）
+    // スワイプ＆時間コントロール操作
     // ==========================================
-    function initHeroSwipe() {
+    function initHeroControls() {
       const card = document.getElementById("heroSwipeCard");
       const content = document.getElementById("swipeContent");
       let startX = 0, startY = 0, deltaX = 0, tracking = false, isHorizontal = null;
 
       card.addEventListener("touchstart", (e) => {
         if (e.touches.length !== 1) return;
+        // 時間コントロールやボタン上の操作では日付スワイプを発動しない
+        if (e.target.closest(".time-control-bar") || e.target.closest("button") || e.target.closest("select")) {
+          tracking = false;
+          return;
+        }
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         deltaX = 0;
@@ -2634,6 +2753,27 @@
 
       document.getElementById("nextDayBtn").addEventListener("click", () => {
         if (selectedDayIdx < dailySummaries.length - 1) selectDay(selectedDayIdx + 1, null, 1);
+      });
+
+      document.getElementById("prevHourBtn").addEventListener("click", () => {
+        if (selectedIndex > 0) selectHour(selectedIndex - 1);
+      });
+
+      document.getElementById("nextHourBtn").addEventListener("click", () => {
+        if (selectedIndex < hourlyData.length - 1) selectHour(selectedIndex + 1);
+      });
+
+      document.getElementById("hourSelect").addEventListener("change", (e) => {
+        selectHourByDayAndHour(selectedDayIdx, Number(e.target.value));
+      });
+
+      document.getElementById("hourSlider").addEventListener("input", (e) => {
+        selectHourByDayAndHour(selectedDayIdx, Number(e.target.value));
+      });
+
+      document.getElementById("bestTonightChip").addEventListener("click", () => {
+        const summary = dailySummaries[selectedDayIdx];
+        if (summary) selectHour(summary.bestIdx);
       });
     }
 
@@ -2800,12 +2940,6 @@
     window.addEventListener("resize", initCanvasObjects);
     document.getElementById("refreshBtn").addEventListener("click", fetchWeather);
 
-    document.getElementById("demoToggleBtn").addEventListener("click", (e) => {
-      isDemoMode = !isDemoMode;
-      e.target.textContent = isDemoMode ? "ライブ気象" : "デモ晴天";
-      fetchWeather();
-    });
-
     document.querySelectorAll(".mini-tab").forEach(tab => {
       tab.addEventListener("click", () => {
         document.querySelectorAll(".mini-tab").forEach(t => t.classList.remove("active"));
@@ -2821,7 +2955,7 @@
 
     initCanvasObjects();
     animateSky();
-    initHeroSwipe();
+    initHeroControls();
     initSpots();
     fetchWeather();
   </script>
