@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#040814" />
+  <title>宮古島 星空指数 14日間予報 | Miyako Starry Sky</title>
+  <style>
+    :root {
+      --bg-deep: #040814;
+      --bg-card: rgba(13, 21, 42, 0.76);
+      --bg-card-hover: rgba(22, 36, 70, 0.88);
+      --border-glass: rgba(148, 179, 255, 0.17);
+      --text-main: #eef4ff;
+      --text-sub: #a5b8de;
+      --text-muted: #7084ac;
+      --accent-cyan: #5eead4;
+      --accent-blue: #60a5fa;
+      --accent-gold: #fbbf24;
+      --accent-purple: #c084fc;
+      --accent-pink: #f472b6;
+      --danger: #f87171;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+      background-color: var(--bg-deep);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.55;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    #skyCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .app-container {
+      position: relative;
+      z-index: 1;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 18px 14px 56px;
+    }
+
+    /* ヘッダー */
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      border-radius: 13px;
+      background: linear-gradient(135deg, rgba(96, 165, 250, 0.28), rgba(192, 132, 252, 0.28));
+      border: 1px solid rgba(148, 179, 255, 0.32);
+      display: grid;
+      place-items: center;
+      font-size: 20px;
+      box-shadow: 0 0 22px rgba(96, 165, 250, 0.2);
+    }
+
+    .brand h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      background: linear-gradient(90deg, #ffffff, #a5f3fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand p {
+      font-size: 0.76rem;
+      color: var(--text-sub);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      backdrop-filter: blur(12px);
+      font-size: 0.75rem;
+      color: var(--text-sub);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+      flex-shrink: 0;
+    }
+
+    .dot.demo {
+      background: var(--accent-gold);
+      box-shadow: 0 0 8px var(--accent-gold);
+    }
+
+    .btn {
+      cursor: pointer;
+      border: 1px solid var(--border-glass);
+      background: var(--bg-card);
+      color: var(--text-main);
+      padding: 8px 14px;
+      min-height: 36px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      backdrop-filter: blur(12px);
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(148, 179, 255, 0.45);
+    }
+
+    /* カード共通 */
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 18px;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.35);
+      min-width: 0;
+    }
+
+    .section-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-sub);
+      letter-spacing: 0.04em;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    /* ヒーローグリッド */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .score-panel {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .gauge-wrap {
+      position: relative;
+      width: 164px;
+      height: 164px;
+      flex-shrink: 0;
+    }
+
+    .gauge-svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .gauge-bg {
+      fill: none;
+      stroke: rgba(148, 179, 255, 0.12);
+      stroke-width: 12;
+    }
+
+    .gauge-progress {
+      fill: none;
+      stroke: url(#gaugeGrad);
+      stroke-width: 12;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      filter: drop-shadow(0 0 10px rgba(94, 234, 212, 0.38));
+    }
+
+    .gauge-center {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .gauge-label {
+      font-size: 0.7rem;
+      color: var(--text-sub);
+      letter-spacing: 0.08em;
+    }
+
+    .gauge-value {
+      font-size: 2.75rem;
+      font-weight: 800;
+      line-height: 1.05;
+    }
+
+    .gauge-max {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .score-info {
+      flex: 1;
+      min-width: 210px;
+    }
+
+    .selected-time-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.76rem;
+      color: var(--accent-cyan);
+      background: rgba(94, 234, 212, 0.11);
+      border: 1px solid rgba(94, 234, 212, 0.25);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .best-tonight-chip {
+      font-size: 0.75rem;
+      color: var(--accent-gold);
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .rank-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .rank-desc {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      margin-bottom: 14px;
+    }
+
+    .mini-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .metric-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 9px 10px;
+    }
+
+    .metric-box .k {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .metric-box .v {
+      font-size: 0.96rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* 月齢・雲層 */
+    .astro-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      justify-content: space-between;
+    }
+
+    .moon-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(148, 179, 255, 0.12);
+    }
+
+    .moon-svg-wrap {
+      width: 60px;
+      height: 60px;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.25));
+    }
+
+    .moon-details h3 {
+      font-size: 0.98rem;
+      font-weight: 700;
+    }
+
+    .moon-details p {
+      font-size: 0.78rem;
+      color: var(--text-sub);
+    }
+
+    .cloud-layers {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .layer-item {
+      display: grid;
+      grid-template-columns: 84px 1fr 38px;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+    }
+
+    .layer-bar-bg {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .layer-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.5s ease;
+    }
+
+    .sun-times {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--text-sub);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 9px 12px;
+      border-radius: 12px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* タイムライン */
+    .timeline-card {
+      margin-bottom: 16px;
+    }
+
+    .chart-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 6px;
+    }
+
+    .chart-wrap::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .chart-wrap::-webkit-scrollbar-thumb {
+      background: rgba(148, 179, 255, 0.25);
+      border-radius: 999px;
+    }
+
+    .hourly-strip {
+      display: flex;
+      gap: 8px;
+      min-width: max-content;
+      padding-top: 4px;
+    }
+
+    .hour-pill {
+      width: 66px;
+      padding: 10px 6px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .hour-pill.is-night {
+      background: rgba(30, 58, 138, 0.2);
+      border-color: rgba(96, 165, 250, 0.24);
+    }
+
+    .hour-pill.is-day {
+      opacity: 0.5;
+    }
+
+    .hour-pill.active {
+      background: rgba(94, 234, 212, 0.16);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 16px rgba(94, 234, 212, 0.22);
+      opacity: 1;
+    }
+
+    .hour-time {
+      font-size: 0.72rem;
+      color: var(--text-sub);
+    }
+
+    .hour-bar-area {
+      width: 15px;
+      height: 50px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    .hour-bar {
+      width: 100%;
+      border-radius: 999px;
+    }
+
+    .hour-score {
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .hour-cloud {
+      font-size: 0.67rem;
+      color: var(--text-muted);
+    }
+
+    /* 星座・流星群セクション */
+    .celestial-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .constellation-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .constellation-item {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 13px;
+      padding: 12px 14px;
+    }
+
+    .const-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+      flex-wrap: wrap;
+    }
+
+    .const-name {
+      font-weight: 700;
+      font-size: 0.96rem;
+      color: #f8fafc;
+    }
+
+    .dir-badge {
+      font-size: 0.7rem;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(96, 165, 250, 0.18);
+      border: 1px solid rgba(96, 165, 250, 0.32);
+      color: #bfdbfe;
+      white-space: nowrap;
+    }
+
+    .dir-badge.special {
+      background: rgba(251, 191, 36, 0.16);
+      border-color: rgba(251, 191, 36, 0.38);
+      color: #fde68a;
+    }
+
+    .const-desc {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+    }
+
+    /* 流星群・天体イベント */
+    .meteor-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .mini-tab {
+      cursor: pointer;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-sub);
+    }
+
+    .mini-tab.active {
+      background: rgba(192, 132, 252, 0.22);
+      border-color: var(--accent-purple);
+      color: #fff;
+    }
+
+    .event-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 360px;
+      overflow-y: auto;
+      padding-right: 2px;
+    }
+
+    .event-card {
+      background: rgba(255, 255, 255, 0.035);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 13px;
+      padding: 12px 14px;
+    }
+
+    .event-card.active-now {
+      border-color: rgba(94, 234, 212, 0.4);
+      background: rgba(94, 234, 212, 0.06);
+    }
+
+    .event-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+      flex-wrap: wrap;
+    }
+
+    .event-title {
+      font-weight: 700;
+      font-size: 0.94rem;
+    }
+
+    .event-tag {
+      font-size: 0.69rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(192, 132, 252, 0.18);
+      color: #e9d5ff;
+      border: 1px solid rgba(192, 132, 252, 0.32);
+    }
+
+    .event-tag.peak {
+      background: rgba(244, 114, 182, 0.22);
+      color: #fbcfe8;
+      border-color: rgba(244, 114, 182, 0.45);
+    }
+
+    .event-meta {
+      font-size: 0.77rem;
+      color: var(--text-sub);
+      margin-bottom: 4px;
+    }
+
+    .event-advice {
+      font-size: 0.76rem;
+      color: var(--accent-cyan);
+    }
+
+    /* 下段 14日間予報 & スポット */
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 16px;
+    }
+
+    .weekly-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .day-row {
+      display: grid;
+      grid-template-columns: 96px 1fr 42px 58px;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .day-row:hover, .day-row.selected {
+      background: rgba(96, 165, 250, 0.14);
+      border-color: rgba(96, 165, 250, 0.42);
+    }
+
+    .day-name {
+      font-size: 0.83rem;
+      font-weight: 600;
+    }
+
+    .day-sub {
+      font-size: 0.69rem;
+      color: var(--text-muted);
+    }
+
+    .day-meter-bg {
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .day-meter-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .day-score-num {
+      text-align: right;
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    .day-badge {
+      font-size: 0.7rem;
+      text-align: center;
+      padding: 3px 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    /* スポットガイド */
+    .spot-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+
+    .spot-tab {
+      cursor: pointer;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      color: var(--text-sub);
+    }
+
+    .spot-tab.active {
+      background: rgba(96, 165, 250, 0.22);
+      border-color: var(--accent-blue);
+      color: #fff;
+    }
+
+    .spot-detail {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .spot-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .spot-header h3 {
+      font-size: 1.04rem;
+    }
+
+    .darkness-tag {
+      font-size: 0.7rem;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(192, 132, 252, 0.16);
+      border: 1px solid rgba(192, 132, 252, 0.35);
+      color: #e9d5ff;
+    }
+
+    .spot-desc {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+
+    .spot-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      font-size: 0.76rem;
+    }
+
+    .spot-meta div {
+      background: rgba(0, 0, 0, 0.24);
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+
+    .spot-meta span {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.68rem;
+      margin-bottom: 2px;
+    }
+
+    .formula-note {
+      margin-top: 18px;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.65;
+    }
+
+    /* スマホ・タブレット向けレスポンシブ調整 */
+    @media (max-width: 900px) {
+      .hero-grid,
+      .celestial-grid,
+      .lower-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .app-container {
+        padding: 14px 10px 48px;
+      }
+      .glass-card {
+        padding: 15px 13px;
+        border-radius: 16px;
+      }
+      .brand h1 {
+        font-size: 1.05rem;
+      }
+      .score-panel {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 14px;
+      }
+      .gauge-wrap {
+        width: 144px;
+        height: 144px;
+      }
+      .gauge-value {
+        font-size: 2.4rem;
+      }
+      .score-info {
+        width: 100%;
+        min-width: 0;
+      }
+      .rank-title {
+        font-size: 1.25rem;
+      }
+      .mini-metrics {
+        gap: 6px;
+      }
+      .metric-box {
+        padding: 8px 6px;
+      }
+      .metric-box .v {
+        font-size: 0.88rem;
+      }
+      .day-row {
+        grid-template-columns: 84px 1fr 34px 50px;
+        gap: 7px;
+        padding: 9px 10px;
+      }
+      .spot-meta {
+        grid-template-columns: 1fr;
+      }
+      .layer-item {
+        grid-template-columns: 74px 1fr 34px;
+        font-size: 0.74rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="skyCanvas"></canvas>
+
+  <div class="app-container">
+    <header>
+      <div class="brand">
+        <div class="brand-icon">🌌</div>
+        <div>
+          <h1>宮古島 星空指数 14日間予報</h1>
+          <p>24.81°N, 125.28°E • 雲層・月齢・星座・流星群ガイド</p>
+        </div>
+      </div>
+
+      <div class="header-controls">
+        <div class="status-pill">
+          <span class="dot" id="statusDot"></span>
+          <span id="statusText">気象データ読込中...</span>
+        </div>
+        <button class="btn" id="refreshBtn">↻ 更新</button>
+        <button class="btn" id="demoToggleBtn">デモ晴天を試す</button>
+      </div>
+    </header>
+
+    <!-- メインビュー -->
+    <div class="hero-grid">
+      <section class="glass-card">
+        <div class="section-title">
+          <span>STARRY SKY INDEX / 星空指数</span>
+          <span class="best-tonight-chip" id="bestTonightChip">今夜ベスト: 計算中</span>
+        </div>
+
+        <div class="score-panel">
+          <div class="gauge-wrap">
+            <svg class="gauge-svg" viewBox="0 0 160 160">
+              <defs>
+                <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#60a5fa" />
+                  <stop offset="50%" stop-color="#5eead4" />
+                  <stop offset="100%" stop-color="#fbbf24" />
+                </linearGradient>
+              </defs>
+              <circle class="gauge-bg" cx="80" cy="80" r="66" />
+              <circle class="gauge-progress" id="gaugeArc" cx="80" cy="80" r="66"
+                stroke-dasharray="414.69" stroke-dashoffset="414.69" />
+            </svg>
+            <div class="gauge-center">
+              <span class="gauge-label" id="gaugeSubLabel">INDEX</span>
+              <span class="gauge-value" id="mainScoreValue">--</span>
+              <span class="gauge-max">/ 100</span>
+            </div>
+          </div>
+
+          <div class="score-info">
+            <div class="selected-time-badge" id="selectedTimeBadge">--/-- --:--</div>
+            <h2 class="rank-title" id="rankTitle">データ取得中...</h2>
+            <p class="rank-desc" id="rankDesc">宮古島の雲量・湿度・月齢から最適な星空指数を計算しています。</p>
+
+            <div class="mini-metrics">
+              <div class="metric-box">
+                <div class="k">総合雲量</div>
+                <div class="v" id="metricCloud">--%</div>
+              </div>
+              <div class="metric-box">
+                <div class="k">降水確率</div>
+                <div class="v" id="metricRain">--%</div>
+              </div>
+              <div class="metric-box">
+                <div class="k">湿度 / 風速</div>
+                <div class="v" id="metricHumWind">--</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 月齢・雲層パネル -->
+      <section class="glass-card astro-stack">
+        <div>
+          <div class="section-title">
+            <span>MOON & CLOUD LAYERS / 月齢・雲層</span>
+          </div>
+          <div class="moon-row">
+            <div class="moon-svg-wrap" id="moonSvgContainer"></div>
+            <div class="moon-details">
+              <h3 id="moonName">月齢 --</h3>
+              <p id="moonDetail">輝面率 --% • 月明かり影響: --</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="cloud-layers">
+          <div class="layer-item">
+            <span>高層雲 (巻雲)</span>
+            <div class="layer-bar-bg">
+              <div class="layer-bar-fill" id="barHigh" style="width:0%; background:#93c5fd;"></div>
+            </div>
+            <span id="valHigh" style="text-align:right;">0%</span>
+          </div>
+          <div class="layer-item">
+            <span>中層雲</span>
+            <div class="layer-bar-bg">
+              <div class="layer-bar-fill" id="barMid" style="width:0%; background:#60a5fa;"></div>
+            </div>
+            <span id="valMid" style="text-align:right;">0%</span>
+          </div>
+          <div class="layer-item">
+            <span>低層雲 (厚雲)</span>
+            <div class="layer-bar-bg">
+              <div class="layer-bar-fill" id="barLow" style="width:0%; background:#818cf8;"></div>
+            </div>
+            <span id="valLow" style="text-align:right;">0%</span>
+          </div>
+        </div>
+
+        <div class="sun-times">
+          <span id="sunsetText">🌇 日の入り: --:--</span>
+          <span id="sunriseText">🌅 日の出: --:--</span>
+        </div>
+      </section>
+    </div>
+
+    <!-- 48時間タイムライン -->
+    <section class="glass-card timeline-card">
+      <div class="section-title">
+        <span>48-HOUR TIMELINE / 時間別予報（タップで空をプレビュー）</span>
+        <span style="font-size:0.74rem; color:var(--text-muted);">青枠 = 夜間</span>
+      </div>
+      <div class="chart-wrap">
+        <div class="hourly-strip" id="hourlyStrip"></div>
+      </div>
+    </section>
+
+    <!-- 星座 & 流星群セクション -->
+    <div class="celestial-grid">
+      <section class="glass-card">
+        <div class="section-title">
+          <span>CONSTELLATIONS / この夜に見える主な星座</span>
+          <span id="constellationDateLabel" style="font-size:0.74rem; color:var(--accent-cyan);">--月--日の夜</span>
+        </div>
+        <div class="constellation-list" id="constellationList"></div>
+      </section>
+
+      <section class="glass-card">
+        <div class="section-title">
+          <span>METEOR SHOWERS & EVENTS / 流星群・天体情報</span>
+        </div>
+        <div class="meteor-tabs">
+          <button class="mini-tab active" data-mtab="upcoming">選択日〜14日以内</button>
+          <button class="mini-tab" data-mtab="all">年間カレンダー</button>
+        </div>
+        <div class="event-list" id="meteorEventList"></div>
+      </section>
+    </div>
+
+    <!-- 14日間予報 & スポットガイド -->
+    <div class="lower-grid">
+      <section class="glass-card">
+        <div class="section-title">
+          <span>14-DAY NIGHT FORECAST / 14日間 星空予報</span>
+          <span style="font-size:0.73rem; color:var(--text-muted);">各夜のピーク値（タップで詳細）</span>
+        </div>
+        <div class="weekly-list" id="weeklyList"></div>
+      </section>
+
+      <section class="glass-card">
+        <div class="section-title">
+          <span>MIYAKO STARGAZING SPOTS / おすすめ観測地</span>
+        </div>
+        <div class="spot-tabs" id="spotTabs"></div>
+        <div class="spot-detail" id="spotDetail"></div>
+      </section>
+    </div>
+
+    <p class="formula-note">
+      ※ 星空指数はOpen-Meteoの14日間気象予報（高度別雲量・降水確率・湿度）と天文計算（月齢・太陽位置）から独自算出しています。予報後半（8〜14日目）は気象モデルの特性上、日々の変動が大きくなる傾向があります。
+    </p>
+  </div>
+
+  <script>
+    // ==========================================
+    // 定数・宮古島設定・天文データベース
+    // ==========================================
+    const MIYAKO_LAT = 24.8055;
+    const MIYAKO_LON = 125.2811;
+    const SYNODIC_MONTH = 29.53058867;
+    const KNOWN_NEW_MOON_UTC = Date.UTC(2000, 0, 6, 18, 14, 0);
+
+    // 月ごとの宮古島（北緯24.8°）夜の代表星座データ（宵20時〜深夜01時頃に見やすい星座）
+    const MONTHLY_CONSTELLATIONS = {
+      1: [
+        { name: "オリオン座 & 冬の大三角", dir: "南〜天頂 (宵〜深夜)", special: false, desc: "宮古島の冬の夜空で最も華やか。ベテルギウス・シリウス・プロキオンの大三角と冬のスバル（おうし座）が頭上高く輝きます。" },
+        { name: "りゅうこつ座（カノープス）", dir: "真南の水平線上 (21〜23時頃)", special: true, desc: "本州では見にくい全天2位の恒星カノープス（長寿の星）が、宮古島では南の海上に余裕を持って高く昇ります。" },
+        { name: "みなみじゅうじ座（南十字星）", dir: "真南の水平線 (02〜05時頃)", special: true, desc: "1月後半の未明〜明け方にかけて、南の水平線スレスレに4つの星が十字を描き始めます。" }
+      ],
+      2: [
+        { name: "おおいぬ座（シリウス）& ふたご座", dir: "南〜天頂 (20〜23時)", special: false, desc: "全天で最も明るい恒星シリウスが南天高く輝き、冬から春へと移り変わる星座たちが一望できます。" },
+        { name: "カノープス（りゅうこつ座）", dir: "真南の水平線上方 (20〜22時)", special: true, desc: "2月の宵はカノープス観測のベストシーズン。南が開けた東平安名崎や来間島からよく見えます。" },
+        { name: "みなみじゅうじ座（南十字星）", dir: "真南の水平線 (01〜04時頃)", special: true, desc: "深夜1時を過ぎると南の海上に出現。街明かりのない南海岸がおすすめです。" }
+      ],
+      3: [
+        { name: "しし座 & おおぐま座（北斗七星）", dir: "東〜北東 (21〜00時)", special: false, desc: "春の代表的な星座が東から高く昇り、北の空では北斗七星が大きな柄杓（ひしゃく）を描きます。" },
+        { name: "みなみじゅうじ座（南十字星）", dir: "真南の水平線 (23:30〜03時)", special: true, desc: "春分を過ぎると深夜前後に南の空へ登場。宮古島ならではの南天ハイライトです。" },
+        { name: "春〜夏の天の川（昇り始め）", dir: "東の水平線 (02時〜明け方)", special: false, desc: "3月後半の明け方には、さそり座とともに濃厚な天の川の中心部が東の空から姿を現します。" }
+      ],
+      4: [
+        { name: "おとめ座・うしかい座（春の大曲線）", dir: "東〜南東 (21〜00時)", special: false, desc: "北斗七星からアークトゥルス、スピカへと続く壮大な春の大曲線が夜空を横断します。" },
+        { name: "みなみじゅうじ座 & ケンタウルス座", dir: "真南の水平線 (21:30〜01時)", special: true, desc: "宮古島での南十字星ベストシーズン！22〜24時頃に南の海上で十字架が最も直立して見えます。" },
+        { name: "さそり座（昇り始め）", dir: "南東の空 (00時〜明け方)", special: false, desc: "深夜以降、南東から巨大なS字を描くさそり座全体が昇ってきます。" }
+      ],
+      5: [
+        { name: "みなみじゅうじ座（南十字星）", dir: "真南〜南西の水平線 (20〜23時)", special: true, desc: "5月は夕暮れ後の早い時間帯（20〜22時頃）に南十字星を見られる絶好の観察期です。" },
+        { name: "さそり座 & てんびん座", dir: "南東の空 (22〜02時)", special: false, desc: "赤い一等星アンタレスを心臓に持つさそり座が、尻尾の先までくっきりと海上に現れます。" },
+        { name: "夏の天の川", dir: "東〜南東 (23時〜未明)", special: true, desc: "深夜になると、いて座〜さそり座付近の最も濃く明るい天の川コアが東の空に大きく広がります。" }
+      ],
+      6: [
+        { name: "みなみじゅうじ座（見納め）", dir: "南〜南西の水平線 (20〜21:30)", special: true, desc: "6月上〜中旬は、日没直後の南西の低空で南十字星を観察できる今シーズン最後のチャンスです。" },
+        { name: "さそり座 & いて座（天の川）", dir: "南〜南東 (21〜02時)", special: true, desc: "梅雨明け後の晴れた夜には、街の外れで天の川の濃い雲のような帯を肉眼で明瞭に確認できます。" },
+        { name: "夏の大三角（昇り始め）", dir: "東の空 (21時〜深夜)", special: false, desc: "こと座ベガ・わし座アルタイル・はくちょう座デネブが東から昇り、夏の夜空を彩ります。" }
+      ],
+      7: [
+        { name: "さそり座 & いて座（天の川コア）", dir: "真南〜天頂近く (20〜00時)", special: true, desc: "宮古島の夏は南中高度が高く、さそり座の尾からいて座にかけての壮大な天の川が目の前にそびえ立ちます。" },
+        { name: "夏の大三角（はくちょう・こと・わし）", dir: "天頂〜東 (21〜02時)", special: false, desc: "天の川の中に羽を広げるはくちょう座と七夕の織り姫・彦星（ベガ・アルタイル）が真上に輝きます。" },
+        { name: "みなみのうお座（フォーマルハウト）", dir: "南東の空 (00時〜未明)", special: false, desc: "秋の南天の指標星フォーマルハウトが深夜の海上に顔を出し始めます。" }
+      ],
+      8: [
+        { name: "夏の大三角 & 天の川アーチ", dir: "天頂〜南西 (20〜01時)", special: true, desc: "北から南の水平線まで頭上を貫く天の川の大アーチ。8月は天の川観望の黄金期です。" },
+        { name: "さそり座 & いて座", dir: "南西の空 (20〜23時)", special: false, desc: "宵の南西の海へ傾いていくさそり座は、サンセット後のビーチからの撮影に最高です。" },
+        { name: "ペガスス座 & カシオペヤ座", dir: "東〜北東 (22時〜未明)", special: false, desc: "秋の四辺形（ペガスス座）とW字のカシオペヤ座が東の海上から昇ってきます。" }
+      ],
+      9: [
+        { name: "夏の大三角 & はくちょう座", dir: "天頂〜西 (20〜23時)", special: false, desc: "日が暮れてすぐ天頂付近に夏の大三角と天の川が横たわります。" },
+        { name: "みなみのうお座 & やぎ座・みずがめ座", dir: "南〜南東 (21〜00時)", special: false, desc: "南天の暗い星空の中で、白い一等星フォーマルハウトがひときわ目立ちます。" },
+        { name: "アンドロメダ座（M31銀河）", dir: "北東〜東 (22時〜深夜)", special: true, desc: "暗い宮古島の空では、250万光年彼方のアンドロメダ銀河を肉眼の淡い光斑として探せます。" }
+      ],
+      10: [
+        { name: "ペガスス座（秋の四辺形）& カシオペヤ座", dir: "天頂〜北 (20〜00時)", special: false, desc: "秋の星座が頭上を支配し、10月後半にかけて空気が澄んで星の瞬きが鮮やかになります。" },
+        { name: "すばる（プレアデス星団）& おうし座", dir: "東の空 (21時〜深夜)", special: true, desc: "宝石箱のような星団「すばる」が東から昇り始め、冬の華やかな星々の先陣を切ります。" },
+        { name: "オリオン座（昇り始め）", dir: "東の空 (23時〜未明)", special: false, desc: "深夜前にはオリオン座の三つ星が東の海上から姿を現します。" }
+      ],
+      11: [
+        { name: "おうし座（すばる）& ぎょしゃ座", dir: "東〜天頂 (20〜00時)", special: false, desc: "明るい一等星カペラやアルデバランとともに、美しい散開星団すばるが真上に近づきます。" },
+        { name: "オリオン座 & 冬の大三角", dir: "東〜南東 (21:30〜深夜)", special: false, desc: "深夜に向けて冬の豪華な一等星たちが一斉に東の空へ勢揃いします。" },
+        { name: "カノープス（昇り始め）", dir: "真南の水平線 (01〜04時頃)", special: true, desc: "11月後半の未明には南の低空に長寿の星カノープスが現れ始めます。" }
+      ],
+      12: [
+        { name: "オリオン座 & 冬の大三角（シリウス）", dir: "南東〜天頂 (20〜01時)", special: true, desc: "全天で最も一等星が多い冬の星座群。湿度が下がる晴夜には宝石を散りばめたような輝きです。" },
+        { name: "カノープス（りゅうこつ座）", dir: "真南の水平線上 (23〜02時頃)", special: true, desc: "日付が変わる前後に南の海上でカノープスが観察しやすくなります。" },
+        { name: "みなみじゅうじ座（シーズン入り）", dir: "真南の水平線 (03〜05:30頃)", special: true, desc: "12月下旬の明け方近く、南の水平線スレスレに南十字星が顔を出し始めます。" }
+      ]
+    };
+
+    // 年間主要流星群・天体イベントデータベース
+    const METEOR_EVENTS = [
+      {
+        name: "しぶんぎ座流星群",
+        start: [1, 1], peak: [1, 4], end: [1, 5],
+        zhr: "ZHR 80〜110 (三大流星群)",
+        dir: "北東（深夜0時〜明け方が見頃）",
+        note: "極大のピークが数時間と鋭いのが特徴。未明から明け方にかけて北東の空を中心に流れます。"
+      },
+      {
+        name: "こと座流星群",
+        start: [4, 16], peak: [4, 22], end: [4, 25],
+        zhr: "ZHR 18前後",
+        dir: "東〜天頂（23時〜明け方）",
+        note: "突発的に明るい流星（火球）が見られることもある春の流星群です。"
+      },
+      {
+        name: "みずがめ座η（エータ）流星群",
+        start: [4, 19], peak: [5, 6], end: [5, 28],
+        zhr: "ZHR 40〜50",
+        dir: "東（02時〜薄明前がベスト）",
+        note: "ハレー彗星が母天体。低緯度の宮古島では放射点が高く昇るため本州より多くの流星が期待できます！"
+      },
+      {
+        name: "南十字星（みなみじゅうじ座）好機",
+        start: [3, 20], peak: [5, 5], end: [6, 15],
+        zhr: "宮古島限定シーズン",
+        dir: "真南の水平線付近",
+        note: "北緯24.8度の宮古島では南中時に十字架の4星すべてが水平線の上に姿を見せます。"
+      },
+      {
+        name: "みずがめ座δ南流星群",
+        start: [7, 12], peak: [7, 30], end: [8, 23],
+        zhr: "ZHR 20〜25",
+        dir: "南〜南東（23時〜未明）",
+        note: "夏の夜にゆったりした速度の流星が流れ、ペルセウス座流星群とも時期が重なります。"
+      },
+      {
+        name: "ペルセウス座流星群",
+        start: [7, 17], peak: [8, 12], end: [8, 24],
+        zhr: "ZHR 80〜100 (三大流星群)",
+        dir: "北東〜全天（22時〜明け方）",
+        note: "夏の晴天率が高い宮古島で非常に人気の高い流星群。明るい流星や流星痕がよく見られます。"
+      },
+      {
+        name: "りゅう座流星群（ジャコビニ）",
+        start: [10, 6], peak: [10, 8], end: [10, 10],
+        zhr: "ZHR 10前後（突発あり）",
+        dir: "北西（宵〜深夜0時前）",
+        note: "速度がゆっくりとした流星が特徴で、宵の早い時間帯から観察しやすい流星群です。"
+      },
+      {
+        name: "オリオン座流星群",
+        start: [10, 2], peak: [10, 21], end: [11, 7],
+        zhr: "ZHR 20前後",
+        dir: "東〜南東（23時〜明け方）",
+        note: "ハレー彗星由来の流星群で、速度が速く明るい流星が多いのが特徴です。"
+      },
+      {
+        name: "おうし座流星群（南・北）",
+        start: [10, 10], peak: [11, 8], end: [11, 25],
+        zhr: "ZHR 5〜10（火球多め）",
+        dir: "東〜南（21時〜未明）",
+        note: "出現数は控えめですが、非常にゆっくりと飛ぶ明るい「火球」が目撃されやすい群です。"
+      },
+      {
+        name: "しし座流星群",
+        start: [11, 6], peak: [11, 17], end: [11, 30],
+        zhr: "ZHR 10〜20",
+        dir: "東（00時〜明け方）",
+        note: "非常に高速で、緑や青白い光の筋を引く明るい流星が見られることがあります。"
+      },
+      {
+        name: "ふたご座流星群",
+        start: [12, 4], peak: [12, 14], end: [12, 17],
+        zhr: "ZHR 100〜120 (三大流星群)",
+        dir: "東〜天頂〜全天（20時〜明け方）",
+        note: "年間最大の安定感を誇る流星群。20時頃の早い時間から多数出現し、一晩中楽しめます。"
+      },
+      {
+        name: "こぐま座流星群",
+        start: [12, 17], peak: [12, 22], end: [12, 26],
+        zhr: "ZHR 10前後",
+        dir: "真北（深夜〜明け方）",
+        note: "冬の夜長、北極星の周囲から穏やかに流れる年の瀬の流星群です。"
+      }
+    ];
+
+    const SPOTS = [
+      {
+        name: "東平安名崎",
+        darkness: "光害レベル: 極小 ★5",
+        desc: "宮古島最東端の細長い岬。周囲が海に囲まれ街明かりがほとんどなく、東〜南の水平線から昇る天の川や南十字星の観測に最適です。",
+        bestDir: "東〜南（天の川・南十字星）",
+        access: "市街地から車で約30分・駐車場あり（強風注意）"
+      },
+      {
+        name: "与那覇前浜ビーチ",
+        darkness: "光害レベル: 小 ★4",
+        desc: "白い砂浜から来間大橋と星空のコラボを楽しめます。足場が良くアクセスも容易で、スマホやカメラ初心者にも人気のスポットです。",
+        bestDir: "南西〜西（来間島方面）",
+        access: "市街地から車で約15分・駐車場/トイレあり"
+      },
+      {
+        name: "池間島（フナクス周辺）",
+        darkness: "光害レベル: 極小 ★5",
+        desc: "宮古島の北端に位置し市街地の明かりから最も離れています。北側の開けた空ではカシオペヤ座や流星群の観測にぴったりです。",
+        bestDir: "北〜東（全天・夏の天の川）",
+        access: "市街地から車で約25分・道幅注意"
+      },
+      {
+        name: "長間浜（来間島）",
+        darkness: "光害レベル: 小〜極小 ★4.5",
+        desc: "来間島西側の静かなビーチ。街灯が少なく砂浜に寝転んで満天の星を眺められます。波の音を聞きながらゆったり観測したい方におすすめ。",
+        bestDir: "西〜南西（水平線に沈む星座）",
+        access: "市街地から車で約20分・懐中電灯必須"
+      },
+      {
+        name: "佐和田の浜（伊良部島）",
+        darkness: "光害レベル: 小 ★4",
+        desc: "浅瀬の巨岩と夜空のリフレクション撮影ができる海岸。干潮〜中潮で風の穏やかな夜が狙い目です。",
+        bestDir: "北西〜西（水鏡リフレクション）",
+        access: "伊良部大橋経由で約25分"
+      }
+    ];
+
+    let hourlyData = [];
+    let dailyData = [];
+    let dailySummaries = [];
+    let selectedIndex = 0;
+    let isDemoMode = false;
+    let activeMeteorTab = "upcoming";
+
+    // ==========================================
+    // JST日時・月齢・日付判定ユーティリティ
+    // ==========================================
+    function getMiyakoNow() {
+      const nowUtcMs = Date.now();
+      const jstMs = nowUtcMs + 9 * 3600 * 1000;
+      const d = new Date(jstMs);
+      return {
+        year: d.getUTCFullYear(),
+        month: d.getUTCMonth() + 1,
+        day: d.getUTCDate(),
+        hour: d.getUTCHours(),
+        isoHour: `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}T${String(d.getUTCHours()).padStart(2, '0')}:00`
+      };
+    }
+
+    function parseJstIsoToMs(isoStr) {
+      const [datePart, timePart] = isoStr.split("T");
+      const [y, m, d] = datePart.split("-").map(Number);
+      const [hh, mm] = timePart.split(":").map(Number);
+      return Date.UTC(y, m - 1, d, hh - 9, mm || 0, 0);
+    }
+
+    function getMoonInfo(utcMs) {
+      const diffDays = (utcMs - KNOWN_NEW_MOON_UTC) / (1000 * 60 * 60 * 24);
+      let age = diffDays % SYNODIC_MONTH;
+      if (age < 0) age += SYNODIC_MONTH;
+      const phase = age / SYNODIC_MONTH;
+      const illumination = (1 - Math.cos(phase * 2 * Math.PI)) / 2;
+
+      let name = "";
+      if (age < 1.5 || age >= 28.0) name = "新月（観測に最適）";
+      else if (age < 6.5) name = "三日月〜若い月";
+      else if (age < 8.5) name = "上弦の月";
+      else if (age < 13.5) name = "十三夜〜小望月";
+      else if (age < 16.5) name = "満月前後（月明かり強）";
+      else if (age < 21.5) name = "寝待月〜更待月";
+      else if (age < 23.5) name = "下弦の月";
+      else name = "有明の月（未明前に暗い）";
+
+      return { age, phase, illumination, name };
+    }
+
+    function renderMoonSvg(phase) {
+      const r = 26, cx = 32, cy = 32;
+      const rx = Math.abs(Math.cos(phase * 2 * Math.PI)) * r;
+      let litPath = "";
+      if (phase <= 0.5) {
+        const sweep2 = phase < 0.25 ? 0 : 1;
+        litPath = `M ${cx} ${cy - r} A ${r} ${r} 0 0 1 ${cx} ${cy + r} A ${rx.toFixed(2)} ${r} 0 0 ${sweep2} ${cx} ${cy - r} Z`;
+      } else {
+        const sweep2 = phase < 0.75 ? 0 : 1;
+        litPath = `M ${cx} ${cy - r} A ${r} ${r} 0 0 0 ${cx} ${cy + r} A ${rx.toFixed(2)} ${r} 0 0 ${sweep2} ${cx} ${cy - r} Z`;
+      }
+      if (phase < 0.015 || phase > 0.985) litPath = "";
+      else if (Math.abs(phase - 0.5) < 0.015) {
+        litPath = `M ${cx - r} ${cy} A ${r} ${r} 0 1 0 ${cx + r} ${cy} A ${r} ${r} 0 1 0 ${cx - r} ${cy} Z`;
+      }
+      return `<svg viewBox="0 0 64 64" width="60" height="60">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="#172038" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" />
+        ${litPath ? `<path d="${litPath}" fill="#fde68a" />` : ""}
+      </svg>`;
+    }
+
+    // 日付が [startM, startD] 〜 [endM, endD] の範囲内か（年またぎ対応）
+    function isDateInRange(month, day, start, end) {
+      const val = month * 100 + day;
+      const s = start[0] * 100 + start[1];
+      const e = end[0] * 100 + end[1];
+      return s <= e ? (val >= s && val <= e) : (val >= s || val <= e);
+    }
+
+    function daysUntilMmDd(fromYear, fromMonth, fromDay, targetMonth, targetDay) {
+      const fromMs = Date.UTC(fromYear, fromMonth - 1, fromDay);
+      const candidates = [
+        Date.UTC(fromYear - 1, targetMonth - 1, targetDay),
+        Date.UTC(fromYear, targetMonth - 1, targetDay),
+        Date.UTC(fromYear + 1, targetMonth - 1, targetDay)
+      ];
+      let bestDiff = Infinity;
+      candidates.forEach(c => {
+        const diff = Math.round((c - fromMs) / 86400000);
+        if (Math.abs(diff) < Math.abs(bestDiff)) bestDiff = diff;
+      });
+      return bestDiff;
+    }
+
+    // ==========================================
+    // 星空指数計算
+    // ==========================================
+    function calcStarryIndex({ cloudLow, cloudMid, cloudHigh, cloudTotal, precipProb, humidity, moonIllum }) {
+      const weightedCloud = cloudLow * 0.62 + cloudMid * 0.28 + cloudHigh * 0.10;
+      const effectiveCloud = Math.max(weightedCloud, cloudTotal * 0.78);
+      let score = 100 - effectiveCloud * 0.95;
+
+      if (precipProb > 15) score -= (precipProb - 15) * 0.35;
+      if (humidity > 80) score -= (humidity - 80) * 0.45;
+      score -= moonIllum * 18;
+
+      return Math.max(0, Math.min(100, Math.round(score)));
+    }
+
+    function getRankInfo(score, isDaytime) {
+      if (isDaytime) {
+        return {
+          title: "昼間（観測時間外）",
+          desc: "日中は星が見えませんが、夜の予報と連動する参考指数を表示しています。下のタイムラインまたは14日間予報から夜の時間帯をお選びください。",
+          color: "#94a3b8"
+        };
+      }
+      if (score >= 85) return { title: "満天の星・天の川チャンス！", desc: "雲も月明かりも少なく最高クラスの夜空です。天の川や微かな流星まで肉眼でクッキリ楽しめます。", color: "#5eead4" };
+      if (score >= 70) return { title: "絶好の星空日和", desc: "視界がクリアで多くの星が輝きます。月明かりがある場合は月と反対側の方角を眺めると綺麗です。", color: "#60a5fa" };
+      if (score >= 50) return { title: "雲の切れ間が狙い目", desc: "雲が流れやすい空模様ですが、宮古島は風で雲が動くため雲間から美しい星が顔を出す可能性があります。", color: "#fbbf24" };
+      if (score >= 30) return { title: "雲多め・部分的な観測", desc: "空の多くを雲が覆っています。明るい一等星や月が時折見える程度になりそうです。", color: "#f472b6" };
+      return { title: "観測困難な空模様", desc: "厚い雲や高い湿度・雨の気配があります。別の日程の好条件日をチェックしてみてください。", color: "#f87171" };
+    }
+
+    function isNightHour(isoTimeStr, dailyMap) {
+      const dateStr = isoTimeStr.slice(0, 10);
+      const hour = Number(isoTimeStr.slice(11, 13));
+      const d = dailyMap[dateStr];
+      if (!d) return hour >= 19 || hour <= 5;
+      const sunsetH = Number(d.sunset.slice(11, 13)) + Number(d.sunset.slice(14, 16)) / 60;
+      const sunriseH = Number(d.sunrise.slice(11, 13)) + Number(d.sunrise.slice(14, 16)) / 60;
+      return hour >= Math.ceil(sunsetH) || hour < Math.floor(sunriseH);
+    }
+
+    // ==========================================
+    // データ取得（Open-Meteo 14日間 API + デモ）
+    // ==========================================
+    async function fetchWeather() {
+      const statusDot = document.getElementById("statusDot");
+      const statusText = document.getElementById("statusText");
+
+      if (isDemoMode) {
+        loadDemoData();
+        return;
+      }
+
+      statusText.textContent = "14日間予報取得中...";
+      statusDot.classList.remove("demo");
+
+      const url = `https://api.open-meteo.com/v1/forecast?latitude=${MIYAKO_LAT}&longitude=${MIYAKO_LON}` +
+        `&hourly=cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,precipitation_probability,relative_humidity_2m,wind_speed_10m` +
+        `&daily=sunrise,sunset&wind_speed_unit=ms&timezone=Asia%2FTokyo&forecast_days=14`;
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = await res.json();
+        processApiData(json);
+        const now = getMiyakoNow();
+        statusText.textContent = `Open-Meteo 14日間ライブ (${String(now.hour).padStart(2, '0')}:00)`;
+      } catch (err) {
+        console.warn("API取得失敗のためデモ表示へ切替:", err);
+        isDemoMode = true;
+        document.getElementById("demoToggleBtn").textContent = "ライブ気象に戻す";
+        loadDemoData("接続エラーのためデモ14日間表示");
+      }
+    }
+
+    function loadDemoData(customMsg) {
+      const now = getMiyakoNow();
+      const baseUtcMs = Date.UTC(now.year, now.month - 1, now.day, now.hour - 9, 0, 0);
+      const times = [], cloud_cover = [], cloud_cover_low = [], cloud_cover_mid = [],
+            cloud_cover_high = [], precipitation_probability = [], relative_humidity_2m = [], wind_speed_10m = [];
+
+      for (let i = -now.hour; i < 14 * 24 - now.hour; i++) {
+        const ms = baseUtcMs + i * 3600 * 1000;
+        const jst = new Date(ms + 9 * 3600 * 1000);
+        const iso = `${jst.getUTCFullYear()}-${String(jst.getUTCMonth() + 1).padStart(2, '0')}-${String(jst.getUTCDate()).padStart(2, '0')}T${String(jst.getUTCHours()).padStart(2, '0')}:00`;
+        times.push(iso);
+
+        const dayOffset = Math.floor((i + now.hour) / 24);
+        const wave = Math.max(0, Math.sin((i + 3) * 0.22)) * (dayOffset % 3 === 0 ? 12 : dayOffset % 3 === 1 ? 38 : 65);
+        const low = Math.round(wave * 0.42);
+        const mid = Math.round(wave * 0.35);
+        const high = Math.round(wave * 0.55);
+        const total = Math.min(100, Math.round(low + mid * 0.6 + high * 0.3));
+
+        cloud_cover.push(total);
+        cloud_cover_low.push(low);
+        cloud_cover_mid.push(mid);
+        cloud_cover_high.push(high);
+        precipitation_probability.push(dayOffset % 3 === 0 ? 5 : Math.min(65, Math.round(wave * 0.7)));
+        relative_humidity_2m.push(74);
+        wind_speed_10m.push(3.6);
+      }
+
+      const dailyTimes = [], sunrise = [], sunset = [];
+      for (let d = 0; d < 14; d++) {
+        const dt = new Date(Date.UTC(now.year, now.month - 1, now.day + d, 0, 0, 0));
+        const dStr = `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-${String(dt.getUTCDate()).padStart(2, '0')}`;
+        dailyTimes.push(dStr);
+        sunrise.push(`${dStr}T06:08`);
+        sunset.push(`${dStr}T18:55`);
+      }
+
+      processApiData({
+        hourly: { time: times, cloud_cover, cloud_cover_low, cloud_cover_mid, cloud_cover_high, precipitation_probability, relative_humidity_2m, wind_speed_10m },
+        daily: { time: dailyTimes, sunrise, sunset }
+      });
+
+      document.getElementById("statusDot").classList.add("demo");
+      document.getElementById("statusText").textContent = customMsg || "デモ14日間シミュレーション中";
+    }
+
+    function processApiData(json) {
+      const h = json.hourly;
+      const d = json.daily;
+      const dailyMap = {};
+      dailyData = [];
+
+      for (let i = 0; i < d.time.length; i++) {
+        const item = { date: d.time[i], sunrise: d.sunrise[i], sunset: d.sunset[i] };
+        dailyMap[d.time[i]] = item;
+        dailyData.push(item);
+      }
+
+      const now = getMiyakoNow();
+      hourlyData = h.time.map((t, idx) => {
+        const utcMs = parseJstIsoToMs(t);
+        const moon = getMoonInfo(utcMs);
+        const isNight = isNightHour(t, dailyMap);
+
+        // 14日予報後半のnull値にも対応する安全なフォールバック
+        const cTotal = h.cloud_cover[idx] ?? 0;
+        const cLow = h.cloud_cover_low?.[idx] ?? Math.round(cTotal * 0.5);
+        const cMid = h.cloud_cover_mid?.[idx] ?? Math.round(cTotal * 0.3);
+        const cHigh = h.cloud_cover_high?.[idx] ?? Math.round(cTotal * 0.2);
+        const precip = h.precipitation_probability?.[idx] ?? Math.round(cTotal * 0.35);
+        const hum = h.relative_humidity_2m?.[idx] ?? 75;
+        const wind = h.wind_speed_10m?.[idx] ?? 3.5;
+
+        const score = calcStarryIndex({
+          cloudLow: cLow,
+          cloudMid: cMid,
+          cloudHigh: cHigh,
+          cloudTotal: cTotal,
+          precipProb: precip,
+          humidity: hum,
+          moonIllum: moon.illumination
+        });
+
+        return {
+          idx,
+          time: t,
+          utcMs,
+          dateStr: t.slice(0, 10),
+          hourStr: t.slice(11, 16),
+          cloudTotal: Math.round(cTotal),
+          cloudLow: Math.round(cLow),
+          cloudMid: Math.round(cMid),
+          cloudHigh: Math.round(cHigh),
+          precip: Math.round(precip),
+          humidity: Math.round(hum),
+          wind: Number(wind),
+          moon,
+          isNight,
+          score,
+          sunset: dailyMap[t.slice(0, 10)]?.sunset.slice(11, 16) || "18:55",
+          sunrise: dailyMap[t.slice(0, 10)]?.sunrise.slice(11, 16) || "06:08"
+        };
+      });
+
+      const nowIdx = hourlyData.findIndex(item => item.time >= now.isoHour);
+      const startIdx = nowIdx >= 0 ? nowIdx : 0;
+
+      let initialPick = startIdx;
+      if (!hourlyData[startIdx]?.isNight) {
+        const nextNight = hourlyData.findIndex((item, i) => i >= startIdx && item.isNight);
+        if (nextNight >= 0 && nextNight - startIdx <= 18) initialPick = nextNight;
+      }
+
+      selectedIndex = initialPick;
+
+      renderTimeline(startIdx);
+      render14DayForecast();
+      updateBestTonight(startIdx);
+      selectHour(selectedIndex);
+    }
+
+    // ==========================================
+    // UI 描画
+    // ==========================================
+    function updateBestTonight(startIdx) {
+      const next24 = hourlyData.slice(startIdx, startIdx + 20).filter(x => x.isNight);
+      const chip = document.getElementById("bestTonightChip");
+      if (next24.length === 0) {
+        chip.textContent = "今夜ベスト: --";
+        return;
+      }
+      const best = next24.reduce((a, b) => (b.score > a.score ? b : a), next24[0]);
+      chip.textContent = `今夜ベスト: ${best.hourStr} (指数 ${best.score})`;
+    }
+
+    function selectHour(idx) {
+      selectedIndex = idx;
+      const item = hourlyData[idx];
+      if (!item) return;
+
+      const circumference = 2 * Math.PI * 66;
+      const offset = circumference - (item.score / 100) * circumference;
+      document.getElementById("gaugeArc").style.strokeDashoffset = offset.toFixed(1);
+
+      document.getElementById("mainScoreValue").textContent = item.score;
+      document.getElementById("gaugeSubLabel").textContent = item.isNight ? "STAR INDEX" : "DAYTIME";
+
+      const [yyyy, mm, dd] = item.dateStr.split("-").map(Number);
+      document.getElementById("selectedTimeBadge").textContent =
+        `${mm}/${dd} ${item.hourStr} (JST) ${item.isNight ? "• 夜間" : "• 昼間"}`;
+
+      const rank = getRankInfo(item.score, !item.isNight);
+      const rankTitleEl = document.getElementById("rankTitle");
+      rankTitleEl.textContent = rank.title;
+      rankTitleEl.style.color = rank.color;
+      document.getElementById("rankDesc").textContent = rank.desc;
+
+      document.getElementById("metricCloud").textContent = `${item.cloudTotal}%`;
+      document.getElementById("metricRain").textContent = `${item.precip}%`;
+      document.getElementById("metricHumWind").textContent = `${item.humidity}% / ${item.wind.toFixed(1)}m`;
+
+      document.getElementById("moonSvgContainer").innerHTML = renderMoonSvg(item.moon.phase);
+      document.getElementById("moonName").textContent = `月齢 ${item.moon.age.toFixed(1)} • ${item.moon.name}`;
+      const illumPct = Math.round(item.moon.illumination * 100);
+      const impactText = illumPct > 70 ? "強め" : illumPct > 30 ? "中程度" : "弱い (好条件)";
+      document.getElementById("moonDetail").textContent = `輝面率 ${illumPct}% • 月明かり影響: ${impactText}`;
+
+      document.getElementById("barHigh").style.width = `${item.cloudHigh}%`;
+      document.getElementById("valHigh").textContent = `${item.cloudHigh}%`;
+      document.getElementById("barMid").style.width = `${item.cloudMid}%`;
+      document.getElementById("valMid").textContent = `${item.cloudMid}%`;
+      document.getElementById("barLow").style.width = `${item.cloudLow}%`;
+      document.getElementById("valLow").textContent = `${item.cloudLow}%`;
+
+      document.getElementById("sunsetText").textContent = `🌇 日の入り: ${item.sunset}`;
+      document.getElementById("sunriseText").textContent = `🌅 日の出: ${item.sunrise}`;
+
+      document.querySelectorAll(".hour-pill").forEach(el => {
+        el.classList.toggle("active", Number(el.dataset.idx) === idx);
+      });
+
+      document.querySelectorAll(".day-row").forEach(el => {
+        el.classList.toggle("selected", el.dataset.date === item.dateStr);
+      });
+
+      renderConstellations(mm, dd);
+      renderMeteorEvents(yyyy, mm, dd, item);
+      updateSkySimulation(item);
+    }
+
+    function renderTimeline(startIdx) {
+      const strip = document.getElementById("hourlyStrip");
+      strip.innerHTML = "";
+      const sliceEnd = Math.min(hourlyData.length, startIdx + 48);
+
+      for (let i = startIdx; i < sliceEnd; i++) {
+        const item = hourlyData[i];
+        const pill = document.createElement("div");
+        pill.className = `hour-pill ${item.isNight ? "is-night" : "is-day"} ${i === selectedIndex ? "active" : ""}`;
+        pill.dataset.idx = i;
+
+        const barColor = item.score >= 75 ? "#5eead4" : item.score >= 50 ? "#60a5fa" : item.score >= 30 ? "#fbbf24" : "#f87171";
+        const dateLabel = item.hourStr === "00:00"
+          ? `${Number(item.dateStr.slice(5, 7))}/${Number(item.dateStr.slice(8, 10))}`
+          : item.hourStr;
+
+        pill.innerHTML = `
+          <span class="hour-time">${dateLabel}</span>
+          <div class="hour-bar-area">
+            <div class="hour-bar" style="height:${item.score}%; background:${barColor};"></div>
+          </div>
+          <span class="hour-score">${item.score}</span>
+          <span class="hour-cloud">☁${item.cloudTotal}%</span>
+        `;
+        pill.addEventListener("click", () => selectHour(i));
+        strip.appendChild(pill);
+      }
+    }
+
+    function renderConstellations(month, day) {
+      document.getElementById("constellationDateLabel").textContent = `${month}月${day}日の夜`;
+      const list = document.getElementById("constellationList");
+      const items = MONTHLY_CONSTELLATIONS[month] || MONTHLY_CONSTELLATIONS[1];
+
+      list.innerHTML = items.map(c => `
+        <div class="constellation-item">
+          <div class="const-head">
+            <span class="const-name">✨ ${c.name}</span>
+            <span class="dir-badge ${c.special ? "special" : ""}">${c.dir}</span>
+          </div>
+          <p class="const-desc">${c.desc}</p>
+        </div>
+      `).join("");
+    }
+
+    function renderMeteorEvents(year, month, day, selectedItem) {
+      const listEl = document.getElementById("meteorEventList");
+      const illumPct = Math.round(selectedItem.moon.illumination * 100);
+      const moonGood = illumPct <= 35;
+
+      let displayEvents = [];
+      if (activeMeteorTab === "upcoming") {
+        // 選択日から前後含む14日以内に活動期または極大が入るものを抽出
+        displayEvents = METEOR_EVENTS.map(ev => {
+          const inActive = isDateInRange(month, day, ev.start, ev.end);
+          const diffPeak = daysUntilMmDd(year, month, day, ev.peak[0], ev.peak[1]);
+          const upcomingIn14 = (diffPeak >= -2 && diffPeak <= 14);
+          return { ...ev, inActive, diffPeak, upcomingIn14 };
+        }).filter(ev => ev.inActive || ev.upcomingIn14);
+
+        if (displayEvents.length === 0) {
+          listEl.innerHTML = `
+            <div class="event-card">
+              <div class="event-top">
+                <span class="event-title">🌠 大きな流星群の極大予定なし</span>
+                <span class="event-tag">通常期</span>
+              </div>
+              <p class="event-meta">選択日（${month}/${day}）から14日以内に極大を迎える主要流星群はありませんが、宮古島の暗い空では1時間に数個の散在流星が見られます。</p>
+              <p class="event-advice">「年間カレンダー」タブで次の流星群をチェックできます。</p>
+            </div>`;
+          return;
+        }
+      } else {
+        displayEvents = METEOR_EVENTS.map(ev => ({
+          ...ev,
+          inActive: isDateInRange(month, day, ev.start, ev.end),
+          diffPeak: daysUntilMmDd(year, month, day, ev.peak[0], ev.peak[1])
+        }));
+      }
+
+      listEl.innerHTML = displayEvents.map(ev => {
+        const isPeakNear = Math.abs(ev.diffPeak) <= 1;
+        let tagHtml = `<span class="event-tag">${ev.start[0]}/${ev.start[1]}〜${ev.end[0]}/${ev.end[1]}</span>`;
+        if (isPeakNear) {
+          tagHtml = `<span class="event-tag peak">🔥 極大期 (${ev.peak[0]}/${ev.peak[1]})</span>`;
+        } else if (ev.inActive) {
+          tagHtml = `<span class="event-tag">✨ 活動中 (極大 ${ev.peak[0]}/${ev.peak[1]})</span>`;
+        } else if (ev.diffPeak > 0 && ev.diffPeak <= 14) {
+          tagHtml = `<span class="event-tag">あと${ev.diffPeak}日で極大</span>`;
+        }
+
+        const advice = ev.inActive
+          ? (moonGood
+              ? `◎ 月明かり少なく好条件 (輝面率${illumPct}%・指数${selectedItem.score})`
+              : `△ 月明かりあり(輝面率${illumPct}%)：月と逆方向を中心に観察がおすすめ`)
+          : `極大日: ${ev.peak[0]}月${ev.peak[1]}日頃 • ${ev.dir}`;
+
+        return `
+          <div class="event-card ${ev.inActive ? "active-now" : ""}">
+            <div class="event-top">
+              <span class="event-title">☄️ ${ev.name}</span>
+              ${tagHtml}
+            </div>
+            <p class="event-meta">${ev.zhr} • 放射点: ${ev.dir}</p>
+            <p class="event-meta">${ev.note}</p>
+            <p class="event-advice">${advice}</p>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function render14DayForecast() {
+      const list = document.getElementById("weeklyList");
+      list.innerHTML = "";
+      dailySummaries = [];
+      const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+
+      dailyData.forEach((d, idx) => {
+        // その日の「夜」（20時〜翌04時相当のその日の夕方以降＋早朝）を取得
+        const nightHours = hourlyData.filter(h => h.dateStr === d.date && h.isNight);
+        if (nightHours.length === 0) return;
+
+        // 夜（19:00〜23:00優先、なければ夜間全体）のピーク時刻を探す
+        const eveningHours = nightHours.filter(h => Number(h.hourStr.slice(0, 2)) >= 19);
+        const targetPool = eveningHours.length > 0 ? eveningHours : nightHours;
+        const bestHour = targetPool.reduce((a, b) => (b.score > a.score ? b : a), targetPool[0]);
+
+        const peak = bestHour.score;
+        const avgCloud = Math.round(nightHours.reduce((s, h) => s + h.cloudTotal, 0) / nightHours.length);
+        const moonPct = Math.round(bestHour.moon.illumination * 100);
+
+        const [y, m, day] = d.date.split("-").map(Number);
+        const wd = weekdays[new Date(Date.UTC(y, m - 1, day)).getUTCDay()];
+        const dayLabel = idx === 0 ? `今日 (${m}/${day})` : `${m}/${day} (${wd})`;
+
+        const barColor = peak >= 80 ? "linear-gradient(90deg,#60a5fa,#5eead4)" :
+                         peak >= 55 ? "linear-gradient(90deg,#3b82f6,#60a5fa)" :
+                         peak >= 35 ? "#fbbf24" : "#f87171";
+        const badgeText = peak >= 80 ? "最高" : peak >= 60 ? "良好" : peak >= 40 ? "雲間" : "厳しい";
+
+        const row = document.createElement("div");
+        row.className = "day-row";
+        row.dataset.date = d.date;
+        row.innerHTML = `
+          <div>
+            <div class="day-name">${dayLabel}</div>
+            <div class="day-sub">雲${avgCloud}% • 月${moonPct}%</div>
+          </div>
+          <div class="day-meter-bg">
+            <div class="day-meter-fill" style="width:${peak}%; background:${barColor};"></div>
+          </div>
+          <div class="day-score-num">${peak}</div>
+          <div class="day-badge">${badgeText}</div>
+        `;
+
+        row.addEventListener("click", () => {
+          selectHour(bestHour.idx);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+
+        list.appendChild(row);
+        dailySummaries.push({ date: d.date, bestIdx: bestHour.idx });
+      });
+    }
+
+    // ==========================================
+    // おすすめスポットガイド
+    // ==========================================
+    function initSpots() {
+      const tabs = document.getElementById("spotTabs");
+      tabs.innerHTML = "";
+      SPOTS.forEach((spot, i) => {
+        const btn = document.createElement("button");
+        btn.className = `spot-tab ${i === 0 ? "active" : ""}`;
+        btn.textContent = spot.name;
+        btn.addEventListener("click", () => showSpot(i));
+        tabs.appendChild(btn);
+      });
+      showSpot(0);
+    }
+
+    function showSpot(index) {
+      document.querySelectorAll(".spot-tab").forEach((el, i) => {
+        el.classList.toggle("active", i === index);
+      });
+      const s = SPOTS[index];
+      document.getElementById("spotDetail").innerHTML = `
+        <div class="spot-header">
+          <h3>${s.name}</h3>
+          <span class="darkness-tag">${s.darkness}</span>
+        </div>
+        <p class="spot-desc">${s.desc}</p>
+        <div class="spot-meta">
+          <div>
+            <span>おすすめの方角</span>
+            ${s.bestDir}
+          </div>
+          <div>
+            <span>アクセス・設備</span>
+            ${s.access}
+          </div>
+        </div>
+      `;
+    }
+
+    // ==========================================
+    // 背景Canvas 星空シミュレーション
+    // ==========================================
+    const canvas = document.getElementById("skyCanvas");
+    const ctx = canvas.getContext("2d");
+    let stars = [];
+    let clouds = [];
+    let shootingStar = null;
+
+    const simState = {
+      cloudCoverage: 0.2,
+      moonIllum: 0.2,
+      isNight: true,
+      starVisibility: 0.9
+    };
+
+    function updateSkySimulation(item) {
+      simState.cloudCoverage = item.cloudTotal / 100;
+      simState.moonIllum = item.moon.illumination;
+      simState.isNight = item.isNight;
+      simState.starVisibility = item.isNight
+        ? Math.max(0.15, 1 - simState.moonIllum * 0.45)
+        : 0.05;
+    }
+
+    function initCanvasObjects() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const starCount = Math.min(300, Math.floor((canvas.width * canvas.height) / 4400));
+      stars = Array.from({ length: starCount }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height * 0.88,
+        r: Math.random() < 0.12 ? Math.random() * 1.5 + 1.1 : Math.random() * 1.1 + 0.3,
+        alpha: Math.random() * 0.7 + 0.3,
+        twinkleSpeed: Math.random() * 0.025 + 0.008,
+        phase: Math.random() * Math.PI * 2,
+        tint: Math.random() < 0.2 ? "#bae6fd" : Math.random() < 0.15 ? "#fde68a" : "#ffffff"
+      }));
+
+      clouds = Array.from({ length: 12 }, (_, i) => ({
+        x: Math.random() * canvas.width,
+        y: (i / 12) * canvas.height * 0.7 + Math.random() * 40,
+        rx: 130 + Math.random() * 200,
+        ry: 38 + Math.random() * 52,
+        speed: 0.12 + Math.random() * 0.2
+      }));
+    }
+
+    function animateSky() {
+      const w = canvas.width, h = canvas.height;
+      const grad = ctx.createLinearGradient(0, 0, 0, h);
+      if (!simState.isNight) {
+        grad.addColorStop(0, "#0f294a");
+        grad.addColorStop(0.6, "#1e3a5f");
+        grad.addColorStop(1, "#0a1628");
+      } else {
+        const moonBoost = simState.moonIllum * 16;
+        grad.addColorStop(0, `rgb(${4 + moonBoost * 0.4}, ${8 + moonBoost * 0.6}, ${22 + moonBoost})`);
+        grad.addColorStop(0.65, `rgb(${10 + moonBoost * 0.5}, ${20 + moonBoost * 0.7}, ${46 + moonBoost})`);
+        grad.addColorStop(1, "#050b18");
+      }
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, w, h);
+
+      if (simState.isNight) {
+        const mwAlpha = Math.max(0.02, (1 - simState.cloudCoverage * 0.85) * (1 - simState.moonIllum * 0.6) * 0.16);
+        ctx.save();
+        ctx.translate(w * 0.5, h * 0.35);
+        ctx.rotate(-0.45);
+        const mwGrad = ctx.createRadialGradient(0, 0, 20, 0, 0, Math.max(w, h) * 0.55);
+        mwGrad.addColorStop(0, `rgba(125, 211, 252, ${mwAlpha})`);
+        mwGrad.addColorStop(0.5, `rgba(167, 139, 250, ${mwAlpha * 0.5})`);
+        mwGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.scale(1.8, 0.42);
+        ctx.fillStyle = mwGrad;
+        ctx.beginPath();
+        ctx.arc(0, 0, Math.max(w, h) * 0.55, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      const cloudFade = 1 - simState.cloudCoverage * 0.82;
+      stars.forEach(s => {
+        s.phase += s.twinkleSpeed;
+        const a = s.alpha * (0.65 + 0.35 * Math.sin(s.phase)) * simState.starVisibility * cloudFade;
+        if (a <= 0.02) return;
+        ctx.globalAlpha = a;
+        ctx.fillStyle = s.tint;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+
+      if (simState.isNight && simState.cloudCoverage < 0.45 && !shootingStar && Math.random() < 0.005) {
+        shootingStar = {
+          x: Math.random() * w * 0.7 + w * 0.15,
+          y: Math.random() * h * 0.3,
+          vx: 8 + Math.random() * 5,
+          vy: 3 + Math.random() * 3,
+          life: 1.0
+        };
+      }
+      if (shootingStar) {
+        ctx.strokeStyle = `rgba(224, 242, 254, ${shootingStar.life})`;
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(shootingStar.x, shootingStar.y);
+        ctx.lineTo(shootingStar.x - shootingStar.vx * 5, shootingStar.y - shootingStar.vy * 5);
+        ctx.stroke();
+        shootingStar.x += shootingStar.vx;
+        shootingStar.y += shootingStar.vy;
+        shootingStar.life -= 0.035;
+        if (shootingStar.life <= 0) shootingStar = null;
+      }
+
+      if (simState.cloudCoverage > 0.03) {
+        clouds.forEach(c => {
+          c.x += c.speed;
+          if (c.x - c.rx > w) c.x = -c.rx;
+          const cAlpha = simState.cloudCoverage * (simState.isNight ? 0.22 : 0.32);
+          const cg = ctx.createRadialGradient(c.x, c.y, c.ry * 0.2, c.x, c.y, c.rx);
+          cg.addColorStop(0, `rgba(148, 163, 184, ${cAlpha})`);
+          cg.addColorStop(1, "rgba(148, 163, 184, 0)");
+          ctx.fillStyle = cg;
+          ctx.beginPath();
+          ctx.ellipse(c.x, c.y, c.rx, c.ry, 0, 0, Math.PI * 2);
+          ctx.fill();
+        });
+      }
+
+      requestAnimationFrame(animateSky);
+    }
+
+    // ==========================================
+    // イベント設定・初期化
+    // ==========================================
+    window.addEventListener("resize", initCanvasObjects);
+
+    document.getElementById("refreshBtn").addEventListener("click", fetchWeather);
+
+    document.getElementById("demoToggleBtn").addEventListener("click", (e) => {
+      isDemoMode = !isDemoMode;
+      e.target.textContent = isDemoMode ? "ライブ気象に戻す" : "デモ晴天を試す";
+      fetchWeather();
+    });
+
+    document.querySelectorAll(".mini-tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".mini-tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        activeMeteorTab = tab.dataset.mtab;
+        const item = hourlyData[selectedIndex];
+        if (item) {
+          const [y, m, d] = item.dateStr.split("-").map(Number);
+          renderMeteorEvents(y, m, d, item);
+        }
+      });
+    });
+
+    initCanvasObjects();
+    animateSky();
+    initSpots();
+    fetchWeather();
+  </script>
+</body>
+</html>
