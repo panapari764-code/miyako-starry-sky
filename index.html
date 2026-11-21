@@ -186,7 +186,7 @@
       gap: 8px;
     }
 
-    /* ヒーローグリッド（1番目: 星空・撮影指数 / 2番目: 風向・詳細気象・潮位） */
+    /* ヒーローグリッド */
     .hero-grid {
       display: grid;
       grid-template-columns: 1.3fr 1fr;
@@ -215,6 +215,36 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
       padding: 6px 10px;
+    }
+
+    .date-select-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .date-select {
+      width: 100%;
+      max-width: 260px;
+      background: rgba(15, 23, 42, 0.92);
+      color: #f8fafc;
+      border: 1px solid rgba(96, 165, 250, 0.38);
+      border-radius: 9px;
+      padding: 6px 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      outline: none;
+      text-align: center;
+      text-align-last: center;
+      transition: all 0.16s ease;
+    }
+
+    .date-select:hover, .date-select:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(94, 234, 212, 0.25);
     }
 
     /* 時間帯コントロールバー */
@@ -288,6 +318,7 @@
       display: grid;
       place-items: center;
       transition: all 0.16s ease;
+      flex-shrink: 0;
     }
 
     .nav-arrow-btn:hover:not(:disabled) {
@@ -298,17 +329,6 @@
     .nav-arrow-btn:disabled {
       opacity: 0.3;
       cursor: not-allowed;
-    }
-
-    .date-nav-center {
-      text-align: center;
-      flex: 1;
-    }
-
-    .date-nav-main {
-      font-size: 0.94rem;
-      font-weight: 700;
-      color: var(--text-main);
     }
 
     .swipe-content {
@@ -501,7 +521,7 @@
       margin-top: 2px;
     }
 
-    /* 時間別タイムライン（5段階マーク表示） */
+    /* 時間別タイムライン */
     .embedded-timeline {
       margin-top: 16px;
       padding-top: 14px;
@@ -1412,7 +1432,7 @@
       <div class="brand">
         <div class="brand-icon">🌌</div>
         <div>
-          <h1>宮古島撮影ガイド</h1>          
+          <h1>宮古島撮影ガイド</h1>
         </div>
       </div>
 
@@ -1438,10 +1458,11 @@
             </div>
           </div>
 
+          <!-- 日付切替バー（日付プルダウン追加） -->
           <div class="date-nav-bar">
             <button class="nav-arrow-btn" id="prevDayBtn" aria-label="前日">◀</button>
-            <div class="date-nav-center">
-              <div class="date-nav-main" id="dateNavLabel">--月--日</div>
+            <div class="date-select-wrap">
+              <select class="date-select" id="dateSelect" aria-label="日付選択"></select>
             </div>
             <button class="nav-arrow-btn" id="nextDayBtn" aria-label="翌日">▶</button>
           </div>
@@ -2474,6 +2495,7 @@
 
       build14DaySummaries();
       initHourSelectOptions();
+      initDateSelectOptions();
 
       const nowIdx = hourlyData.findIndex(item => item.time >= now.isoHour);
       const startIdx = nowIdx >= 0 ? nowIdx : 0;
@@ -2496,6 +2518,17 @@
         opt.textContent = `${tag} ${String(h).padStart(2, '0')}:00`;
         sel.appendChild(opt);
       }
+    }
+
+    function initDateSelectOptions() {
+      const sel = document.getElementById("dateSelect");
+      sel.innerHTML = "";
+      dailySummaries.forEach((s, idx) => {
+        const opt = document.createElement("option");
+        opt.value = String(idx);
+        opt.textContent = `📅 ${s.dayLabel}`;
+        sel.appendChild(opt);
+      });
     }
 
     function build14DaySummaries() {
@@ -2543,7 +2576,7 @@
     }
 
     // ==========================================
-    // 日付スワイプ & 時間帯選択
+    // 日付スワイプ・プルダウン & 時間帯選択
     // ==========================================
     function selectDay(dayIdx, specificHourIdx = null, swipeDir = 0) {
       if (dayIdx < 0 || dayIdx >= dailySummaries.length) return;
@@ -2589,7 +2622,10 @@
     function updateDayHeaderUI(dayIdx) {
       const summary = dailySummaries[dayIdx];
       if (!summary) return;
-      document.getElementById("dateNavLabel").textContent = `${summary.dayLabel} (${dayIdx + 1}/${dailySummaries.length}日目)`;
+      const dateSelect = document.getElementById("dateSelect");
+      if (dateSelect && dateSelect.value !== String(dayIdx)) {
+        dateSelect.value = String(dayIdx);
+      }
       document.getElementById("prevDayBtn").disabled = dayIdx === 0;
       document.getElementById("nextDayBtn").disabled = dayIdx === dailySummaries.length - 1;
       document.getElementById("bestDayChip").textContent = `☀ 昼ベスト ${summary.bestDayStr} (${summary.dayPeak})`;
@@ -3210,6 +3246,13 @@
 
       document.getElementById("nextDayBtn").addEventListener("click", () => {
         if (selectedDayIdx < dailySummaries.length - 1) selectDay(selectedDayIdx + 1, null, 1);
+      });
+
+      document.getElementById("dateSelect").addEventListener("change", (e) => {
+        const targetDayIdx = Number(e.target.value);
+        if (targetDayIdx !== selectedDayIdx) {
+          selectDay(targetDayIdx, null, targetDayIdx > selectedDayIdx ? 1 : -1);
+        }
       });
 
       document.getElementById("prevHourBtn").addEventListener("click", () => {
