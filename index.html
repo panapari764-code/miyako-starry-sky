@@ -219,14 +219,11 @@
 
     /* 時間帯コントロールバー */
     .time-control-bar {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
       margin-bottom: 14px;
       background: rgba(96, 165, 250, 0.07);
       border: 1px solid rgba(96, 165, 250, 0.22);
       border-radius: 12px;
-      padding: 8px 10px;
+      padding: 7px 10px;
     }
 
     .time-control-top {
@@ -238,7 +235,7 @@
 
     .time-step-btn {
       cursor: pointer;
-      padding: 5px 10px;
+      padding: 5px 11px;
       min-height: 32px;
       border-radius: 9px;
       border: 1px solid rgba(148, 179, 255, 0.24);
@@ -277,56 +274,6 @@
       font-weight: 700;
       cursor: pointer;
       outline: none;
-    }
-
-    .time-slider-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .time-slider-label {
-      font-size: 0.67rem;
-      color: var(--text-muted);
-      white-space: nowrap;
-    }
-
-    .time-slider {
-      -webkit-appearance: none;
-      appearance: none;
-      flex: 1;
-      height: 6px;
-      border-radius: 999px;
-      background: linear-gradient(90deg,
-        rgba(30, 58, 138, 0.8) 0%,
-        rgba(30, 58, 138, 0.8) 25%,
-        rgba(251, 191, 36, 0.5) 50%,
-        rgba(251, 191, 36, 0.5) 75%,
-        rgba(30, 58, 138, 0.85) 100%);
-      outline: none;
-      cursor: pointer;
-    }
-
-    .time-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--accent-cyan);
-      border: 2px solid #040814;
-      box-shadow: 0 0 10px rgba(94, 234, 212, 0.65);
-      cursor: pointer;
-    }
-
-    .time-slider::-moz-range-thumb {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--accent-cyan);
-      border: 2px solid #040814;
-      box-shadow: 0 0 10px rgba(94, 234, 212, 0.65);
-      cursor: pointer;
     }
 
     .nav-arrow-btn {
@@ -554,10 +501,10 @@
       margin-top: 2px;
     }
 
-    /* タイムライン */
+    /* 時間別タイムライン（5段階マーク表示） */
     .embedded-timeline {
-      margin-top: 14px;
-      padding-top: 13px;
+      margin-top: 16px;
+      padding-top: 14px;
       border-top: 1px solid rgba(148, 179, 255, 0.14);
     }
 
@@ -567,7 +514,7 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 6px;
-      margin-bottom: 8px;
+      margin-bottom: 9px;
       font-size: 0.77rem;
       color: var(--text-sub);
       font-weight: 600;
@@ -592,21 +539,21 @@
 
     .hourly-strip {
       display: flex;
-      gap: 7px;
+      gap: 8px;
       min-width: max-content;
       padding-top: 2px;
     }
 
     .hour-pill {
-      width: 62px;
-      padding: 8px 5px;
+      width: 84px;
+      padding: 9px 6px;
       border-radius: 13px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 5px;
       cursor: pointer;
       transition: all 0.16s ease;
     }
@@ -628,32 +575,31 @@
     }
 
     .hour-time {
-      font-size: 0.69rem;
-      color: var(--text-sub);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-main);
     }
 
-    .hour-bar-area {
-      width: 14px;
-      height: 40px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
+    .hour-stars {
       display: flex;
-      align-items: flex-end;
-      overflow: hidden;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      font-size: 0.74rem;
+      line-height: 1.1;
+      white-space: nowrap;
     }
 
-    .hour-bar {
-      width: 100%;
+    .hour-rank-label {
+      font-size: 0.67rem;
+      color: var(--text-sub);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 1px 7px;
       border-radius: 999px;
-    }
-
-    .hour-score {
-      font-size: 0.84rem;
-      font-weight: 700;
     }
 
     .hour-cloud {
-      font-size: 0.64rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
     }
 
@@ -1466,7 +1412,7 @@
       <div class="brand">
         <div class="brand-icon">🌌</div>
         <div>
-          <h1>宮古島撮影ガイド</h1>
+          <h1>宮古島撮影ガイド</h1>          
         </div>
       </div>
 
@@ -1500,6 +1446,7 @@
             <button class="nav-arrow-btn" id="nextDayBtn" aria-label="翌日">▶</button>
           </div>
 
+          <!-- 時間変更バー（1h前・時刻プルダウン・1h後） -->
           <div class="time-control-bar">
             <div class="time-control-top">
               <button class="time-step-btn" id="prevHourBtn" aria-label="1時間前">◀ 1h前</button>
@@ -1508,11 +1455,6 @@
                 <select class="time-select" id="hourSelect" aria-label="時間帯選択"></select>
               </div>
               <button class="time-step-btn" id="nextHourBtn" aria-label="1時間後">1h後 ▶</button>
-            </div>
-            <div class="time-slider-row">
-              <span class="time-slider-label">00時</span>
-              <input type="range" class="time-slider" id="hourSlider" min="0" max="23" value="21" aria-label="時間帯スライダー" />
-              <span class="time-slider-label">23時</span>
             </div>
           </div>
         </div>
@@ -1567,8 +1509,8 @@
 
         <div class="embedded-timeline">
           <div class="embedded-timeline-head">
-            <span id="timelineTitle">⏰ 時間別予報（昼:屋外指数 / 夜:星空指数）</span>
-            <span style="font-size:0.69rem; color:var(--text-muted);">青枠=夜間 / 水色枠=日中</span>
+            <span id="timelineTitle">⏰ 時間別予報（昼:☀️5段階 / 夜:⭐5段階）</span>
+            <span style="font-size:0.69rem; color:var(--text-muted);">青枠=夜間 / 水色枠=日中（タップで切替）</span>
           </div>
           <div class="chart-wrap" id="timelineScrollWrap">
             <div class="hourly-strip" id="hourlyStrip"></div>
@@ -2336,7 +2278,7 @@
           70: ["うりずんの爽やかな星空日和", "寒すぎず暑すぎず虫も少ない最高の観測気候です。春の大曲線から南天の星々まで心地よい夜風のもとでじっくり楽しめます。"],
           50: ["春霞・雲の切れ間が狙い目", "季節の変わり目で雲が出やすい時間帯ですが、風で空が開ける瞬間があります。南が開けたインギャーや前浜ビーチで粘るのもおすすめです。"],
           30: ["春の曇天・ぼんやり星空", "湿った空気で雲が多めです。明るい一等星（アークトゥルスやスピカ）や月が見え隠れする空模様になりそうです。"],
-          0:  ["春の雨模様・観測困難", "厚い雲や雨が予想されます。うりずんの天気は変わりやすいため、時間スライダーで晴れる時間帯を探してみてください。"]
+          0:  ["春の雨模様・観測困難", "厚い雲や雨が予想されます。うりずんの天気は変わりやすいため、下の時間別予報で晴れる時間帯を探してみてください。"]
         },
         earlySummer: {
           85: ["初夏・南十字星と天の川の競演！", "梅雨の晴れ間やカーチベー後の澄んだ空！宵は南十字星、深夜にかけて濃厚な夏の天の川が昇る宮古島ならではの豪華な夜空です。"],
@@ -2374,7 +2316,7 @@
           70: ["うりずんの心地よい屋外撮影日和", "柔らかな南風と明るい青空が広がります。前浜ビーチや17ENDなど、真っ白な砂浜とエメラルドの海の撮影にぴったりです。"],
           50: ["春雲の移ろい・ビーチ日和", "薄い雲や白い積雲が浮かぶ春らしい空。海の近くは風が心地よく、雲が抜けるタイミングを待てば鮮やかな海色が撮れます。"],
           30: ["春曇り・ソフトライト撮影", "柔らかな雲が天然のディフューザーとなり、逆光を気にせず人物撮影やウェディング・ファミリーフォトが撮りやすい光環境です。"],
-          0:  ["春の雨天・屋内シフト推奨", "低気圧や湿った空気で雨がちです。天気の回復が早い季節なので、タイムラインで次の晴れ間を確認しましょう。"]
+          0:  ["春の雨天・屋内シフト推奨", "低気圧や湿った空気で雨がちです。天気の回復が早い季節なので、時間別予報で次の晴れ間を確認しましょう。"]
         },
         earlySummer: {
           85: ["夏至南風・鮮烈な初夏の宮古ブルー！", "梅雨を吹き飛ばす太陽とクリアな海！日差しが一気に強まり、遠浅の珊瑚礁とコバルトブルーのコントラストが眩しい絶好の撮影日和です。"],
@@ -2601,7 +2543,7 @@
     }
 
     // ==========================================
-    // 日付スワイプ & 時間帯変更
+    // 日付スワイプ & 時間帯選択
     // ==========================================
     function selectDay(dayIdx, specificHourIdx = null, swipeDir = 0) {
       if (dayIdx < 0 || dayIdx >= dailySummaries.length) return;
@@ -2696,7 +2638,6 @@
       }
 
       document.getElementById("hourSelect").value = String(item.hourNum);
-      document.getElementById("hourSlider").value = String(item.hourNum);
       document.getElementById("prevHourBtn").disabled = idx <= 0;
       document.getElementById("nextHourBtn").disabled = idx >= hourlyData.length - 1;
 
@@ -2780,22 +2721,22 @@
       document.getElementById("magicDateBadge").textContent = `${mm}月${dd}日`;
       document.getElementById("magicRows").innerHTML = `
         <div class="magic-box blue">
-          <div class="magic-label">🌅 朝ブルーアワー</div>
+          <div class="magic-label">🌅 朝:ブルーアワー</div>
           <div class="magic-time">${sunMagic.mornBlue}</div>
           <div class="magic-note">日の出前の深い蒼の時間</div>
         </div>
         <div class="magic-box golden">
-          <div class="magic-label">✨ 朝ゴールデンアワー</div>
+          <div class="magic-label">✨ 朝:ゴールデンアワー</div>
           <div class="magic-time">${sunMagic.mornGold}</div>
           <div class="magic-note">日の出後の黄金色の光</div>
         </div>
         <div class="magic-box golden">
-          <div class="magic-label">🌇 夕ゴールデンアワー</div>
+          <div class="magic-label">🌇 夕:ゴールデンアワー</div>
           <div class="magic-time">${sunMagic.eveGold}</div>
           <div class="magic-note">サンセットの柔らかい光</div>
         </div>
         <div class="magic-box blue">
-          <div class="magic-label">🌌 夕ブルーアワー</div>
+          <div class="magic-label">🌌 夕:ブルーアワー</div>
           <div class="magic-time">${sunMagic.eveBlue}</div>
           <div class="magic-note">日没後・一番星との共演</div>
         </div>
@@ -3044,34 +2985,40 @@
       `;
     }
 
+    function buildEmojiStars(count, emojiChar) {
+      let html = "";
+      for (let st = 1; st <= 5; st++) {
+        html += `<span class="${st <= count ? "emoji-on" : "emoji-off"}">${emojiChar}</span>`;
+      }
+      return html;
+    }
+
     function renderTimeline(startIdx, dayLabelText) {
       currentTimelineStart = Math.max(0, startIdx);
-      document.getElementById("timelineTitle").textContent = `⏰ ${dayLabelText}〜 時間別予報（昼:屋外 / 夜:星空）`;
+      document.getElementById("timelineTitle").textContent = `⏰ ${dayLabelText}〜 時間別予報（昼:☀️5段階 / 夜:⭐5段階）`;
       const strip = document.getElementById("hourlyStrip");
       strip.innerHTML = "";
       const sliceEnd = Math.min(hourlyData.length, currentTimelineStart + 48);
 
       for (let i = currentTimelineStart; i < sliceEnd; i++) {
         const item = hourlyData[i];
+        const rating = getRating5(item.score, item.isNight);
+        const emojiChar = item.isNight ? "⭐" : "☀️";
+
         const pill = document.createElement("div");
         pill.className = `hour-pill ${item.isNight ? "is-night" : "is-day"} ${i === selectedIndex ? "active" : ""}`;
         pill.dataset.idx = i;
-
-        const barColor = item.isNight
-          ? (item.score >= 75 ? "#5eead4" : item.score >= 50 ? "#60a5fa" : item.score >= 30 ? "#fbbf24" : "#f87171")
-          : (item.score >= 75 ? "#38bdf8" : item.score >= 50 ? "#fde047" : "#fb923c");
+        pill.title = `${item.hourStr} 指数: ${item.score}/100 (${rating.label})`;
 
         const dateLabel = item.hourStr === "00:00"
-          ? `${Number(item.dateStr.slice(5, 7))}/${Number(item.dateStr.slice(8, 10))}`
+          ? `${Number(item.dateStr.slice(5, 7))}/${Number(item.dateStr.slice(8, 10))} 0時`
           : item.hourStr;
 
         pill.innerHTML = `
           <span class="hour-time">${dateLabel}</span>
-          <div class="hour-bar-area">
-            <div class="hour-bar" style="height:${item.score}%; background:${barColor};"></div>
-          </div>
-          <span class="hour-score">${item.score}</span>
-          <span class="hour-cloud">${item.isNight ? "🌌" : "☀️"}${item.cloudTotal}%</span>
+          <div class="hour-stars" aria-label="5段階中 ${rating.count}">${buildEmojiStars(rating.count, emojiChar)}</div>
+          <span class="hour-rank-label">${rating.label}</span>
+          <span class="hour-cloud">${item.isNight ? "🌌" : "☀️"}雲${item.cloudTotal}%</span>
         `;
         pill.addEventListener("click", () => selectHour(i));
         strip.appendChild(pill);
@@ -3155,14 +3102,6 @@
       }).join("");
     }
 
-    function buildEmojiStars(count, emojiChar) {
-      let html = "";
-      for (let st = 1; st <= 5; st++) {
-        html += `<span class="${st <= count ? "emoji-on" : "emoji-off"}">${emojiChar}</span>`;
-      }
-      return html;
-    }
-
     function render14DayForecast() {
       const list = document.getElementById("weeklyList");
       list.innerHTML = "";
@@ -3213,7 +3152,7 @@
     }
 
     // ==========================================
-    // スワイプ＆時間コントロール操作
+    // スワイプ＆時間・日付コントロール操作
     // ==========================================
     function initHeroControls() {
       const card = document.getElementById("heroSwipeCard");
@@ -3282,10 +3221,6 @@
       });
 
       document.getElementById("hourSelect").addEventListener("change", (e) => {
-        selectHourByDayAndHour(selectedDayIdx, Number(e.target.value));
-      });
-
-      document.getElementById("hourSlider").addEventListener("input", (e) => {
         selectHourByDayAndHour(selectedDayIdx, Number(e.target.value));
       });
 
