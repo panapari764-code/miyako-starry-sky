@@ -186,10 +186,10 @@
       gap: 8px;
     }
 
-    /* ヒーローグリッド */
+    /* ヒーローグリッド（1番目: 星空・撮影指数 / 2番目: 風向・詳細気象・潮位） */
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.38fr 1fr;
+      grid-template-columns: 1.3fr 1fr;
       gap: 16px;
       margin-bottom: 16px;
     }
@@ -663,11 +663,143 @@
       color: var(--text-muted);
     }
 
-    /* 右パネル：太陽・月・雲層 */
+    /* 風向コンパス・詳細気象・潮位（2番目パネル） */
+    .wind-panel-stack {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .wind-weather-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .compass-box {
+      width: 90px;
+      height: 90px;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .wind-stats {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .wind-main {
+      font-size: 1.08rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+
+    .wind-sub {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+    }
+
+    .wind-shelter-tip {
+      font-size: 0.73rem;
+      color: var(--accent-cyan);
+      background: rgba(94, 234, 212, 0.08);
+      border: 1px solid rgba(94, 234, 212, 0.22);
+      border-radius: 9px;
+      padding: 6px 9px;
+    }
+
+    .weather-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+    }
+
+    .wd-item {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 10px;
+      padding: 7px 8px;
+      text-align: center;
+    }
+
+    .wd-item .k {
+      font-size: 0.66rem;
+      color: var(--text-muted);
+    }
+
+    .wd-item .v {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* 潮汐ボックス */
+    .tide-box {
+      background: rgba(14, 165, 233, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: 13px;
+      padding: 11px 12px;
+    }
+
+    .tide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 7px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .tide-name-badge {
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #bae6fd;
+      font-weight: 700;
+      font-size: 0.71rem;
+    }
+
+    .tide-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      font-size: 0.73rem;
+      margin-bottom: 7px;
+    }
+
+    .tide-col {
+      background: rgba(0, 0, 0, 0.22);
+      border-radius: 9px;
+      padding: 6px 9px;
+    }
+
+    .tide-col .label {
+      font-size: 0.67rem;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .tide-chart-svg {
+      width: 100%;
+      height: 54px;
+      display: block;
+    }
+
+    /* 2段目：太陽・月・出没・雲層 & マジックアワー */
+    .magic-weather-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
     .astro-stack {
       display: flex;
       flex-direction: column;
-      gap: 13px;
+      gap: 12px;
       justify-content: space-between;
     }
 
@@ -761,8 +893,8 @@
     .cloud-layers {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      padding: 11px 12px;
+      gap: 7px;
+      padding: 10px 12px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.07);
       border-radius: 12px;
@@ -773,7 +905,7 @@
       grid-template-columns: 84px 1fr 36px;
       align-items: center;
       gap: 8px;
-      font-size: 0.76rem;
+      font-size: 0.75rem;
     }
 
     .layer-bar-bg {
@@ -787,14 +919,6 @@
       height: 100%;
       border-radius: 999px;
       transition: width 0.5s ease;
-    }
-
-    /* マジックアワー & 詳細気象・潮汐 2カラム */
-    .magic-weather-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.1fr;
-      gap: 16px;
-      margin-bottom: 16px;
     }
 
     .magic-rows {
@@ -869,126 +993,6 @@
       justify-content: space-between;
       font-size: 0.67rem;
       color: var(--text-muted);
-    }
-
-    /* 風向コンパス・詳細気象・潮汐 */
-    .wind-weather-wrap {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 12px;
-    }
-
-    .compass-box {
-      width: 92px;
-      height: 92px;
-      flex-shrink: 0;
-      position: relative;
-    }
-
-    .wind-stats {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .wind-main {
-      font-size: 1.12rem;
-      font-weight: 700;
-      margin-bottom: 3px;
-    }
-
-    .wind-sub {
-      font-size: 0.77rem;
-      color: var(--text-sub);
-      margin-bottom: 6px;
-    }
-
-    .wind-shelter-tip {
-      font-size: 0.74rem;
-      color: var(--accent-cyan);
-      background: rgba(94, 234, 212, 0.08);
-      border: 1px solid rgba(94, 234, 212, 0.22);
-      border-radius: 9px;
-      padding: 6px 9px;
-    }
-
-    .weather-detail-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 7px;
-      margin-bottom: 12px;
-    }
-
-    .wd-item {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 10px;
-      padding: 7px 6px;
-      text-align: center;
-    }
-
-    .wd-item .k {
-      font-size: 0.66rem;
-      color: var(--text-muted);
-    }
-
-    .wd-item .v {
-      font-size: 0.84rem;
-      font-weight: 700;
-      margin-top: 2px;
-    }
-
-    /* 潮汐ボックス */
-    .tide-box {
-      background: rgba(14, 165, 233, 0.08);
-      border: 1px solid rgba(56, 189, 248, 0.22);
-      border-radius: 13px;
-      padding: 11px 12px;
-    }
-
-    .tide-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 7px;
-      font-size: 0.78rem;
-      font-weight: 600;
-    }
-
-    .tide-name-badge {
-      padding: 2px 9px;
-      border-radius: 999px;
-      background: rgba(56, 189, 248, 0.2);
-      border: 1px solid rgba(56, 189, 248, 0.4);
-      color: #bae6fd;
-      font-weight: 700;
-      font-size: 0.71rem;
-    }
-
-    .tide-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 7px;
-      font-size: 0.73rem;
-      margin-bottom: 7px;
-    }
-
-    .tide-col {
-      background: rgba(0, 0, 0, 0.22);
-      border-radius: 9px;
-      padding: 6px 9px;
-    }
-
-    .tide-col .label {
-      font-size: 0.67rem;
-      color: var(--text-muted);
-      margin-bottom: 2px;
-    }
-
-    .tide-chart-svg {
-      width: 100%;
-      height: 52px;
-      display: block;
     }
 
     /* 撮影アシストパネル */
@@ -1179,7 +1183,7 @@
       color: var(--accent-cyan);
     }
 
-    /* 下段 14日間撮影予報（昼・夜同時表示、棒グラフなし） & スポット */
+    /* 下段 14日間撮影予報 & スポット */
     .lower-grid {
       display: grid;
       grid-template-columns: 1.15fr 1fr;
@@ -1431,9 +1435,6 @@
       .rise-set-quad {
         grid-template-columns: repeat(2, 1fr);
       }
-      .weather-detail-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
       .wind-weather-wrap {
         flex-direction: column;
         text-align: center;
@@ -1485,9 +1486,9 @@
       </div>
     </header>
 
-    <!-- メインビュー -->
+    <!-- メインビュー：1番目 星空・撮影指数 / 2番目 風向・詳細気象・潮位 -->
     <div class="hero-grid">
-      <!-- 星空・撮影指数タブ（時間別予報を内包） -->
+      <!-- 1番目：星空・撮影指数タブ（時間別予報を内包） -->
       <section class="glass-card swipe-card" id="heroSwipeCard">
         <div>
           <div class="section-title">
@@ -1498,7 +1499,6 @@
             </div>
           </div>
 
-          <!-- 日付切替バー -->
           <div class="date-nav-bar">
             <button class="nav-arrow-btn" id="prevDayBtn" aria-label="前日">◀</button>
             <div class="date-nav-center">
@@ -1508,7 +1508,6 @@
             <button class="nav-arrow-btn" id="nextDayBtn" aria-label="翌日">▶</button>
           </div>
 
-          <!-- 時間帯切替コントロール -->
           <div class="time-control-bar">
             <div class="time-control-top">
               <button class="time-step-btn" id="prevHourBtn" aria-label="1時間前">◀ 1h前</button>
@@ -1574,7 +1573,6 @@
           </div>
         </div>
 
-        <!-- 時間別予報 -->
         <div class="embedded-timeline">
           <div class="embedded-timeline-head">
             <span id="timelineTitle">⏰ 時間別予報（昼:屋外指数 / 夜:星空指数）</span>
@@ -1588,7 +1586,48 @@
         <div class="swipe-dots" id="swipeDots"></div>
       </section>
 
-      <!-- 右パネル：太陽・月・出没・雲層 -->
+      <!-- 2番目：風向・詳細気象・潮位タブ -->
+      <section class="glass-card wind-panel-stack">
+        <div>
+          <div class="section-title">
+            <span>🧭 WIND, WEATHER & TIDE / 風向・詳細気象・潮位</span>
+            <span id="weatherTimeBadge" style="font-size:0.73rem; color:var(--accent-cyan);">--:--</span>
+          </div>
+
+          <div class="wind-weather-wrap">
+            <div class="compass-box" id="windCompassSvg"></div>
+            <div class="wind-stats">
+              <div class="wind-main" id="windMainText">--風 -- m/s</div>
+              <div class="wind-sub" id="windSubText">最大瞬間風速: -- m/s • 風向: --°</div>
+              <div class="wind-shelter-tip" id="windShelterTip">風向に応じた撮影・観測ポイントアドバイスを計算中...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="weather-detail-grid" id="weatherDetailGrid"></div>
+
+        <div class="tide-box">
+          <div class="tide-header">
+            <span>🌊 潮位・満干潮（宮古島・平良推算）</span>
+            <span class="tide-name-badge" id="tideNameBadge">--潮</span>
+          </div>
+          <div class="tide-grid">
+            <div class="tide-col">
+              <div class="label">満潮 (潮位)</div>
+              <div id="highTideList">--:--</div>
+            </div>
+            <div class="tide-col">
+              <div class="label">干潮 (潮位)</div>
+              <div id="lowTideList">--:--</div>
+            </div>
+          </div>
+          <svg class="tide-chart-svg" id="tideChartSvg" viewBox="0 0 300 54" preserveAspectRatio="none"></svg>
+        </div>
+      </section>
+    </div>
+
+    <!-- 2段目：太陽・月・出没・雲層 & マジックアワー -->
+    <div class="magic-weather-grid">
       <section class="glass-card astro-stack">
         <div class="section-title" style="margin-bottom:0;">
           <span>SUN, MOON & CLOUDS / 太陽・月・雲層</span>
@@ -1661,16 +1700,15 @@
           </div>
         </div>
       </section>
-    </div>
 
-    <!-- マジックアワー & 風向・風速・詳細気象・潮位 -->
-    <div class="magic-weather-grid">
-      <section class="glass-card">
-        <div class="section-title">
-          <span>🌅 MAGIC HOURS / ゴールデン・ブルーアワー</span>
-          <span id="magicDateBadge" style="font-size:0.73rem; color:var(--accent-gold);">--月--日</span>
+      <section class="glass-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <div class="section-title">
+            <span>🌅 MAGIC HOURS / ゴールデン・ブルーアワー</span>
+            <span id="magicDateBadge" style="font-size:0.73rem; color:var(--accent-gold);">--月--日</span>
+          </div>
+          <div class="magic-rows" id="magicRows"></div>
         </div>
-        <div class="magic-rows" id="magicRows"></div>
         <div class="magic-bar-legend">
           <div class="magic-gradient-bar"></div>
           <div class="magic-bar-labels">
@@ -1681,40 +1719,6 @@
             <span>夕ブルー</span>
             <span>完全暗夜</span>
           </div>
-        </div>
-      </section>
-
-      <section class="glass-card">
-        <div class="section-title">
-          <span>🧭 WIND, WEATHER & TIDE / 風向・詳細気象・潮位</span>
-          <span id="weatherTimeBadge" style="font-size:0.73rem; color:var(--accent-cyan);">--:--</span>
-        </div>
-        <div class="wind-weather-wrap">
-          <div class="compass-box" id="windCompassSvg"></div>
-          <div class="wind-stats">
-            <div class="wind-main" id="windMainText">--風 -- m/s</div>
-            <div class="wind-sub" id="windSubText">最大瞬間風速: -- m/s • 風向: --°</div>
-            <div class="wind-shelter-tip" id="windShelterTip">風向に応じた撮影・観測ポイントアドバイスを計算中...</div>
-          </div>
-        </div>
-        <div class="weather-detail-grid" id="weatherDetailGrid"></div>
-
-        <div class="tide-box">
-          <div class="tide-header">
-            <span>🌊 潮位・満干潮（宮古島・平良推算）</span>
-            <span class="tide-name-badge" id="tideNameBadge">--潮</span>
-          </div>
-          <div class="tide-grid">
-            <div class="tide-col">
-              <div class="label">満潮 (潮位)</div>
-              <div id="highTideList">--:--</div>
-            </div>
-            <div class="tide-col">
-              <div class="label">干潮 (潮位)</div>
-              <div id="lowTideList">--:--</div>
-            </div>
-          </div>
-          <svg class="tide-chart-svg" id="tideChartSvg" viewBox="0 0 300 52" preserveAspectRatio="none"></svg>
         </div>
       </section>
     </div>
@@ -1750,7 +1754,7 @@
       </section>
     </div>
 
-    <!-- 14日間撮影予報（昼・夜同時表示、横棒グラフなし） & スポットガイド -->
+    <!-- 14日間撮影予報 & スポットガイド -->
     <div class="lower-grid">
       <section class="glass-card">
         <div class="section-title">
@@ -2819,7 +2823,7 @@
       const arrowRot = (wd.deg + 180) % 360;
 
       document.getElementById("windCompassSvg").innerHTML = `
-        <svg viewBox="0 0 100 100" width="92" height="92">
+        <svg viewBox="0 0 100 100" width="90" height="90">
           <circle cx="50" cy="50" r="44" fill="rgba(255,255,255,0.03)" stroke="rgba(148,179,255,0.28)" stroke-width="1.5" />
           <circle cx="50" cy="50" r="30" fill="none" stroke="rgba(148,179,255,0.12)" stroke-dasharray="2 3" />
           <text x="50" y="13" text-anchor="middle" fill="#5eead4" font-size="9" font-weight="700">N</text>
@@ -2876,7 +2880,7 @@
       const minCm = 0, maxCm = 230;
       const pts = tides.samples.map(s => {
         const x = (s.min / 1440) * 300;
-        const y = 47 - ((Math.max(minCm, Math.min(maxCm, s.cm)) - minCm) / (maxCm - minCm)) * 41;
+        const y = 49 - ((Math.max(minCm, Math.min(maxCm, s.cm)) - minCm) / (maxCm - minCm)) * 43;
         return `${x.toFixed(1)},${y.toFixed(1)}`;
       }).join(" ");
 
@@ -2886,20 +2890,20 @@
       const markers = [
         ...tides.highs.map(h => {
           const x = (h.min / 1440) * 300;
-          const y = 47 - ((Math.max(minCm, Math.min(maxCm, h.cm)) - minCm) / (maxCm - minCm)) * 41;
+          const y = 49 - ((Math.max(minCm, Math.min(maxCm, h.cm)) - minCm) / (maxCm - minCm)) * 43;
           return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.8" fill="#5eead4" />`;
         }),
         ...tides.lows.map(l => {
           const x = (l.min / 1440) * 300;
-          const y = 47 - ((Math.max(minCm, Math.min(maxCm, l.cm)) - minCm) / (maxCm - minCm)) * 41;
+          const y = 49 - ((Math.max(minCm, Math.min(maxCm, l.cm)) - minCm) / (maxCm - minCm)) * 43;
           return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.8" fill="#fbbf24" />`;
         })
       ].join("");
 
       svg.innerHTML = `
-        <line x1="0" y1="26" x2="300" y2="26" stroke="rgba(255,255,255,0.08)" stroke-dasharray="3 3" />
+        <line x1="0" y1="27" x2="300" y2="27" stroke="rgba(255,255,255,0.08)" stroke-dasharray="3 3" />
         <polyline fill="none" stroke="#38bdf8" stroke-width="2" points="${pts}" />
-        <line x1="${curX.toFixed(1)}" y1="2" x2="${curX.toFixed(1)}" y2="50" stroke="rgba(255,255,255,0.5)" stroke-width="1.3" stroke-dasharray="2 2" />
+        <line x1="${curX.toFixed(1)}" y1="2" x2="${curX.toFixed(1)}" y2="52" stroke="rgba(255,255,255,0.5)" stroke-width="1.3" stroke-dasharray="2 2" />
         ${markers}
       `;
     }
