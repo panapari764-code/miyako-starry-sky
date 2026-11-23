@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-title" content="宮古島撮影ガイド" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#040814" />
-  <title>宮古島撮影ガイド | 星空・青空指数 14日間予報</title>
+  <title>宮古島撮影ガイド | 星空・青空指数 1か月予報</title>
   <style>
     :root {
       --bg-deep: #040814;
@@ -227,13 +227,13 @@
 
     .date-select {
       width: 100%;
-      max-width: 260px;
+      max-width: 280px;
       background: rgba(15, 23, 42, 0.92);
       color: #f8fafc;
       border: 1px solid rgba(96, 165, 250, 0.38);
       border-radius: 9px;
       padding: 6px 10px;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 700;
       cursor: pointer;
       outline: none;
@@ -335,26 +335,30 @@
       transition: transform 0.22s ease-out, opacity 0.22s ease-out;
     }
 
-    .swipe-dots {
+    /* 30日間プログレスインジケーター */
+    .month-progress-wrap {
       display: flex;
-      justify-content: center;
-      gap: 5px;
+      align-items: center;
+      gap: 10px;
       margin-top: 12px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
     }
 
-    .swipe-dot {
-      width: 6px;
-      height: 6px;
+    .month-progress-bg {
+      flex: 1;
+      height: 5px;
       border-radius: 999px;
-      background: rgba(148, 179, 255, 0.25);
-      cursor: pointer;
-      transition: all 0.2s ease;
+      background: rgba(148, 179, 255, 0.15);
+      overflow: hidden;
+      position: relative;
     }
 
-    .swipe-dot.active {
-      width: 18px;
-      background: var(--accent-cyan);
-      box-shadow: 0 0 8px rgba(94, 234, 212, 0.5);
+    .month-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #5eead4, #60a5fa, #c084fc);
+      transition: width 0.25s ease;
     }
 
     .score-panel {
@@ -455,6 +459,18 @@
       border-radius: 999px;
     }
 
+    .climate-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.7rem;
+      color: #e9d5ff;
+      background: rgba(192, 132, 252, 0.15);
+      border: 1px solid rgba(192, 132, 252, 0.35);
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+
     .best-chips-row {
       display: flex;
       gap: 6px;
@@ -521,6 +537,80 @@
       margin-top: 2px;
     }
 
+    /* ファーストビュー 海ポチャ一望バー */
+    .quick-umipocha-wrap {
+      margin-top: 14px;
+      padding: 10px 11px;
+      border-radius: 13px;
+      background: rgba(14, 165, 233, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.24);
+    }
+
+    .quick-umipocha-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #bae6fd;
+      margin-bottom: 8px;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .quick-umipocha-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+    }
+
+    .qu-item {
+      background: rgba(4, 12, 30, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 10px;
+      padding: 7px 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .qu-item:hover {
+      border-color: var(--accent-cyan);
+      background: rgba(94, 234, 212, 0.12);
+    }
+
+    .qu-top {
+      font-size: 0.67rem;
+      color: var(--text-sub);
+      white-space: nowrap;
+    }
+
+    .qu-prob {
+      font-size: 1.08rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin: 2px 0;
+    }
+
+    .qu-bar-bg {
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      margin-bottom: 3px;
+    }
+
+    .qu-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.45s ease;
+    }
+
+    .qu-judge {
+      font-size: 0.64rem;
+      font-weight: 700;
+    }
+
     /* 0.5段階 絵文字スタイル */
     .emoji-on {
       display: inline-block;
@@ -549,8 +639,8 @@
 
     /* 時間別タイムライン */
     .embedded-timeline {
-      margin-top: 16px;
-      padding-top: 14px;
+      margin-top: 14px;
+      padding-top: 13px;
       border-top: 1px solid rgba(148, 179, 255, 0.14);
     }
 
@@ -775,10 +865,10 @@
       display: block;
     }
 
-    /* 2段目：太陽・月・出没・雲層 & マジックアワー */
+    /* 2段目：太陽・月・出没（海ポチャ率強化）・雲層 & マジックアワー */
     .magic-weather-grid {
       display: grid;
-      grid-template-columns: 1.05fr 1fr;
+      grid-template-columns: 1.1fr 1fr;
       gap: 16px;
       margin-bottom: 16px;
     }
@@ -793,19 +883,26 @@
     .rise-set-quad {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 7px;
+      gap: 8px;
     }
 
     .rs-box {
       background: rgba(255, 255, 255, 0.045);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 11px;
-      padding: 8px 5px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 12px;
+      padding: 9px 7px;
       text-align: center;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 3px;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .rs-box:hover {
+      transform: translateY(-1px);
+      border-color: rgba(94, 234, 212, 0.45);
     }
 
     .rs-box.sun {
@@ -819,14 +916,36 @@
     }
 
     .rs-label {
-      font-size: 0.66rem;
+      font-size: 0.68rem;
       color: var(--text-sub);
     }
 
     .rs-time {
-      font-size: 0.96rem;
+      font-size: 0.92rem;
       font-weight: 700;
       color: #f8fafc;
+    }
+
+    .umi-big-prob {
+      font-size: 1.32rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-top: 2px;
+    }
+
+    .umi-meter-bg {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      margin: 2px 0;
+    }
+
+    .umi-meter-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.45s ease;
     }
 
     .umi-prob-badge {
@@ -835,7 +954,6 @@
       padding: 2px 7px;
       border-radius: 999px;
       white-space: nowrap;
-      margin-top: 1px;
     }
 
     .umi-prob-high {
@@ -1205,10 +1323,10 @@
       color: var(--accent-cyan);
     }
 
-    /* 下段 14日間撮影予報 & スポット */
+    /* 下段 1か月撮影予報 & スポット */
     .lower-grid {
       display: grid;
-      grid-template-columns: 1.15fr 1fr;
+      grid-template-columns: 1.18fr 1fr;
       gap: 16px;
     }
 
@@ -1216,6 +1334,29 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      max-height: 540px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .weekly-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .weekly-list::-webkit-scrollbar-thumb {
+      background: rgba(148, 179, 255, 0.24);
+      border-radius: 999px;
+    }
+
+    .forecast-divider {
+      font-size: 0.71rem;
+      font-weight: 700;
+      color: var(--accent-purple);
+      background: rgba(192, 132, 252, 0.12);
+      border: 1px solid rgba(192, 132, 252, 0.28);
+      border-radius: 10px;
+      padding: 6px 10px;
+      margin-top: 4px;
     }
 
     .day-row {
@@ -1230,9 +1371,16 @@
       transition: all 0.16s ease;
     }
 
+    .day-row.is-climate-ref {
+      background: rgba(192, 132, 252, 0.04);
+      border-style: dashed;
+      border-color: rgba(192, 132, 252, 0.2);
+    }
+
     .day-row:hover, .day-row.selected {
-      background: rgba(96, 165, 250, 0.13);
-      border-color: rgba(96, 165, 250, 0.42);
+      background: rgba(96, 165, 250, 0.14);
+      border-style: solid;
+      border-color: rgba(96, 165, 250, 0.45);
     }
 
     .day-date-col {
@@ -1245,7 +1393,7 @@
     }
 
     .day-sub {
-      font-size: 0.67rem;
+      font-size: 0.66rem;
       color: var(--text-muted);
     }
 
@@ -1446,6 +1594,9 @@
       .rank-title {
         font-size: 1.15rem;
       }
+      .quick-umipocha-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
       .rise-set-quad {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -1484,8 +1635,35 @@
   <div class="app-container">
     <header>
       <div class="brand">
-        <div class="brand-icon">🌌</div>
-        <div>
+        <div class="brand-icon" style="padding:0; overflow:hidden;">
+  <svg viewBox="0 0 44 44" width="44" height="44" aria-hidden="true">
+    <defs>
+      <linearGradient id="miyakoSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#0f172a"/>
+        <stop offset="55%" stop-color="#1d4ed8"/>
+        <stop offset="100%" stop-color="#fb923c"/>
+      </linearGradient>
+      <linearGradient id="miyakoSea" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#38bdf8"/>
+        <stop offset="100%" stop-color="#0d9488"/>
+      </linearGradient>
+    </defs>
+    <!-- 空 -->
+    <rect width="44" height="29" fill="url(#miyakoSky)"/>
+    <!-- 星 -->
+    <circle cx="11" cy="9" r="1.3" fill="#fde68a"/>
+    <circle cx="31" cy="8" r="1.1" fill="#ffffff"/>
+    <circle cx="35" cy="15" r="0.9" fill="#bae6fd"/>
+    <circle cx="16" cy="16" r="0.8" fill="#ffffff" opacity="0.85"/>
+    <!-- 水平線に沈む太陽/月（海ポチャ） -->
+    <circle cx="22" cy="27" r="7" fill="#fbbf24"/>
+    <!-- 宮古ブルーの海 -->
+    <rect y="27" width="44" height="17" fill="url(#miyakoSea)"/>
+    <!-- 海面の反射光 -->
+    <rect x="16" y="30" width="12" height="1.8" rx="0.9" fill="#fef08a" opacity="0.85"/>
+    <rect x="18" y="34" width="8" height="1.5" rx="0.75" fill="#fef08a" opacity="0.55"/>
+  </svg>
+</div>
           <h1>宮古島撮影ガイド</h1>
         </div>
       </div>
@@ -1512,7 +1690,7 @@
             </div>
           </div>
 
-          <!-- 日付切替バー（日付プルダウン追加） -->
+          <!-- 日付切替バー（30日間プルダウン） -->
           <div class="date-nav-bar">
             <button class="nav-arrow-btn" id="prevDayBtn" aria-label="前日">◀</button>
             <div class="date-select-wrap">
@@ -1560,6 +1738,7 @@
               <div class="badge-row">
                 <span class="selected-time-badge" id="selectedTimeBadge">--/-- --:--</span>
                 <span class="weather-code-badge" id="weatherCodeBadge">☀ --</span>
+                <span class="climate-badge" id="sourceTypeBadge">📡 ライブ予報</span>
               </div>
               <h2 class="rank-title" id="rankTitle">データ取得中...</h2>
               <p class="rank-desc" id="rankDesc">宮古島の雲量・天気・視程・月齢から0.5段階指数を計算しています。</p>
@@ -1580,6 +1759,15 @@
               </div>
             </div>
           </div>
+
+          <!-- ファーストビュー：一目でわかる海ポチャ確率サマリー -->
+          <div class="quick-umipocha-wrap">
+            <div class="quick-umipocha-head">
+              <span>🌊 この日の海ポチャ確率（水平線で見える可能性）</span>
+              <span style="font-size:0.66rem; color:var(--text-muted); font-weight:400;">タップでその時間帯へ移動</span>
+            </div>
+            <div class="quick-umipocha-grid" id="quickUmipochaGrid"></div>
+          </div>
         </div>
 
         <div class="embedded-timeline">
@@ -1592,7 +1780,13 @@
           </div>
         </div>
 
-        <div class="swipe-dots" id="swipeDots"></div>
+        <div class="month-progress-wrap">
+          <span id="monthDayCounter">1 / 30日目</span>
+          <div class="month-progress-bg">
+            <div class="month-progress-fill" id="monthProgressFill" style="width:3%;"></div>
+          </div>
+          <span>1か月予報</span>
+        </div>
       </section>
 
       <!-- 2番目：風向・詳細気象・潮位タブ -->
@@ -1635,35 +1829,14 @@
       </section>
     </div>
 
-    <!-- 2段目：太陽・月・出没（海ポチャ確率）・雲層 & マジックアワー -->
+    <!-- 2段目：太陽・月・出没（海ポチャ確率詳細）・雲層 & マジックアワー -->
     <div class="magic-weather-grid">
       <section class="glass-card astro-stack">
         <div class="section-title" style="margin-bottom:0;">
-          <span>SUN, MOON & CLOUDS / 出没・海ポチャ率・月齢・雲層</span>
+          <span>SUN, MOON & CLOUDS / 出没・海ポチャ確率・月齢・雲層</span>
         </div>
 
-        <div class="rise-set-quad">
-          <div class="rs-box sun">
-            <span class="rs-label">🌅 日の出</span>
-            <span class="rs-time" id="sunriseText">--:--</span>
-            <span class="umi-prob-badge umi-prob-none" id="sunriseProb">海ポチャ --%</span>
-          </div>
-          <div class="rs-box sun">
-            <span class="rs-label">🌇 日の入り</span>
-            <span class="rs-time" id="sunsetText">--:--</span>
-            <span class="umi-prob-badge umi-prob-none" id="sunsetProb">海ポチャ --%</span>
-          </div>
-          <div class="rs-box moon">
-            <span class="rs-label">🌔 月の出</span>
-            <span class="rs-time" id="moonriseText">--:--</span>
-            <span class="umi-prob-badge umi-prob-none" id="moonriseProb">海ポチャ --%</span>
-          </div>
-          <div class="rs-box moon">
-            <span class="rs-label">🌘 月の入り</span>
-            <span class="rs-time" id="moonsetText">--:--</span>
-            <span class="umi-prob-badge umi-prob-none" id="moonsetProb">海ポチャ --%</span>
-          </div>
-        </div>
+        <div class="rise-set-quad" id="detailUmipochaQuad"></div>
 
         <div class="sun-pos-box">
           <div>
@@ -1760,18 +1933,18 @@
           <span>METEOR SHOWERS & EVENTS / 流星群・天体情報</span>
         </div>
         <div class="meteor-tabs">
-          <button class="mini-tab active" data-mtab="upcoming">選択日〜14日以内</button>
+          <button class="mini-tab active" data-mtab="upcoming">選択日〜30日以内</button>
           <button class="mini-tab" data-mtab="all">年間カレンダー</button>
         </div>
         <div class="event-list" id="meteorEventList"></div>
       </section>
     </div>
 
-    <!-- 14日間撮影予報 & スポットガイド -->
+    <!-- 1か月撮影予報（30日間） & スポットガイド -->
     <div class="lower-grid">
       <section class="glass-card">
         <div class="section-title">
-          <span>14-DAY PHOTO FORECAST / 14日間撮影予報（0.5段階）</span>
+          <span>1-MONTH PHOTO FORECAST / 1か月撮影予報（30日間）</span>
           <span style="font-size:0.71rem; color:var(--text-muted);">☀️青空・🌌星空をタップで切替</span>
         </div>
         <div class="weekly-list" id="weeklyList"></div>
@@ -1787,20 +1960,36 @@
     </div>
 
     <p class="formula-note">
-      ※ 宮古島撮影ガイドの気象データ（雲量・天気コード・風向/風速/突風・気温/露点・気圧・視程・UV・日射量）はOpen-Meteoの14日間予報を使用しています。星空指数・青空指数（0.5段階）および海ポチャ確率（水平線付近の低/中/高層雲・視程・降水確率から算出）は独自の撮影向け指標です。
+      ※ 1〜16日目はOpen-Meteoの最新気象予報（📡ライブ）、17〜30日目は天文計算（月齢・出没・潮汐・太陽位置・星座・流星群）と宮古島の月別気候平年値を組み合わせた参考予報（🔭天文+気候参考）として表示しています。海ポチャ確率は水平線付近の低/中/高層雲・視程・降水確率から算出した視認可能性の目安です。
     </p>
   </div>
 
   <script>
     // ==========================================
-    // 定数・宮古島設定・天文データベース
+    // 定数・宮古島設定・天文データベース・月別気候平年値
     // ==========================================
     const MIYAKO_LAT = 24.8055;
     const MIYAKO_LON = 125.2811;
+    const FORECAST_TOTAL_DAYS = 30;
     const RAD = Math.PI / 180;
     const DEG = 180 / Math.PI;
     const SYNODIC_MONTH = 29.53058867;
     const KNOWN_NEW_MOON_UTC = Date.UTC(2000, 0, 6, 18, 14, 0);
+
+    const MIYAKO_CLIMATE_MONTHLY = {
+      1:  { tempAvg: 18.3, hum: 72, cloud: 64, precip: 25, wind: 5.5, windDir: 35, visKm: 18 },
+      2:  { tempAvg: 18.7, hum: 74, cloud: 62, precip: 25, wind: 5.3, windDir: 40, visKm: 18 },
+      3:  { tempAvg: 20.5, hum: 76, cloud: 58, precip: 25, wind: 5.0, windDir: 55, visKm: 18 },
+      4:  { tempAvg: 22.9, hum: 78, cloud: 54, precip: 22, wind: 4.6, windDir: 95, visKm: 19 },
+      5:  { tempAvg: 25.4, hum: 81, cloud: 60, precip: 30, wind: 4.3, windDir: 135, visKm: 18 },
+      6:  { tempAvg: 27.8, hum: 83, cloud: 54, precip: 25, wind: 4.5, windDir: 175, visKm: 20 },
+      7:  { tempAvg: 29.2, hum: 80, cloud: 38, precip: 15, wind: 4.6, windDir: 155, visKm: 23 },
+      8:  { tempAvg: 28.8, hum: 80, cloud: 40, precip: 18, wind: 4.8, windDir: 135, visKm: 22 },
+      9:  { tempAvg: 27.6, hum: 78, cloud: 44, precip: 20, wind: 5.0, windDir: 75, visKm: 22 },
+      10: { tempAvg: 25.5, hum: 75, cloud: 46, precip: 18, wind: 5.4, windDir: 45, visKm: 22 },
+      11: { tempAvg: 22.8, hum: 73, cloud: 55, precip: 20, wind: 5.6, windDir: 40, visKm: 20 },
+      12: { tempAvg: 19.8, hum: 71, cloud: 63, precip: 24, wind: 5.7, windDir: 35, visKm: 19 }
+    };
 
     const MONTHLY_CONSTELLATIONS = {
       1: [
@@ -1970,7 +2159,7 @@
     const dayAstroCache = {};
 
     // ==========================================
-    // 天文計算（太陽位置・月・出没・マジックアワー・潮汐）
+    // 天文計算（太陽位置・出没・月・マジックアワー・潮汐）
     // ==========================================
     function toDaysJ2000(utcMs) {
       return utcMs / 86400000 - 10957.5;
@@ -2037,6 +2226,28 @@
     function formatJstHm(utcMs) {
       const j = new Date(utcMs + 9 * 3600000);
       return `${String(j.getUTCHours()).padStart(2, '0')}:${String(j.getUTCMinutes()).padStart(2, '0')}`;
+    }
+
+    function calcSunRiseSet(dateStr) {
+      const [y, m, d] = dateStr.split("-").map(Number);
+      const startMs = Date.UTC(y, m - 1, d, -9, 0, 0);
+      const endMs = startMs + 24 * 3600000;
+      const h0 = -0.833;
+      let rise = null, set = null;
+      let prev = getSunAltDeg(startMs) - h0;
+
+      for (let t = startMs + 120000; t <= endMs; t += 120000) {
+        const curr = getSunAltDeg(t) - h0;
+        if (prev <= 0 && curr > 0 && !rise) {
+          const frac = -prev / (curr - prev);
+          rise = formatJstHm(t - 120000 + frac * 120000);
+        } else if (prev >= 0 && curr < 0 && !set) {
+          const frac = prev / (prev - curr);
+          set = formatJstHm(t - 120000 + frac * 120000);
+        }
+        prev = curr;
+      }
+      return { sunrise: `${dateStr}T${rise || "06:00"}`, sunset: `${dateStr}T${set || "18:45"}` };
     }
 
     function calcSunMagicAndDark(dateStr) {
@@ -2162,7 +2373,7 @@
     }
 
     // ==========================================
-    // 海ポチャ確率計算（水平線上の日の出/入・月の出/入の視認確率）
+    // 海ポチャ確率計算 & 視覚表示（トップ & 詳細カード）
     // ==========================================
     function calcHorizonProbAtTime(dateStr, hhmm) {
       if (!hhmm || hhmm === "なし" || hhmm === "--:--") return null;
@@ -2188,7 +2399,6 @@
       const precip = lerp(a.precip, b.precip);
       const visKm = lerp(a.visKm, b.visKm);
 
-      // 水平線（低空）を隠しやすい低層雲・中層雲を重く評価
       const horizonBlock = cLow * 0.60 + cMid * 0.26 + cHigh * 0.08;
       const effectiveBlock = Math.max(horizonBlock, cTotal * 0.68);
       let prob = 100 - effectiveBlock * 0.92;
@@ -2199,25 +2409,87 @@
       return Math.max(0, Math.min(99, Math.round(prob)));
     }
 
-    function applyUmiProbBadge(elId, prob) {
-      const el = document.getElementById(elId);
-      if (!el) return;
-      el.classList.remove("umi-prob-high", "umi-prob-mid", "umi-prob-low", "umi-prob-none");
+    function getUmiJudgeInfo(prob) {
       if (prob === null) {
-        el.textContent = "海ポチャ --";
-        el.classList.add("umi-prob-none");
-        return;
+        return { text: "本日なし", color: "#64748b", barColor: "#334155", cls: "umi-prob-none" };
       }
-      el.textContent = `🌊 海ポチャ ${prob}%`;
-      if (prob >= 70) el.classList.add("umi-prob-high");
-      else if (prob >= 40) el.classList.add("umi-prob-mid");
-      else el.classList.add("umi-prob-low");
+      if (prob >= 75) return { text: "◎ 期待大", color: "#5eead4", barColor: "linear-gradient(90deg,#38bdf8,#5eead4)", cls: "umi-prob-high" };
+      if (prob >= 55) return { text: "○ チャンス", color: "#38bdf8", barColor: "#38bdf8", cls: "umi-prob-high" };
+      if (prob >= 35) return { text: "△ 雲次第", color: "#fbbf24", barColor: "#fbbf24", cls: "umi-prob-mid" };
+      return { text: "× 厳しい", color: "#f87171", barColor: "#f87171", cls: "umi-prob-low" };
+    }
+
+    function jumpToApproxTime(dateStr, hhmm) {
+      if (!hhmm || hhmm === "なし" || hhmm === "--:--") return;
+      const [hh, mm] = hhmm.split(":").map(Number);
+      const targetHour = Math.min(23, Math.max(0, Math.round(hh + (mm || 0) / 60)));
+      const targetIdx = hourlyData.findIndex(h => h.dateStr === dateStr && h.hourNum === targetHour);
+      if (targetIdx >= 0) {
+        selectHour(targetIdx);
+      }
+    }
+
+    function renderUmipochaSections(dateStr, sunriseTime, sunsetTime, astro) {
+      const events = [
+        { key: "sunrise",  icon: "🌅", label: "日の出",   time: sunriseTime,       type: "sun" },
+        { key: "sunset",   icon: "🌇", label: "日の入り", time: sunsetTime,        type: "sun" },
+        { key: "moonrise", icon: "🌔", label: "月の出",   time: astro.moonRS.rise, type: "moon" },
+        { key: "moonset",  icon: "🌘", label: "月の入り", time: astro.moonRS.set,  type: "moon" }
+      ];
+
+      // 1. ファーストビュー用サマリーバー
+      const quickGrid = document.getElementById("quickUmipochaGrid");
+      quickGrid.innerHTML = events.map(ev => {
+        const prob = calcHorizonProbAtTime(dateStr, ev.time);
+        const judge = getUmiJudgeInfo(prob);
+        const probDisplay = prob === null ? "--" : `${prob}%`;
+        const fillWidth = prob === null ? 0 : prob;
+
+        return `
+          <div class="qu-item" data-jumptime="${ev.time}" title="${ev.label} (${ev.time}) の空模様へジャンプ">
+            <div class="qu-top">${ev.icon} ${ev.label} ${ev.time}</div>
+            <div class="qu-prob" style="color:${judge.color};">${probDisplay}</div>
+            <div class="qu-bar-bg">
+              <div class="qu-bar-fill" style="width:${fillWidth}%; background:${judge.barColor};"></div>
+            </div>
+            <div class="qu-judge" style="color:${judge.color};">${judge.text}</div>
+          </div>
+        `;
+      }).join("");
+
+      // 2. 2段目詳細カード用 4連ボックス
+      const detailQuad = document.getElementById("detailUmipochaQuad");
+      detailQuad.innerHTML = events.map(ev => {
+        const prob = calcHorizonProbAtTime(dateStr, ev.time);
+        const judge = getUmiJudgeInfo(prob);
+        const probDisplay = prob === null ? "--%" : `${prob}%`;
+        const fillWidth = prob === null ? 0 : prob;
+
+        return `
+          <div class="rs-box ${ev.type}" data-jumptime="${ev.time}" title="${ev.label} (${ev.time}) の時刻へ移動">
+            <span class="rs-label">${ev.icon} ${ev.label}</span>
+            <span class="rs-time">${ev.time}</span>
+            <span class="umi-big-prob" style="color:${judge.color};">${probDisplay}</span>
+            <div class="umi-meter-bg">
+              <div class="umi-meter-fill" style="width:${fillWidth}%; background:${judge.barColor};"></div>
+            </div>
+            <span class="umi-prob-badge ${judge.cls}">${judge.text}</span>
+          </div>
+        `;
+      }).join("");
+
+      document.querySelectorAll("[data-jumptime]").forEach(el => {
+        el.addEventListener("click", () => {
+          jumpToApproxTime(dateStr, el.dataset.jumptime);
+        });
+      });
     }
 
     // ==========================================
     // 天気コード・風向・気象ユーティリティ
     // ==========================================
-    function getWeatherCodeInfo(code, isNight) {
+    function getWeatherCodeInfo(code, isNight, isClimateRef = false) {
+      if (isClimateRef) return { icon: isNight ? "🔭" : "🌤️", text: "気候平年傾向" };
       if (code === 0) return { icon: isNight ? "✨" : "☀️", text: "快晴" };
       if (code === 1) return { icon: isNight ? "🌙" : "🌤️", text: "おおむね晴れ" };
       if (code === 2) return { icon: "⛅", text: "一部曇り" };
@@ -2358,21 +2630,19 @@
     }
 
     function calcBlueSkyRaw({ cloudLow, cloudMid, cloudHigh, cloudTotal, precipProb, humidity, visKm, weatherCode }) {
-      // 青空指数：低/中層雲は青空を遮り、薄い高層雲は透過する。視程・降水・霧も反映
       const weightedCloud = cloudLow * 0.62 + cloudMid * 0.28 + cloudHigh * 0.10;
       const effectiveCloud = Math.max(weightedCloud, cloudTotal * 0.78);
       let score = 100 - effectiveCloud * 0.96;
 
       if (precipProb > 15) score -= (precipProb - 15) * 0.45;
-      if (weatherCode >= 51) score -= 22; // 降水
-      else if (weatherCode === 45 || weatherCode === 48) score -= 18; // 霧
+      if (weatherCode >= 51) score -= 22;
+      else if (weatherCode === 45 || weatherCode === 48) score -= 18;
       if (visKm < 15) score -= (15 - visKm) * 1.4;
       if (humidity > 85) score -= (humidity - 85) * 0.4;
 
       return Math.max(0, Math.min(100, Math.round(score)));
     }
 
-    // 0〜100の内部スコアを 0.0〜5.0 の 0.5刻み指数に変換
     function toHalfStep5(rawScore) {
       const val = Math.round((rawScore / 20) * 2) / 2;
       return Math.max(0, Math.min(5.0, val));
@@ -2439,7 +2709,7 @@
           3.5: ["爽やかな秋夜の星空日和", "湿度が落ち着きレンズも結露しにくい快適な観測日和です。西へ傾く天の川から冬の先駆けの星々まで長く楽しめます。"],
           2.5: ["秋空の雲間・星見チャンス", "北東風に乗り雲が流れますが、風裏のビーチを選べば雲の隙間から秋の四辺形や流星を十分に捉えられます。"],
           1.5: ["秋雨前線・曇りがちの空", "上空の雲が広がりやすい夜です。月や明るい惑星・一等星が時折雲を透かして見える程度になりそうです。"],
-          0.0: ["秋の悪天・観測困難", "厚い雲や強風・雨が予想されます。秋は天気が周期的に変わるため、14日間撮影予報で次の晴れ間をチェックしましょう。"]
+          0.0: ["秋の悪天・観測困難", "厚い雲や強風・雨が予想されます。秋は天気が周期的に変わるため、1か月撮影予報で次の晴れ間をチェックしましょう。"]
         }
       };
 
@@ -2477,7 +2747,7 @@
           3.5: ["爽やかな秋風と青空日和", "湿度が下がりカラッとした青空が広がります。午後から夕暮れにかけての斜光とマジックアワーのグラデーションも美しいです。"],
           2.5: ["秋空の雲間・青空と光の演出", "季節風の雲が流れますが、青空の合間から斜めに太陽が差す秋は、雲の陰影と海のコントラストがドラマチックに映えます。"],
           1.5: ["秋の曇り空・青空少なめ", "涼しく過ごしやすい曇天です。青空撮影には少し物足りませんが、島内ドライブやカフェ巡りのスナップには快適です。"],
-          0.0: ["秋の悪天・厚い雲と雨", "前線や北風の影響で青空が見えない時間帯です。秋は周期的に天気が変わるため、14日間予報で次の快晴日を狙いましょう。"]
+          0.0: ["秋の悪天・厚い雲と雨", "前線や北風の影響で青空が見えない時間帯です。秋は周期的に天気が変わるため、1か月予報で次の快晴日を狙いましょう。"]
         }
       };
 
@@ -2504,18 +2774,18 @@
     }
 
     // ==========================================
-    // データ取得（Open-Meteo 14日間 API）
+    // データ取得（Open-Meteo 最大16日ライブ ＋ 17〜30日天文気候補完）
     // ==========================================
     async function fetchWeather() {
       const statusDot = document.getElementById("statusDot");
       const statusText = document.getElementById("statusText");
 
-      statusText.textContent = "14日間予報取得中...";
+      statusText.textContent = "1か月予報取得中...";
       statusDot.classList.remove("error");
 
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${MIYAKO_LAT}&longitude=${MIYAKO_LON}` +
         `&hourly=cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,precipitation_probability,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,temperature_2m,dew_point_2m,surface_pressure,visibility,uv_index,shortwave_radiation,weather_code` +
-        `&daily=sunrise,sunset&wind_speed_unit=ms&timezone=Asia%2FTokyo&forecast_days=14`;
+        `&daily=sunrise,sunset&wind_speed_unit=ms&timezone=Asia%2FTokyo&forecast_days=16`;
 
       try {
         const res = await fetch(url);
@@ -2523,7 +2793,7 @@
         const json = await res.json();
         processApiData(json);
         const now = getMiyakoNow();
-        statusText.textContent = `Open-Meteo 14日間ライブ (${String(now.hour).padStart(2, '0')}:00)`;
+        statusText.textContent = `16日ライブ + 30日天文 (${String(now.hour).padStart(2, '0')}:00)`;
       } catch (err) {
         console.error("気象データの取得に失敗しました:", err);
         statusDot.classList.add("error");
@@ -2540,7 +2810,7 @@
       dailyData = [];
 
       for (let i = 0; i < d.time.length; i++) {
-        const item = { date: d.time[i], sunrise: d.sunrise[i], sunset: d.sunset[i] };
+        const item = { date: d.time[i], sunrise: d.sunrise[i], sunset: d.sunset[i], isClimateRef: false };
         dailyMap[d.time[i]] = item;
         dailyData.push(item);
       }
@@ -2607,6 +2877,7 @@
           sunPos,
           moon,
           isNight,
+          isClimateRef: false,
           starRaw,
           blueSkyRaw,
           starIndex5,
@@ -2618,7 +2889,97 @@
         };
       });
 
-      build14DaySummaries();
+      const lastDateStr = dailyData[dailyData.length - 1].date;
+      const [ly, lm, ld] = lastDateStr.split("-").map(Number);
+      const liveDaysCount = dailyData.length;
+
+      for (let offset = 1; offset <= FORECAST_TOTAL_DAYS - liveDaysCount; offset++) {
+        const dt = new Date(Date.UTC(ly, lm - 1, ld + offset, 0, 0, 0));
+        const dateStr = `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-${String(dt.getUTCDate()).padStart(2, '0')}`;
+        const month = dt.getUTCMonth() + 1;
+        const clim = MIYAKO_CLIMATE_MONTHLY[month] || MIYAKO_CLIMATE_MONTHLY[4];
+        const sunRS = calcSunRiseSet(dateStr);
+
+        const dayItem = { date: dateStr, sunrise: sunRS.sunrise, sunset: sunRS.sunset, isClimateRef: true };
+        dailyMap[dateStr] = dayItem;
+        dailyData.push(dayItem);
+
+        for (let hr = 0; hr < 24; hr++) {
+          const t = `${dateStr}T${String(hr).padStart(2, '0')}:00`;
+          const utcMs = parseJstIsoToMs(t);
+          const moon = getMoonInfo(utcMs);
+          const sunPos = getSunPosition(utcMs);
+          const isNight = isNightHour(t, dailyMap);
+
+          const diurnalTemp = clim.tempAvg + Math.sin(((hr - 9) / 24) * Math.PI * 2) * 2.4;
+          const hum = Math.min(95, Math.round(clim.hum + (isNight ? 4 : -4)));
+          const cTotal = clim.cloud;
+          const cLow = Math.round(cTotal * 0.45);
+          const cMid = Math.round(cTotal * 0.35);
+          const cHigh = Math.round(cTotal * 0.25);
+          const precip = clim.precip;
+          const wind = clim.wind;
+          const windDir = clim.windDir;
+          const windGust = Math.round(wind * 1.45 * 10) / 10;
+          const dewPoint = Number((diurnalTemp - ((100 - hum) / 5)).toFixed(1));
+          const visKm = clim.visKm;
+          const sunSin = Math.max(0, Math.sin(Math.max(0, sunPos.altDeg) * RAD));
+          const uvIndex = isNight ? 0 : Number((sunSin * 10.5 * (1 - cTotal / 220)).toFixed(1));
+          const radiation = isNight ? 0 : Math.round(sunSin * 920 * (1 - cTotal / 170));
+          const weatherCode = cTotal < 25 ? 0 : cTotal < 55 ? 2 : 3;
+
+          const starRaw = calcStarryRaw({
+            cloudLow: cLow, cloudMid: cMid, cloudHigh: cHigh, cloudTotal: cTotal,
+            precipProb: precip, humidity: hum, moonIllum: moon.illumination
+          });
+
+          const blueSkyRaw = calcBlueSkyRaw({
+            cloudLow: cLow, cloudMid: cMid, cloudHigh: cHigh, cloudTotal: cTotal,
+            precipProb: precip, humidity: hum, visKm, weatherCode
+          });
+
+          const starIndex5 = toHalfStep5(starRaw);
+          const blueSkyIndex5 = toHalfStep5(blueSkyRaw);
+
+          hourlyData.push({
+            idx: hourlyData.length,
+            time: t, utcMs,
+            dateStr,
+            hourStr: `${String(hr).padStart(2, '0')}:00`,
+            hourNum: hr,
+            cloudTotal: cTotal,
+            cloudLow: cLow,
+            cloudMid: cMid,
+            cloudHigh: cHigh,
+            precip,
+            humidity: hum,
+            wind,
+            windDir,
+            windGust,
+            temp: Number(diurnalTemp.toFixed(1)),
+            dewPoint,
+            pressure: 1013,
+            visKm,
+            uvIndex,
+            radiation,
+            weatherCode,
+            sunPos,
+            moon,
+            isNight,
+            isClimateRef: true,
+            starRaw,
+            blueSkyRaw,
+            starIndex5,
+            blueSkyIndex5,
+            score5: isNight ? starIndex5 : blueSkyIndex5,
+            rawScore: isNight ? starRaw : blueSkyRaw,
+            sunset: sunRS.sunset.slice(11, 16),
+            sunrise: sunRS.sunrise.slice(11, 16)
+          });
+        }
+      }
+
+      build30DaySummaries();
       initHourSelectOptions();
       initDateSelectOptions();
 
@@ -2628,8 +2989,7 @@
       selectedIndex = startIdx;
       selectedDayIdx = Math.max(0, dailySummaries.findIndex(s => s.date === hourlyData[startIdx].dateStr));
 
-      renderSwipeDots();
-      render14DayForecast();
+      render1MonthForecast();
       selectDay(selectedDayIdx, startIdx);
     }
 
@@ -2651,12 +3011,13 @@
       dailySummaries.forEach((s, idx) => {
         const opt = document.createElement("option");
         opt.value = String(idx);
-        opt.textContent = `📅 ${s.dayLabel}`;
+        const mark = s.isClimateRef ? "🔭" : "📡";
+        opt.textContent = `${mark} ${s.dayLabel}`;
         sel.appendChild(opt);
       });
     }
 
-    function build14DaySummaries() {
+    function build30DaySummaries() {
       dailySummaries = [];
       const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
       dailyData.forEach((d, idx) => {
@@ -2686,6 +3047,7 @@
           date: d.date,
           dayLabel,
           shortLabel: idx === 0 ? `今日 (${m}/${day})` : `${m}/${day} (${wd})`,
+          isClimateRef: !!d.isClimateRef,
           bestNightIdx: bestNight.idx,
           bestNightStr: bestNight.hourStr,
           nightPeak5: bestNight.starIndex5,
@@ -2755,7 +3117,10 @@
       document.getElementById("nextDayBtn").disabled = dayIdx === dailySummaries.length - 1;
       document.getElementById("bestDayChip").textContent = `☀ 青空ベスト ${summary.bestDayStr} (${summary.dayPeak5.toFixed(1)})`;
       document.getElementById("bestTonightChip").textContent = `🌌 星空ベスト ${summary.bestNightStr} (${summary.nightPeak5.toFixed(1)})`;
-      document.querySelectorAll(".swipe-dot").forEach((dot, i) => dot.classList.toggle("active", i === dayIdx));
+
+      const total = dailySummaries.length;
+      document.getElementById("monthDayCounter").textContent = `${dayIdx + 1} / ${total}日目`;
+      document.getElementById("monthProgressFill").style.width = `${(((dayIdx + 1) / total) * 100).toFixed(1)}%`;
     }
 
     function selectHourByDayAndHour(dayIdx, hourNum) {
@@ -2768,18 +3133,6 @@
         }
         selectHour(targetIdx);
       }
-    }
-
-    function renderSwipeDots() {
-      const container = document.getElementById("swipeDots");
-      container.innerHTML = "";
-      dailySummaries.forEach((s, i) => {
-        const dot = document.createElement("span");
-        dot.className = `swipe-dot ${i === selectedDayIdx ? "active" : ""}`;
-        dot.title = s.dayLabel;
-        dot.addEventListener("click", () => selectDay(i, null, i > selectedDayIdx ? 1 : -1));
-        container.appendChild(dot);
-      });
     }
 
     function selectHour(idx) {
@@ -2814,14 +3167,19 @@
       document.getElementById("selectedTimeBadge").textContent =
         `${mm}/${dd} ${item.hourStr} (JST) ${item.isNight ? "• 夜間" : "• 日中"}`;
 
-      const wc = getWeatherCodeInfo(item.weatherCode, item.isNight);
+      const wc = getWeatherCodeInfo(item.weatherCode, item.isNight, item.isClimateRef);
       document.getElementById("weatherCodeBadge").textContent = `${wc.icon} ${wc.text}`;
+
+      const srcBadge = document.getElementById("sourceTypeBadge");
+      srcBadge.textContent = item.isClimateRef ? "🔭 天文+気候参考" : "📡 ライブ予報";
 
       const rank = getRankInfo(item.score5, item.isNight, mm);
       const rankTitleEl = document.getElementById("rankTitle");
       rankTitleEl.textContent = rank.title;
       rankTitleEl.style.color = rank.color;
-      document.getElementById("rankDesc").textContent = rank.desc;
+      document.getElementById("rankDesc").textContent = item.isClimateRef
+        ? `【17〜30日目：天文計算＋月別気候傾向】${rank.desc}`
+        : rank.desc;
 
       document.getElementById("metricCloud").textContent = item.isNight
         ? `${item.cloudTotal}%`
@@ -2831,16 +3189,8 @@
 
       const astro = getDayAstroData(item.dateStr);
 
-      // 日の出・日の入り・月の出・月の入り + 海ポチャ確率
-      document.getElementById("sunriseText").textContent = item.sunrise;
-      document.getElementById("sunsetText").textContent = item.sunset;
-      document.getElementById("moonriseText").textContent = astro.moonRS.rise;
-      document.getElementById("moonsetText").textContent = astro.moonRS.set;
-
-      applyUmiProbBadge("sunriseProb", calcHorizonProbAtTime(item.dateStr, item.sunrise));
-      applyUmiProbBadge("sunsetProb", calcHorizonProbAtTime(item.dateStr, item.sunset));
-      applyUmiProbBadge("moonriseProb", calcHorizonProbAtTime(item.dateStr, astro.moonRS.rise));
-      applyUmiProbBadge("moonsetProb", calcHorizonProbAtTime(item.dateStr, astro.moonRS.set));
+      // 海ポチャ確率を一目で表示（トップ＋詳細カードの同時更新）
+      renderUmipochaSections(item.dateStr, item.sunrise, item.sunset, astro);
 
       const sunDir = getDirectionName16(item.sunPos.azDeg);
       document.getElementById("sunPosText").textContent = item.sunPos.altDeg > 0
@@ -3152,7 +3502,6 @@
       `;
     }
 
-    // 0.5段階対応の絵文字5連描画
     function buildEmojiStars(val5, emojiChar) {
       let html = "";
       for (let st = 1; st <= 5; st++) {
@@ -3225,9 +3574,9 @@
         displayEvents = METEOR_EVENTS.map(ev => {
           const inActive = isDateInRange(month, day, ev.start, ev.end);
           const diffPeak = daysUntilMmDd(year, month, day, ev.peak[0], ev.peak[1]);
-          const upcomingIn14 = (diffPeak >= -2 && diffPeak <= 14);
-          return { ...ev, inActive, diffPeak, upcomingIn14 };
-        }).filter(ev => ev.inActive || ev.upcomingIn14);
+          const upcomingIn30 = (diffPeak >= -2 && diffPeak <= 30);
+          return { ...ev, inActive, diffPeak, upcomingIn30 };
+        }).filter(ev => ev.inActive || ev.upcomingIn30);
 
         if (displayEvents.length === 0) {
           listEl.innerHTML = `
@@ -3236,7 +3585,7 @@
                 <span class="event-title">🌠 大きな流星群の極大予定なし</span>
                 <span class="event-tag">通常期</span>
               </div>
-              <p class="event-meta">選択日（${month}/${day}）から14日以内に極大を迎える主要流星群はありませんが、宮古島の暗い空では1時間に数個の散在流星が見られます。</p>
+              <p class="event-meta">選択日（${month}/${day}）から30日以内に極大を迎える主要流星群はありませんが、宮古島の暗い空では1時間に数個の散在流星が見られます。</p>
               <p class="event-advice">「年間カレンダー」タブで次の流星群をチェックできます。</p>
             </div>`;
           return;
@@ -3254,7 +3603,7 @@
         let tagHtml = `<span class="event-tag">${ev.start[0]}/${ev.start[1]}〜${ev.end[0]}/${ev.end[1]}</span>`;
         if (isPeakNear) tagHtml = `<span class="event-tag peak">🔥 極大期 (${ev.peak[0]}/${ev.peak[1]})</span>`;
         else if (ev.inActive) tagHtml = `<span class="event-tag">✨ 活動中 (極大 ${ev.peak[0]}/${ev.peak[1]})</span>`;
-        else if (ev.diffPeak > 0 && ev.diffPeak <= 14) tagHtml = `<span class="event-tag">あと${ev.diffPeak}日で極大</span>`;
+        else if (ev.diffPeak > 0 && ev.diffPeak <= 30) tagHtml = `<span class="event-tag">あと${ev.diffPeak}日で極大</span>`;
 
         const advice = ev.inActive
           ? (moonGood
@@ -3276,23 +3625,32 @@
       }).join("");
     }
 
-    function render14DayForecast() {
+    function render1MonthForecast() {
       const list = document.getElementById("weeklyList");
       list.innerHTML = "";
       const selectedDate = hourlyData[selectedIndex]?.dateStr;
+      let dividerAdded = false;
 
       dailySummaries.forEach((s, i) => {
+        if (s.isClimateRef && !dividerAdded) {
+          dividerAdded = true;
+          const divEl = document.createElement("div");
+          divEl.className = "forecast-divider";
+          divEl.textContent = "🔭 17〜30日目：正確な天文計算（月齢・潮汐）＋宮古島月別気候傾向（参考）";
+          list.appendChild(divEl);
+        }
+
         const dayLabel = getRatingLabel5(s.dayPeak5, false);
         const nightLabel = getRatingLabel5(s.nightPeak5, true);
 
         const row = document.createElement("div");
-        row.className = `day-row ${s.date === selectedDate ? "selected" : ""}`;
+        row.className = `day-row ${s.isClimateRef ? "is-climate-ref" : ""} ${s.date === selectedDate ? "selected" : ""}`;
         row.dataset.date = s.date;
 
         row.innerHTML = `
           <div class="day-date-col" title="タップしてこの日を表示">
             <div class="day-name">${s.shortLabel}</div>
-            <div class="day-sub">🌙月${s.moonPct}%</div>
+            <div class="day-sub">${s.isClimateRef ? "🔭気候" : "📡予報"} • 🌙${s.moonPct}%</div>
           </div>
           <div class="day-dual-ratings">
             <div class="rating-pill day-side" data-jump="${s.bestDayIdx}" title="青空ベスト ${s.bestDayStr} (青空指数 ${s.dayPeak5.toFixed(1)} • ${dayLabel})">
@@ -3336,7 +3694,7 @@
       card.addEventListener("touchstart", (e) => {
         if (e.touches.length !== 1) return;
         if (e.target.closest(".time-control-bar") || e.target.closest(".chart-wrap") ||
-            e.target.closest("button") || e.target.closest("select")) {
+            e.target.closest(".quick-umipocha-wrap") || e.target.closest("button") || e.target.closest("select")) {
           tracking = false;
           return;
         }
