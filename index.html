@@ -195,7 +195,7 @@
     /* スワイプ対応 メイン指数カード */
     .swipe-card {
       position: relative;
-      touch-action: pan-y;
+      touch-action: pan-y pinch-zoom;
       user-select: none;
       overflow: hidden;
       display: flex;
@@ -607,7 +607,7 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       padding-bottom: 6px;
-      touch-action: pan-x;
+      touch-action: auto;
     }
 
     .chart-wrap::-webkit-scrollbar {
@@ -1679,12 +1679,141 @@
         font-size: 0.76rem;
       }
     }
+    [hidden] { display: none !important; }
+    :root { color-scheme: dark; --text-muted: #aabbd3; }
+    html { scroll-padding-bottom: 80px; }
+    body { background: radial-gradient(ellipse at top, #14304a, #080f20 680px); }
+    .app-container { max-width: 1080px; padding-bottom: calc(98px + env(safe-area-inset-bottom)); }
+    .glass-card { min-width: 0; background: #101d33; box-shadow: none; backdrop-filter: none; }
+    .view-heading { margin: 14px 0 10px; font-size: clamp(1.25rem, 4.7vw, 1.8rem); }
+    .view-source { color: var(--text-sub); margin-bottom: 14px; font-size: .875rem; }
+    #view-home .hero-grid, #view-details .hero-grid { grid-template-columns: minmax(0, 1fr); }
+    #view-details > :is(.hero-grid, .sun-moon-grid, .celestial-grid, .photo-card) { margin-bottom: 16px; }
+    .skip-link { position: absolute; top: 0; left: 12px; z-index: 15; transform: translateY(-120%); background: #122845; color: white; padding: 12px; }
+    .skip-link:focus { transform: none; }
+    :is(button, select, a, [tabindex]):focus-visible { outline: 2px solid #fce18b; outline-offset: 2px; }
+    button, select { min-height: 44px; font: inherit; }
+    button:disabled { opacity: .55; cursor: default; }
+    .selection-controls { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; align-items: center; gap: 8px 16px; }
+    .selection-controls .date-nav-bar, .selection-controls .time-control-bar { margin: 0; width: 100%; }
+    .selection-controls .time-control-top { width: 100%; justify-content: space-between; flex-wrap: nowrap; }
+    .selection-controls .time-select-wrap > span { display: none; }
+    .selection-controls .date-select-wrap, .selection-controls .time-select-wrap { min-width: 0; flex: 1; }
+    .selection-controls select { width: 100%; min-width: 0; font-size: 1rem; text-align: center; }
+    .selection-controls .nav-arrow-btn { min-width: 44px; }
+    .timezone { color: var(--text-sub); font-size: .75rem; }
+    .forecast-pick {
+      color: var(--text-main); cursor: pointer; background: #162942;
+      border: 1px solid #456180; border-radius: 10px; padding: 7px 9px;
+    }
+    .forecast-pick:hover {
+      color: #b7fff1; border-color: #61d9c9; background: #113b43;
+    }
+    .app-nav {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; position: fixed; z-index: 10;
+      inset: auto 0 0; margin: auto; max-width: 1080px; background: #101d33; border: 1px solid #365375;
+      padding: 5px max(7px, env(safe-area-inset-right)) calc(5px + env(safe-area-inset-bottom)) max(7px, env(safe-area-inset-left));
+      border-radius: 14px 14px 0 0;
+    }
+    .app-nav a { display: grid; place-items: center; min-height: 48px; text-align: center; text-decoration: none; color: #c7d7ec; font-size: .85rem; border-radius: 8px; }
+    .app-nav a[aria-current="page"] { color: #b7fff1; background: #164048; font-weight: 700; }
+    #heroSwipeCard .section-title { margin: 0 0 8px; font-size: .9rem; }
+    .score-panel { display: grid; grid-template-columns: 128px minmax(0, 1fr); align-items: center; text-align: left; gap: 10px; }
+    .score-panel .gauge-wrap { width: 128px; height: 128px; }
+    .gauge-label { font-size: .625rem; letter-spacing: 0; }
+    .gauge-value { font-size: clamp(1.75rem, 6vw, 2.3rem); }
+    .score-panel .badge-row { justify-content: flex-start; }
+    .score-panel .mini-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+    .mini-metrics .metric-box { min-width: 0; padding: 5px 6px; }
+    .metric-box .v { overflow-wrap: anywhere; }
+    .score-panel .rank-title { font-size: clamp(1.05rem, 4vw, 1.45rem); }
+    .score-panel .rank-desc { font-size: .85rem; }
+    .embedded-timeline-head { flex-wrap: wrap; }
+    .chart-wrap { padding-block: 4px; }
+    .hour-pill { color: var(--text-main); flex: 0 0 83px; padding-inline: 4px; scroll-snap-align: center; }
+    .hour-pill .hour-score { font-size: 1rem; }
+    .hour-pill.active { outline: 1px solid #5eead4; outline-offset: -2px; }
+    .climate-badge:not(.is-reference) { color: #a1ffdf; background: #123c3d; border-color: #397b74; }
+    .climate-badge.is-reference, .forecast-divider.is-reference { color: #ffe5a9; background: #392e22; border-color: #8e7247; }
+    .weekly-list { max-height: none; overflow: visible; }
+    .forecast-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr)); gap: 8px; }
+    .forecast-divider { color: #a1ffdf; background: #123c3d; font-size: .9rem; margin: 4px 0; }
+    .forecast-grid .day-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; min-width: 0; }
+    .forecast-grid .day-row.selected { outline: 1px solid #5eead4; outline-offset: -1px; }
+    .forecast-pick { font-size: .8rem; }
+    .rs-box { color: var(--text-main); text-align: inherit; }
+    @media (max-width: 640px) {
+      .selection-controls { grid-template-columns: 1fr; gap: 5px; }
+      .selection-controls .timezone { justify-self: center; }
+      .score-panel { grid-template-columns: 94px minmax(0, 1fr); }
+      .score-panel .gauge-wrap { width: 94px; height: 94px; }
+      .score-panel .gauge-label { font-size: .54rem; }
+      .score-panel .score-info { display: contents; }
+      .score-panel :is(.badge-row, .rank-title, .rank-desc) { grid-column: 2; }
+      .score-panel .gauge-wrap { grid-row: 1 / 4; align-self: start; }
+      .score-panel .mini-metrics { grid-column: 1 / -1; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .spot-tabs { flex-wrap: wrap; overflow: visible; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+
+    button.btn, button.time-step-btn, button.nav-arrow-btn, button.spot-tab, button.mini-tab,
+    select.date-select, select.time-select { min-height: 44px; }
+    @media (max-width: 640px) {
+      .selection-controls .timezone { display: none; }
+      .score-panel { row-gap: 5px; }
+      .score-panel .rank-desc:empty { display: none; }
+    }
+
+    .home-recommendations { margin-bottom: 12px; }
+    .recommendations-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; margin-bottom: 8px; }
+    .recommendations-header h3 { font-size: 1rem; }
+    #recommendationsSource { color: var(--text-sub); font-size: .8rem; }
+    .recommendations-grid, .home-detail-tabs { display: grid; gap: 6px; }
+    .recommendations-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .home-details { margin-top: 14px; }
+    .home-detail-tabs { grid-template-columns: 1fr 1.35fr 1fr; margin-bottom: 8px; }
+    .recommendations-grid button, .home-detail-tabs button {
+      min-width: 0; color: var(--text-main); background: #162942; border: 1px solid #456180;
+      border-radius: 9px; padding: 5px 4px; cursor: pointer; line-height: 1.35;
+    }
+    .recommendations-grid button { display: grid; place-content: center; gap: 2px; min-height: 52px; }
+    .recommendations-grid button:disabled { cursor: default; }
+    .recommendations-grid span, .home-detail-tabs button { font-size: .8rem; }
+    .recommendations-grid strong { color: #b7fff1; font-size: .96rem; }
+    .home-detail-tabs button[aria-selected="true"] { color: #b7fff1; border-color: #61d9c9; background: #113b43; }
+    @media (max-width: 640px) {
+      .app-container {
+        padding-left: max(10px, env(safe-area-inset-left));
+        padding-right: max(10px, env(safe-area-inset-right));
+      }
+      .selection-controls .date-nav-bar, .selection-controls .time-control-bar { padding: 4px 7px; }
+      .selection-controls select { padding-inline: 3px; }
+      .selection-controls .nav-arrow-btn, .selection-controls .time-step-btn { min-width: 44px; }
+      .score-panel .badge-row { grid-column: 1 / -1; grid-row: 1; }
+      .score-panel .gauge-wrap { grid-row: 2 / 4; }
+      .score-panel .badge-row > span { line-height: 1.35; font-size: .75rem; }
+      .mini-metrics .k { font-size: .75rem; }
+      .mini-metrics .v { font-size: .9rem; }
+      .embedded-timeline-head [id] { font-size: .875rem; }
+      .home-detail-tabs button { min-height: 52px; font-size: .875rem; }
+      .forecast-pick, .spot-tab, .mini-tab { font-size: .875rem; }
+      .app-nav a { font-size: .9rem; }
+    }
+    @media (max-width: 420px) {
+      .recommendations-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+      .recommendations-grid button { grid-column: span 2; }
+      .recommendations-grid button:nth-child(n+4) { grid-column: span 3; }
+      .recommendations-grid span { font-size: .875rem; }
+      .recommendations-grid strong { font-size: 1.05rem; }
+    }
   </style>
 </head>
 <body>
-  <canvas id="skyCanvas"></canvas>
 
   <div class="app-container">
+    <a class="skip-link" href="#app-main">本文に移動</a>
     <header>
       <div class="brand">
         <div class="brand-icon">
@@ -1719,25 +1848,14 @@
       <div class="header-controls">
         <div class="status-pill">
           <span class="dot" id="statusDot"></span>
-          <span id="statusText">気象データ読込中...</span>
+          <span id="statusText" role="status">気象データ読込中...</span>
         </div>
         <button class="btn" id="refreshBtn">↻ 更新</button>
       </div>
     </header>
 
-    <!-- 1段目：1番目 星空・青空指数（%円グラフ） / 2番目 風向・詳細気象・潮位 -->
-    <div class="hero-grid">
-      <section class="glass-card swipe-card" id="heroSwipeCard">
-        <div>
-          <div class="section-title">
-            <span id="mainIndexCardTitle">STARRY & BLUE SKY INDEX / 星空・青空指数</span>
-            <div class="best-chips-row">
-              <button class="best-chip day" id="bestDayChip" title="タップで昼の青空ベスト時刻へ">☀ 青空ベスト: --</button>
-              <button class="best-chip night" id="bestTonightChip" title="タップで夜の星空ベスト時刻へ">🌌 星空ベスト: --</button>
-            </div>
-          </div>
-
-          <div class="date-nav-bar">
+    <main id="app-main">
+      <div class="selection-controls" aria-label="撮影日時（日本時間）">          <div class="date-nav-bar">
             <button class="nav-arrow-btn" id="prevDayBtn" aria-label="前日">◀</button>
             <div class="date-select-wrap">
               <select class="date-select" id="dateSelect" aria-label="日付選択"></select>
@@ -1755,6 +1873,33 @@
               <button class="time-step-btn" id="nextHourBtn" aria-label="1時間後">1h後 ▶</button>
             </div>
           </div>
+        <span class="timezone">日本時間</span>
+      </div>
+      <section id="view-home" aria-labelledby="home-heading">
+        <h2 class="view-heading" id="home-heading" tabindex="-1">撮影コンディション</h2>
+        <section class="glass-card home-recommendations" aria-labelledby="recommendations-heading">
+          <div class="recommendations-header">
+            <h3 id="recommendations-heading">おすすめ撮影時刻</h3>
+            <span id="recommendationsSource">日本時間 · データ待ち</span>
+          </div>
+          <div class="recommendations-grid">
+            <button type="button" data-recommend="sunrise" disabled><span>朝景</span><strong>—</strong></button>
+            <button type="button" data-recommend="blue" disabled><span>青空</span><strong>—</strong></button>
+            <button type="button" data-recommend="sunset" disabled><span>夕景</span><strong>—</strong></button>
+            <button type="button" data-recommend="stars" disabled><span>星空</span><strong>—</strong></button>
+            <button type="button" data-recommend="moon" disabled><span>月景</span><strong>—</strong></button>
+          </div>
+        </section>
+    <!-- 1段目：1番目 星空・青空指数（%円グラフ） / 2番目 風向・詳細気象・潮位 -->
+    <div class="hero-grid">
+      <section class="glass-card swipe-card" id="heroSwipeCard" aria-labelledby="mainIndexCardTitle">
+        <div>
+          <div class="section-title">
+            <span id="mainIndexCardTitle">星空撮影</span>
+
+          </div>
+
+
         </div>
 
         <div class="swipe-content" id="swipeContent">
@@ -1773,9 +1918,9 @@
                   stroke-dasharray="414.69" stroke-dashoffset="414.69" />
               </svg>
               <div class="gauge-center">
-                <span class="gauge-label" id="gaugeSubLabel">STAR INDEX</span>
+                <span class="gauge-label" id="gaugeSubLabel">星空指数</span>
                 <span class="gauge-value" id="mainScoreValue">--<span class="pct-unit">%</span></span>
-                <span class="gauge-max" id="gaugeSubRating">0.5段階: --</span>
+                <span class="gauge-max" id="gaugeSubRating">— / 5</span>
               </div>
             </div>
 
@@ -1783,7 +1928,7 @@
               <div class="badge-row">
                 <span class="selected-time-badge" id="selectedTimeBadge">--/-- --:--</span>
                 <span class="weather-code-badge" id="weatherCodeBadge">☀ --</span>
-                <span class="climate-badge" id="sourceTypeBadge">📡 ライブ予報</span>
+                <span class="climate-badge" id="sourceTypeBadge">データ待ち</span>
               </div>
               <h2 class="rank-title" id="rankTitle">データ取得中...</h2>
               <p class="rank-desc" id="rankDesc">宮古島の雲層・直達日射・月高度・視程・露点差から指数を計算しています。</p>
@@ -1801,6 +1946,7 @@
                   <div class="k">気温 / 風速</div>
                   <div class="v" id="metricTempWind">--</div>
                 </div>
+                <div class="metric-box"><div class="k" id="modeMetricLabel">月齢 / 輝面率</div><div class="v" id="modeMetric">—</div></div>
               </div>
             </div>
           </div>
@@ -1816,17 +1962,25 @@
           </div>
         </div>
 
-        <div class="month-progress-wrap">
-          <span id="monthDayCounter">1 / 30日目</span>
-          <div class="month-progress-bg">
-            <div class="month-progress-fill" id="monthProgressFill" style="width:3%;"></div>
-          </div>
-          <span>1か月予報</span>
-        </div>
+
       </section>
 
+    </div>
+        <div class="home-details">
+          <div class="home-detail-tabs" role="tablist" aria-label="気象・天文の詳細">
+            <button type="button" role="tab" id="home-tab-wind" aria-controls="panel-wind" aria-selected="true">風向・詳細気象・潮位</button>
+            <button type="button" role="tab" id="home-tab-events" aria-controls="panel-events" aria-selected="false" tabindex="-1">出没・海ポチャ・光スケジュール</button>
+            <button type="button" role="tab" id="home-tab-moon" aria-controls="panel-moon" aria-selected="false" tabindex="-1">月齢・雲の広がり</button>
+          </div>
+          <div id="homePanelSlot"></div>
+        </div>
+    </section>
+    <section id="view-details" aria-labelledby="details-heading" hidden>
+      <h2 class="view-heading" id="details-heading" tabindex="-1">詳細</h2>
+      <p class="view-source" id="detailSource"></p>
+      <div class="hero-grid">
       <!-- 2番目：風向・詳細気象・潮位タブ -->
-      <section class="glass-card wind-panel-stack">
+      <section class="glass-card wind-panel-stack" id="panel-wind">
         <div>
           <div class="section-title">
             <span>🧭 WIND, WEATHER & TIDE / 風向・詳細気象・潮位</span>
@@ -1867,7 +2021,7 @@
 
     <!-- 2段目：太陽・月・出没（海ポチャ確率）・マジックアワー統合 ＆ 月齢・雲層 -->
     <div class="sun-moon-grid">
-      <section class="glass-card sun-magic-stack">
+      <section class="glass-card sun-magic-stack" id="panel-events">
         <div>
           <div class="section-title">
             <span>☀️🌙 SUN, MOON & MAGIC HOURS / 出没・海ポチャ・光スケジュール</span>
@@ -1902,7 +2056,7 @@
       </section>
 
       <!-- 右：月齢・高度別雲層カード -->
-      <section class="glass-card astro-stack">
+      <section class="glass-card astro-stack" id="panel-moon">
         <div class="section-title" style="margin-bottom:0;">
           <span>🌗☁️ MOON & CLOUDS / 月齢・雲の広がり</span>
         </div>
@@ -1970,35 +2124,40 @@
           <span>METEOR SHOWERS & EVENTS / 流星群・天体情報</span>
         </div>
         <div class="meteor-tabs">
-          <button class="mini-tab active" data-mtab="upcoming">選択日〜30日以内</button>
-          <button class="mini-tab" data-mtab="all">年間カレンダー</button>
+          <button class="mini-tab active" data-mtab="upcoming" aria-pressed="true">選択日〜30日以内</button>
+          <button class="mini-tab" data-mtab="all" aria-pressed="false">年間カレンダー</button>
         </div>
         <div class="event-list" id="meteorEventList"></div>
       </section>
     </div>
 
-    <!-- 1か月撮影予報（30日間） & スポットガイド -->
-    <div class="lower-grid">
-      <section class="glass-card">
-        <div class="section-title">
-          <span>1-MONTH PHOTO FORECAST / 1か月撮影予報（30日間）</span>
-          <span style="font-size:0.73rem; color:var(--text-muted);">☀️青空・🌌星空をタップで切替</span>
-        </div>
+    </section>
+    <section id="view-forecast" aria-labelledby="forecast-heading" hidden>
+      <h2 class="view-heading" id="forecast-heading" tabindex="-1">30日撮影予報</h2>
+      <p class="view-source">Open-Meteoの気象予報と、予報期間後の月別気候による参考値を掲載します。時間帯を選ぶとホームに移動します。</p>
+      <div class="glass-card">
         <div class="weekly-list" id="weeklyList"></div>
-      </section>
-
-      <section class="glass-card">
-        <div class="section-title">
-          <span>MIYAKO BEACH & STAR SPOTS / 撮影スポット＆ビーチ</span>
-        </div>
+      </div>
+    </section>
+    <section id="view-spots" aria-labelledby="spots-heading" hidden>
+      <h2 class="view-heading" id="spots-heading" tabindex="-1">撮影地</h2>
+      <p class="view-source">予報は宮古島の代表地点のデータです。撮影地ごとの方角・アクセスを確認できます。</p>
+      <div class="glass-card">
         <div class="spot-tabs" id="spotTabs"></div>
         <div class="spot-detail" id="spotDetail"></div>
-      </section>
-    </div>
+      </div>
+    </section>
 
     <p class="formula-note">
-      ※ 1〜16日目はOpen-Meteoの最新気象予報（📡ライブ）を用い、15分ごとの自動更新および画面復帰時の自動再取得に対応しています。海ぽちゃ確率は水平線付近の雲層・直達日射トレンド・露点差・湿度・視程・強風ミスト・月齢輝面率から算出した視認目安です。
+      気象データはOpen-Meteo。画面表示中は15分ごとに更新します。潮位は平良の推算値、水平線の視認度は気象・天文データから求めた撮影の目安です。
     </p>
+    </main>
+    <nav class="app-nav" aria-label="画面切替">
+      <a href="#home" data-view="home" aria-current="page">ホーム</a>
+      <a href="#forecast" data-view="forecast">30日予報</a>
+      <a href="#spots" data-view="spots">撮影地</a>
+      <a href="#details" data-view="details">詳細</a>
+    </nav>
   </div>
 
   <script>
@@ -2193,7 +2352,7 @@
     let dailySummaries = [];
     let selectedIndex = 0;
     let selectedDayIdx = 0;
-    let currentTimelineStart = 0;
+    let renderedTimelineDay = null;
     let activeMeteorTab = "upcoming";
     let lastFetchMs = 0;
     let isFetching = false;
@@ -2443,7 +2602,7 @@
       if (dayStartIdx < 0) return null;
 
       const idx1 = Math.min(hourlyData.length - 1, dayStartIdx + hh);
-      const idx2 = Math.min(hourlyData.length - 1, idx1 + 1);
+      const idx2 = hourlyData[idx1 + 1]?.isClimateRef === hourlyData[idx1]?.isClimateRef ? idx1 + 1 : idx1;
       const frac = (mm || 0) / 60;
 
       const a = hourlyData[idx1];
@@ -2549,7 +2708,7 @@
         const fillWidth = prob === null ? 0 : prob;
 
         return `
-          <div class="rs-box ${ev.type}" data-jumptime="${ev.time}" title="${ev.label} (${ev.time} • ${azText}) の時刻へ移動">
+          <button type="button" ${/^\d{2}:\d{2}$/.test(ev.time) ? "" : "disabled"} class="rs-box ${ev.type}" data-jumptime="${ev.time}" title="${ev.label} (${ev.time} • ${azText}) の時刻へ移動">
             <span class="rs-label">${ev.icon} ${ev.label}</span>
             <span class="rs-time">${ev.time}</span>
             <span class="rs-az">🧭 ${azText}</span>
@@ -2559,7 +2718,7 @@
               <div class="umi-meter-fill" style="width:${fillWidth}%; background:${judge.barColor};"></div>
             </div>
             <span class="umi-prob-badge ${judge.cls}">${judge.text}</span>
-          </div>
+          </button>
         `;
       }).join("");
 
@@ -2955,12 +3114,13 @@
     async function fetchWeather(isAuto = false) {
       if (isFetching) return;
       isFetching = true;
+      document.getElementById("refreshBtn").disabled = true;
 
       const statusDot = document.getElementById("statusDot");
       const statusText = document.getElementById("statusText");
       const syncBadge = document.getElementById("umiAutoSyncBadge");
 
-      const prevSelection = (isAuto && hourlyData[selectedIndex])
+      const prevSelection = hourlyData[selectedIndex]
         ? { dateStr: hourlyData[selectedIndex].dateStr, hourNum: hourlyData[selectedIndex].hourNum }
         : null;
 
@@ -2976,22 +3136,26 @@
         const res = await fetch(url, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
-        lastFetchMs = Date.now();
+        validateWeather(json);
         processApiData(json, prevSelection);
+        lastFetchMs = Date.now();
         const now = getMiyakoNow();
-        statusText.textContent = `自動更新済 ${now.hm} (16日予報+30日天文)`;
+        statusText.textContent = `更新 ${now.hm} JST`;
         if (syncBadge) syncBadge.textContent = `🔄 自動更新 ${now.hm}`;
       } catch (err) {
         console.error("気象データの取得に失敗しました:", err);
         statusDot.classList.add("error");
-        statusText.textContent = "更新失敗（↻ 更新で再試行）";
+        statusText.textContent = hourlyData.length ? "更新失敗 · 前回取得分を表示" : "取得失敗 · 更新で再試行";
         if (syncBadge) syncBadge.textContent = "⚠️ 通信待機中";
         if (hourlyData.length === 0) {
+          document.getElementById("recommendationsSource").textContent = "気象データ取得待ち · 更新で再試行";
+          document.getElementById("weeklyList").textContent = "気象データを取得できませんでした。「更新」で再試行できます。";
           document.getElementById("rankTitle").textContent = "データの取得に失敗しました";
           document.getElementById("rankDesc").textContent = "通信環境をご確認のうえ、右上の「↻ 更新」ボタンを押してください。";
         }
       } finally {
         isFetching = false;
+        document.getElementById("refreshBtn").disabled = false;
       }
     }
 
@@ -3015,26 +3179,26 @@
         const sunPos = getSunPosition(utcMs);
         const isNight = isNightHour(t, dailyMap);
 
-        const cTotal = h.cloud_cover[idx] ?? 0;
-        const cLow = h.cloud_cover_low?.[idx] ?? Math.round(cTotal * 0.5);
-        const cMid = h.cloud_cover_mid?.[idx] ?? Math.round(cTotal * 0.3);
-        const cHigh = h.cloud_cover_high?.[idx] ?? Math.round(cTotal * 0.2);
-        const precip = h.precipitation_probability?.[idx] ?? Math.round(cTotal * 0.35);
-        const precipMm = h.precipitation?.[idx] ?? 0;
-        const hum = h.relative_humidity_2m?.[idx] ?? 75;
-        const wind = h.wind_speed_10m?.[idx] ?? 3.5;
-        const windDir = h.wind_direction_10m?.[idx] ?? 60;
-        const windGust = h.wind_gusts_10m?.[idx] ?? Math.round((wind * 1.5) * 10) / 10;
-        const temp = h.temperature_2m?.[idx] ?? 24.0;
-        const dewPoint = h.dew_point_2m?.[idx] ?? (temp - 4.0);
+        const cTotal = h.cloud_cover[idx];
+        const cLow = h.cloud_cover_low[idx];
+        const cMid = h.cloud_cover_mid[idx];
+        const cHigh = h.cloud_cover_high[idx];
+        const precip = h.precipitation_probability[idx];
+        const precipMm = h.precipitation[idx];
+        const hum = h.relative_humidity_2m[idx];
+        const wind = h.wind_speed_10m[idx];
+        const windDir = h.wind_direction_10m[idx];
+        const windGust = h.wind_gusts_10m[idx];
+        const temp = h.temperature_2m[idx];
+        const dewPoint = h.dew_point_2m[idx];
         const dewDiff = Math.max(0, temp - dewPoint);
-        const pressure = h.surface_pressure?.[idx] ?? 1013;
-        const visMeters = h.visibility?.[idx] ?? 20000;
+        const pressure = h.surface_pressure[idx];
+        const visMeters = h.visibility[idx];
         const visKm = Math.round(visMeters / 1000);
-        const uvIndex = h.uv_index?.[idx] ?? (isNight ? 0 : Math.max(0, Math.round(Math.sin(Math.max(0, sunPos.altDeg) * RAD) * 10)));
-        const radiation = h.shortwave_radiation?.[idx] ?? 0;
-        const directRad = h.direct_radiation?.[idx] ?? (isNight ? 0 : Math.round(radiation * (1 - cTotal / 120)));
-        const weatherCode = h.weather_code?.[idx] ?? (cTotal < 20 ? 0 : cTotal < 60 ? 2 : 3);
+        const uvIndex = h.uv_index[idx];
+        const radiation = h.shortwave_radiation[idx];
+        const directRad = h.direct_radiation[idx];
+        const weatherCode = h.weather_code[idx];
 
         const starRaw = calcStarryRaw({
           cloudLow: cLow, cloudMid: cMid, cloudHigh: cHigh, cloudTotal: cTotal,
@@ -3223,7 +3387,7 @@
         const preservedIdx = hourlyData.findIndex(
           h => h.dateStr === prevSelection.dateStr && h.hourNum === prevSelection.hourNum
         );
-        if (preservedIdx >= startIdx) {
+        if (preservedIdx >= 0) {
           startIdx = preservedIdx;
         }
       }
@@ -3231,6 +3395,7 @@
       selectedIndex = startIdx;
       selectedDayIdx = Math.max(0, dailySummaries.findIndex(s => s.date === hourlyData[startIdx].dateStr));
 
+      if (!prevSelection) setMode(hourlyData[startIdx].isNight ? "stars" : "blue");
       render1MonthForecast();
       selectDay(selectedDayIdx, startIdx);
     }
@@ -3241,8 +3406,7 @@
       for (let h = 0; h < 24; h++) {
         const opt = document.createElement("option");
         opt.value = String(h);
-        const tag = (h >= 19 || h <= 5) ? "🌌" : "☀️";
-        opt.textContent = `${tag} ${String(h).padStart(2, '0')}:00`;
+        opt.textContent = String(h).padStart(2, "0") + ":00";
         sel.appendChild(opt);
       }
     }
@@ -3250,12 +3414,16 @@
     function initDateSelectOptions() {
       const sel = document.getElementById("dateSelect");
       sel.innerHTML = "";
-      dailySummaries.forEach((s, idx) => {
-        const opt = document.createElement("option");
-        opt.value = String(idx);
-        const mark = s.isClimateRef ? "🔭" : "📡";
-        opt.textContent = `${mark} ${s.dayLabel}`;
-        sel.appendChild(opt);
+      [false, true].forEach(isReference => {
+        const group = document.createElement("optgroup");
+        group.label = isReference ? "気候参考値" : "気象予報";
+        dailySummaries.filter(day => day.isClimateRef === isReference).forEach(day => {
+          const opt = document.createElement("option");
+          opt.value = String(day.dayIdx);
+          opt.textContent = day.dayLabel.replace(" (", "(");
+          group.append(opt);
+        });
+        if (group.children.length) sel.append(group);
       });
     }
 
@@ -3321,7 +3489,7 @@
       selectedDayIdx = dayIdx;
       const summary = dailySummaries[dayIdx];
 
-      if (swipeDir !== 0) {
+      if (swipeDir !== 0 && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
         const content = document.getElementById("swipeContent");
         content.style.transition = "none";
         content.style.transform = `translateX(${swipeDir * 28}px)`;
@@ -3338,40 +3506,15 @@
       updateDayHeaderUI(dayIdx);
 
       let pickIdx = specificHourIdx;
-      if (pickIdx === null) {
-        const curItem = hourlyData[selectedIndex];
-        if (curItem && !curItem.isNight) {
-          pickIdx = summary.bestDayIdx;
-        } else {
-          pickIdx = summary.bestNightIdx;
-        }
-      }
+      if (pickIdx === null) pickIdx = recommendedHour(summary)?.idx ?? summary.firstIdxOfDay;
 
-      let timelineStart = summary.firstIdxOfDay;
-      if (dayIdx === 0) {
-        const now = getMiyakoNow();
-        const nowIdx = hourlyData.findIndex(item => item.time >= now.isoHour);
-        if (nowIdx >= 0 && pickIdx >= nowIdx) timelineStart = nowIdx;
-      }
-      renderTimeline(timelineStart, summary.shortLabel);
       selectHour(pickIdx);
     }
 
     function updateDayHeaderUI(dayIdx) {
-      const summary = dailySummaries[dayIdx];
-      if (!summary) return;
-      const dateSelect = document.getElementById("dateSelect");
-      if (dateSelect && dateSelect.value !== String(dayIdx)) {
-        dateSelect.value = String(dayIdx);
-      }
-      document.getElementById("prevDayBtn").disabled = dayIdx === 0;
-      document.getElementById("nextDayBtn").disabled = dayIdx === dailySummaries.length - 1;
-      document.getElementById("bestDayChip").textContent = `☀ 青空ベスト ${summary.bestDayStr} (${summary.dayPeakRaw}%)`;
-      document.getElementById("bestTonightChip").textContent = `🌌 星空ベスト ${summary.bestNightStr} (${summary.nightPeakRaw}%)`;
-
-      const total = dailySummaries.length;
-      document.getElementById("monthDayCounter").textContent = `${dayIdx + 1} / ${total}日目`;
-      document.getElementById("monthProgressFill").style.width = `${(((dayIdx + 1) / total) * 100).toFixed(1)}%`;
+      document.getElementById("dateSelect").value = String(dayIdx);
+      document.getElementById("prevDayBtn").disabled = dayIdx <= 0;
+      document.getElementById("nextDayBtn").disabled = dayIdx >= dailySummaries.length - 1;
     }
 
     function selectHourByDayAndHour(dayIdx, hourNum) {
@@ -3379,9 +3522,6 @@
       if (!summary) return;
       const targetIdx = hourlyData.findIndex(h => h.dateStr === summary.date && h.hourNum === hourNum);
       if (targetIdx >= 0) {
-        if (targetIdx < currentTimelineStart || targetIdx >= currentTimelineStart + 48) {
-          renderTimeline(summary.firstIdxOfDay, summary.shortLabel);
-        }
         selectHour(targetIdx);
       }
     }
@@ -3397,41 +3537,16 @@
         updateDayHeaderUI(matchingDayIdx);
       }
 
-      if (idx < currentTimelineStart || idx >= currentTimelineStart + 48) {
-        const summary = dailySummaries[selectedDayIdx];
-        if (summary) renderTimeline(summary.firstIdxOfDay, summary.shortLabel);
-      }
-
       document.getElementById("hourSelect").value = String(item.hourNum);
       document.getElementById("prevHourBtn").disabled = idx <= 0;
       document.getElementById("nextHourBtn").disabled = idx >= hourlyData.length - 1;
 
-      const circumference = 2 * Math.PI * 66;
-      document.getElementById("gaugeArc").style.strokeDashoffset = (circumference - (item.rawScore / 100) * circumference).toFixed(1);
-      document.getElementById("mainScoreValue").innerHTML = `${item.rawScore}<span class="pct-unit">%</span>`;
-      document.getElementById("gaugeSubLabel").textContent = item.isNight ? "STAR INDEX" : "BLUE SKY";
-      document.getElementById("gaugeSubRating").textContent = `5段階: ${item.score5.toFixed(1)}`;
-      document.getElementById("mainIndexCardTitle").textContent = item.isNight
-        ? "STARRY SKY INDEX / 星空指数（夜間モード）"
-        : "BLUE SKY INDEX / 青空指数（日中モード）";
-
       const [yyyy, mm, dd] = item.dateStr.split("-").map(Number);
       document.getElementById("selectedTimeBadge").textContent =
-        `${mm}/${dd} ${item.hourStr} (JST) ${item.isNight ? "• 夜間" : "• 日中"}`;
+        `${mm}/${dd} ${item.hourStr} JST`;
 
       const wc = getWeatherCodeInfo(item.weatherCode, item.isNight, item.isClimateRef);
       document.getElementById("weatherCodeBadge").textContent = `${wc.icon} ${wc.text}`;
-
-      const srcBadge = document.getElementById("sourceTypeBadge");
-      srcBadge.textContent = item.isClimateRef ? "🔭 天文+気候参考" : "📡 ライブ予報";
-
-      const rank = getRankInfo(item.score5, item.isNight, mm);
-      const rankTitleEl = document.getElementById("rankTitle");
-      rankTitleEl.textContent = rank.title;
-      rankTitleEl.style.color = rank.color;
-      document.getElementById("rankDesc").textContent = item.isClimateRef
-        ? `【17〜30日目：天文計算＋月間補間気候傾向】${rank.desc}`
-        : rank.desc;
 
       document.getElementById("metricCloud").textContent = item.isNight
         ? `${item.cloudTotal}%`
@@ -3473,18 +3588,6 @@
       else if (item.cloudTotal < 20) cloudTip = "全高度で雲が非常に少なく、昼の宮古ブルーも夜の天の川・海ポチャも最高の見通しです！";
       document.getElementById("cloudSummaryTip").textContent = `☁️ 雲の傾向: ${cloudTip}`;
 
-      let activePillEl = null;
-      document.querySelectorAll(".hour-pill").forEach(el => {
-        const isActive = Number(el.dataset.idx) === idx;
-        el.classList.toggle("active", isActive);
-        if (isActive) activePillEl = el;
-      });
-      if (activePillEl) {
-        const wrap = document.getElementById("timelineScrollWrap");
-        const targetLeft = activePillEl.offsetLeft - wrap.clientWidth / 2 + activePillEl.clientWidth / 2;
-        wrap.scrollTo({ left: Math.max(0, targetLeft), behavior: "smooth" });
-      }
-
       document.querySelectorAll(".day-row").forEach(el => el.classList.toggle("selected", el.dataset.date === item.dateStr));
 
       renderMagicHoursPanel(astro.sunMagic, mm, dd);
@@ -3492,7 +3595,7 @@
       renderPhotoGuide(item, astro, mm, dd);
       renderConstellations(mm, dd);
       renderMeteorEvents(yyyy, mm, dd, item);
-      updateSkySimulation(item);
+      renderHome(item);
     }
 
     function renderMagicHoursPanel(sunMagic, mm, dd) {
@@ -3778,36 +3881,239 @@
       return html;
     }
 
-    function renderTimeline(startIdx, dayLabelText) {
-      currentTimelineStart = Math.max(0, startIdx);
-      document.getElementById("timelineTitle").textContent = `⏰ ${dayLabelText}〜 時間別予報（昼:青空☀️ / 夜:星空⭐ 0.5段階）`;
-      const strip = document.getElementById("hourlyStrip");
-      strip.innerHTML = "";
-      const sliceEnd = Math.min(hourlyData.length, currentTimelineStart + 48);
+    let shootingMode = "stars";
+    const modes = {
+      stars: { label: "星空", index: "星空指数" },
+      blue: { label: "青空", index: "青空指数" },
+      sunrise: { label: "朝景" },
+      sunset: { label: "夕景" },
+      moon: { label: "月景" }
+    };
 
-      for (let i = currentTimelineStart; i < sliceEnd; i++) {
-        const item = hourlyData[i];
-        const labelText = getRatingLabel5(item.score5, item.isNight);
-        const emojiChar = item.isNight ? "⭐" : "☀️";
-
-        const pill = document.createElement("div");
-        pill.className = `hour-pill ${item.isNight ? "is-night" : "is-day"} ${i === selectedIndex ? "active" : ""}`;
-        pill.dataset.idx = i;
-        pill.title = `${item.hourStr} ${item.isNight ? "星空指数" : "青空指数"}: ${item.rawScore}% (5段階 ${item.score5.toFixed(1)} • ${labelText})`;
-
-        const dateLabel = item.hourStr === "00:00"
-          ? `${Number(item.dateStr.slice(5, 7))}/${Number(item.dateStr.slice(8, 10))} 0時`
-          : item.hourStr;
-
-        pill.innerHTML = `
-          <span class="hour-time">${dateLabel}</span>
-          <div class="hour-stars" aria-label="5段階中 ${item.score5.toFixed(1)}">${buildEmojiStars(item.score5, emojiChar)}</div>
-          <span class="hour-rank-label">${item.score5.toFixed(1)} • ${labelText}</span>
-          <span class="hour-cloud">${item.isNight ? "🌌" : "☀️"}雲${item.cloudTotal}%</span>
-        `;
-        pill.addEventListener("click", () => selectHour(i));
-        strip.appendChild(pill);
+    function validateWeather({ hourly, daily }) {
+      const keys = "cloud_cover cloud_cover_low cloud_cover_mid cloud_cover_high precipitation_probability precipitation relative_humidity_2m wind_speed_10m wind_direction_10m wind_gusts_10m temperature_2m dew_point_2m surface_pressure visibility uv_index shortwave_radiation direct_radiation weather_code".split(" ");
+      const count = daily?.time?.length;
+      if (!count || count > 16 || hourly?.time?.length !== count * 24 ||
+          !daily.time.every((date, day) =>
+            /^\d{4}-\d{2}-\d{2}$/.test(date) &&
+            daily.sunrise?.[day]?.startsWith(date + "T") &&
+            daily.sunset?.[day]?.startsWith(date + "T") &&
+            hourly.time.slice(day * 24, day * 24 + 24).every((t, hr) =>
+              t === date + "T" + String(hr).padStart(2, "0") + ":00")) ||
+          !keys.every(key => hourly[key]?.length === hourly.time.length && hourly[key].every(Number.isFinite))) {
+        throw new Error("気象予報に欠測または不正な値があります");
       }
+    }
+
+    function showView(view, focusHeading = true) {
+      const link = document.querySelector('.app-nav [data-view="' + view + '"]');
+      if (!link) return;
+      document.querySelectorAll(".app-nav a").forEach(el => {
+        if (el === link) el.setAttribute("aria-current", "page");
+        else el.removeAttribute("aria-current");
+        document.getElementById("view-" + el.dataset.view).hidden = el !== link;
+      });
+      placeDetailPanels(view === "home");
+      if (focusHeading) {
+        window.scrollTo(0, 0);
+        document.getElementById(view + "-heading").focus({ preventScroll: true });
+      }
+      if (view === "home" && hourlyData[selectedIndex]) centerHour();
+    }
+
+    function initNavigation() {
+      const route = focus => {
+        const view = location.hash.slice(1);
+        if (["home", "forecast", "spots", "details"].includes(view)) showView(view, focus);
+        else if (!view) showView("home", focus);
+      };
+      window.addEventListener("hashchange", () => route(true));
+      document.querySelectorAll(".app-nav a").forEach(link => {
+        link.addEventListener("click", () => {
+          if (location.hash === link.hash) showView(link.dataset.view);
+        });
+      });
+      initHomeTabs();
+      route(false);
+      document.querySelectorAll("[data-recommend]").forEach(button => {
+        button.addEventListener("click", () => {
+          const mode = button.dataset.recommend;
+          const best = recommendedHour(dailySummaries[selectedDayIdx], mode);
+          if (!best) return;
+          setMode(mode);
+          selectHour(best.idx);
+        });
+      });
+    }
+
+    let activeHomeTab = 0;
+    const homeDetailPanels = [];
+
+    function initHomeTabs() {
+      const list = document.querySelector(".home-detail-tabs");
+      list.querySelectorAll('[role="tab"]').forEach((tab, index) => {
+        const panel = document.getElementById(tab.getAttribute("aria-controls"));
+        const origin = document.createComment(panel.id);
+        panel.before(origin);
+        homeDetailPanels.push({ tab, panel, origin });
+        tab.addEventListener("click", () => {
+          activeHomeTab = index;
+          placeDetailPanels(true);
+        });
+      });
+      list.addEventListener("keydown", event => {
+        const count = homeDetailPanels.length;
+        const steps = {
+          ArrowLeft: (activeHomeTab + count - 1) % count,
+          ArrowRight: (activeHomeTab + 1) % count,
+          Home: 0,
+          End: count - 1
+        };
+        if (!Object.hasOwn(steps, event.key)) return;
+        event.preventDefault();
+        activeHomeTab = steps[event.key];
+        placeDetailPanels(true);
+        homeDetailPanels[activeHomeTab].tab.focus();
+      });
+    }
+
+    function placeDetailPanels(atHome) {
+      const slot = document.getElementById("homePanelSlot");
+      homeDetailPanels.forEach(({ tab, panel, origin }, index) => {
+        const active = index === activeHomeTab;
+        tab.tabIndex = active ? 0 : -1;
+        tab.setAttribute("aria-selected", String(active));
+        panel.hidden = atHome && !active;
+        if (atHome) {
+          if (panel.parentNode !== slot) slot.append(panel);
+          panel.setAttribute("role", "tabpanel");
+          panel.setAttribute("aria-labelledby", tab.id);
+          panel.tabIndex = 0;
+        } else {
+          if (panel.previousSibling !== origin) origin.after(panel);
+          panel.removeAttribute("role");
+          panel.removeAttribute("aria-labelledby");
+          panel.removeAttribute("tabindex");
+        }
+      });
+    }
+
+    function setMode(mode) {
+      shootingMode = mode;
+    }
+
+    function eventOptions(item, mode = shootingMode) {
+      const date = item.dateStr;
+      const moon = mode === "moon" ? getDayAstroData(date).moonRS : null;
+      const events = moon
+        ? [["moonrise", "月の出", moon.rise], ["moonset", "月の入り", moon.set]]
+        : mode === "sunrise" ? [["sunrise", "日の出", item.sunrise]] : [["sunset", "日の入り", item.sunset]];
+      return events.filter(([, , time]) => /^\d{2}:\d{2}$/.test(time)).map(([key, label, time]) => {
+        const [hour, minute] = time.split(":").map(Number);
+        return { label, time, hour: Math.min(23, Math.round(hour + minute / 60)),
+          score: calcHorizonProbAtTime(date, time, key) };
+      });
+    }
+
+    function skyIndex(item) {
+      return modes[item.isNight ? "stars" : "blue"].index;
+    }
+
+    function recommendedHour(summary, mode = shootingMode) {
+      if (!summary) return null;
+      if (mode === "stars" || mode === "blue") {
+        const item = hourlyData[mode === "stars" ? summary.bestNightIdx : summary.bestDayIdx];
+        return item ? { idx: item.idx, time: item.hourStr } : null;
+      }
+      const item = hourlyData[summary.firstIdxOfDay];
+      const best = eventOptions(item, mode).filter(event => event.score !== null)
+        .sort((a, b) => b.score - a.score)[0];
+      return best ? { idx: item.idx + best.hour, time: best.time, event: best.label } : null;
+    }
+
+    function renderRecommendations(summary) {
+      document.getElementById("recommendationsSource").textContent =
+        summary.dayLabel + " · 日本時間 · " + (summary.isClimateRef ? "気候参考値" : "気象予報");
+      document.querySelectorAll("[data-recommend]").forEach(button => {
+        const mode = button.dataset.recommend;
+        const best = recommendedHour(summary, mode);
+        button.disabled = !best;
+        button.querySelector("strong").textContent = best?.time ?? "対象時刻なし";
+        button.querySelector("span").textContent = modes[mode].label +
+          (mode === "moon" && best?.event ? " · " + best.event : "");
+      });
+    }
+
+    function renderHome(item) {
+      const summary = dailySummaries[selectedDayIdx];
+      const index = skyIndex(item);
+      const score = item.rawScore;
+      const badge = document.getElementById("sourceTypeBadge");
+      badge.textContent = item.isClimateRef ? "気候参考値" : "Open-Meteo予報";
+      badge.classList.toggle("is-reference", item.isClimateRef);
+      document.getElementById("detailSource").textContent = document.getElementById("selectedTimeBadge").textContent + " · " +
+        (item.isClimateRef ? "気候参考値（宮古島の月別気候と天文計算）" : "Open-Meteoの気象予報と天文計算");
+      renderRecommendations(summary);
+      const rating = item.score5;
+      const rank = getRankInfo(rating, item.isNight, Number(item.dateStr.slice(5, 7)));
+      const title = document.getElementById("rankTitle");
+      title.textContent = rank.title;
+      title.style.color = rank.color;
+      const source = item.isClimateRef ? "月別気候＋天文計算。 " : "";
+      document.getElementById("rankDesc").textContent = source + rank.desc.split("。")[0] + "。";
+      document.getElementById("mainIndexCardTitle").textContent = index + "（" + (item.isNight ? "夜間" : "日中") + "）";
+      document.getElementById("gaugeSubLabel").textContent = index;
+      document.getElementById("gaugeArc").style.strokeDashoffset = String(414.69 * (1 - score / 100));
+      document.getElementById("mainScoreValue").textContent = score + "%";
+      document.getElementById("gaugeSubRating").textContent = rating.toFixed(1) + " / 5";
+      const sunEvent = shootingMode === "sunrise" ? "sunrise" : shootingMode === "sunset" ? "sunset" : null;
+      document.getElementById("modeMetricLabel").textContent =
+        sunEvent === "sunrise" ? "日の出" : sunEvent === "sunset" ? "日の入り" : "月齢 / 輝面率";
+      document.getElementById("modeMetric").textContent = sunEvent ? item[sunEvent] :
+        item.moon.age.toFixed(1) + " / " + Math.round(item.moon.illumination * 100) + "%";
+      document.getElementById("metricCloud").textContent = item.cloudTotal + "% / " + item.directRad + " W/m²";
+      document.getElementById("metricRain").textContent = item.isClimateRef
+        ? item.precip + "% / —" : item.precip + "% / " + item.precipMm + " mm";
+      document.getElementById("metricTempWind").textContent = item.temp.toFixed(0) + "℃ / " + item.wind.toFixed(1) + " m/s";
+
+      const strip = document.getElementById("hourlyStrip");
+      if (renderedTimelineDay !== summary) renderTimeline(summary);
+      strip.querySelectorAll("button").forEach(button => {
+        const active = Number(button.dataset.idx) === item.idx;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      if (!document.getElementById("view-home").hidden) centerHour();
+    }
+
+    function centerHour() {
+      const wrap = document.getElementById("timelineScrollWrap");
+      const button = wrap.querySelector(".active");
+      if (!button) return;
+      wrap.scrollLeft += button.getBoundingClientRect().left - wrap.getBoundingClientRect().left +
+        (button.clientWidth - wrap.clientWidth) / 2;
+    }
+
+    function renderTimeline(summary) {
+      const start = summary.firstIdxOfDay;
+      const hours = hourlyData.slice(start, start + 24);
+      document.getElementById("timelineTitle").textContent = summary.shortLabel + " · 時間別適性（日中は青空、夜間は星空）";
+      const strip = document.getElementById("hourlyStrip");
+      renderedTimelineDay = summary;
+      strip.replaceChildren();
+      hours.forEach(item => {
+        const index = skyIndex(item);
+        const pill = document.createElement("button");
+        pill.type = "button";
+        pill.className = "hour-pill " + (item.isNight ? "is-night" : "is-day");
+        pill.dataset.idx = item.idx;
+        pill.innerHTML = '<span class="hour-time">' + item.hourStr + '</span>' +
+          '<strong class="hour-score">' + item.rawScore + '%</strong>' +
+          '<span class="hour-cloud">' + index + '</span>';
+        pill.setAttribute("aria-label", item.hourStr + " " + index + " " + item.rawScore + "パーセント");
+        pill.addEventListener("click", () => selectHour(item.idx));
+        strip.append(pill);
+      });
     }
 
     function renderConstellations(month, day) {
@@ -3889,61 +4195,46 @@
 
     function render1MonthForecast() {
       const list = document.getElementById("weeklyList");
-      list.innerHTML = "";
-      const selectedDate = hourlyData[selectedIndex]?.dateStr;
-      let dividerAdded = false;
+      list.replaceChildren();
+      [false, true].forEach(reference => {
+        const days = dailySummaries.filter(day => day.isClimateRef === reference);
+        if (!days.length) return;
+        const heading = document.createElement("h3");
+        heading.className = reference ? "forecast-divider is-reference" : "forecast-divider";
+        heading.textContent = reference ? "気候参考値 · 月別気候と天文計算" : "気象予報 · Open-Meteo";
+        const grid = document.createElement("div");
+        grid.className = "forecast-grid";
+        list.append(heading, grid);
 
-      dailySummaries.forEach((s, i) => {
-        if (s.isClimateRef && !dividerAdded) {
-          dividerAdded = true;
-          const divEl = document.createElement("div");
-          divEl.className = "forecast-divider";
-          divEl.textContent = "🔭 17〜30日目：天文計算（月高度・潮汐）＋宮古島月別気候傾向（参考）";
-          list.appendChild(divEl);
-        }
-
-        const dayLabel = getRatingLabel5(s.dayPeak5, false);
-        const nightLabel = getRatingLabel5(s.nightPeak5, true);
-
-        const row = document.createElement("div");
-        row.className = `day-row ${s.isClimateRef ? "is-climate-ref" : ""} ${s.date === selectedDate ? "selected" : ""}`;
-        row.dataset.date = s.date;
-
-        row.innerHTML = `
-          <div class="day-date-col" title="タップしてこの日を表示">
-            <div class="day-name">${s.shortLabel}</div>
-            <div class="day-sub">${s.isClimateRef ? "🔭気候" : "📡予報"} • ${s.moonEmoji}${s.moonPct}%</div>
-          </div>
-          <div class="day-dual-ratings">
-            <div class="rating-pill day-side" data-jump="${s.bestDayIdx}" title="青空ベスト ${s.bestDayStr} (${s.dayPeakRaw}% • ${dayLabel})">
-              <span class="rating-mode-tag">青空</span>
-              <div class="day-stars" aria-label="青空5段階中 ${s.dayPeak5.toFixed(1)}">${buildEmojiStars(s.dayPeak5, "☀️")}</div>
-              <span class="rating-label-chip">${s.dayPeak5.toFixed(1)}</span>
-            </div>
-            <div class="rating-pill night-side" data-jump="${s.bestNightIdx}" title="星空ベスト ${s.bestNightStr} (${s.nightPeakRaw}% • ${nightLabel})">
-              <span class="rating-mode-tag">星空</span>
-              <div class="day-stars" aria-label="星空5段階中 ${s.nightPeak5.toFixed(1)}">${buildEmojiStars(s.nightPeak5, "⭐")}</div>
-              <span class="rating-label-chip">${s.nightPeak5.toFixed(1)}</span>
-            </div>
-          </div>
-        `;
-
-        row.querySelector(".day-date-col").addEventListener("click", () => {
-          selectDay(i, null, i > selectedDayIdx ? 1 : -1);
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        });
-
-        row.querySelectorAll(".rating-pill").forEach(pill => {
-          pill.addEventListener("click", () => {
-            const targetIdx = Number(pill.dataset.jump);
-            selectDay(i, targetIdx, i > selectedDayIdx ? 1 : -1);
-            window.scrollTo({ top: 0, behavior: "smooth" });
+        days.forEach(summary => {
+          const row = document.createElement("article");
+          row.className = "day-row" + (reference ? " is-climate-ref" : "");
+          row.dataset.date = summary.date;
+          row.innerHTML = '<h4 class="day-name">' + summary.dayLabel + '</h4>' +
+            '<p class="day-sub">' + (reference ? "気候参考値" : "気象予報") +
+            ' · 月 ' + summary.moonPct + '%</p>';
+          [
+            ["blue", "青空", summary.bestDayIdx, summary.bestDayStr, summary.dayPeakRaw],
+            ["stars", "星空", summary.bestNightIdx, summary.bestNightStr, summary.nightPeakRaw]
+          ].forEach(([mode, label, idx, time, score]) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "forecast-pick";
+            button.textContent = label + " " + time + " · " + score + "%";
+            button.setAttribute("aria-label", summary.dayLabel + " " + button.textContent);
+            button.addEventListener("click", () => {
+              setMode(mode);
+              selectDay(summary.dayIdx, idx);
+              if (location.hash === "#home") showView("home");
+              else location.hash = "home";
+            });
+            row.append(button);
           });
+          grid.append(row);
         });
-
-        list.appendChild(row);
       });
     }
+
 
     // ==========================================
     // スワイプ＆時間・日付コントロール操作
@@ -3954,7 +4245,10 @@
       let startX = 0, startY = 0, deltaX = 0, tracking = false, isHorizontal = null;
 
       card.addEventListener("touchstart", (e) => {
-        if (e.touches.length !== 1) return;
+        if (e.touches.length !== 1) {
+          resetSwipe();
+          return;
+        }
         if (e.target.closest(".time-control-bar") || e.target.closest(".chart-wrap") ||
             e.target.closest("button") || e.target.closest("select")) {
           tracking = false;
@@ -3983,11 +4277,16 @@
         }
       }, { passive: true });
 
-      card.addEventListener("touchend", () => {
-        if (!tracking) return;
+      function resetSwipe() {
         tracking = false;
         content.style.transition = "transform 0.22s ease-out";
         content.style.transform = "translateX(0)";
+      }
+
+      card.addEventListener("touchcancel", resetSwipe);
+      card.addEventListener("touchend", () => {
+        if (!tracking) return;
+        resetSwipe();
 
         if (isHorizontal && Math.abs(deltaX) > 48) {
           if (deltaX < 0 && selectedDayIdx < dailySummaries.length - 1) {
@@ -4025,15 +4324,7 @@
         selectHourByDayAndHour(selectedDayIdx, Number(e.target.value));
       });
 
-      document.getElementById("bestTonightChip").addEventListener("click", () => {
-        const summary = dailySummaries[selectedDayIdx];
-        if (summary) selectHour(summary.bestNightIdx);
-      });
 
-      document.getElementById("bestDayChip").addEventListener("click", () => {
-        const summary = dailySummaries[selectedDayIdx];
-        if (summary) selectHour(summary.bestDayIdx);
-      });
     }
 
     // ==========================================
@@ -4073,7 +4364,10 @@
     }
 
     function showSpot(index) {
-      document.querySelectorAll(".spot-tab").forEach((el, i) => el.classList.toggle("active", i === index));
+      document.querySelectorAll(".spot-tab").forEach((el, i) => {
+        el.classList.toggle("active", i === index);
+        el.setAttribute("aria-pressed", String(i === index));
+      });
       const s = SPOTS[index];
       document.getElementById("spotDetail").innerHTML = `
         <div class="spot-header">
@@ -4089,155 +4383,17 @@
     }
 
     // ==========================================
-    // 背景Canvas 空シミュレーション（昼・夕・夜対応）
-    // ==========================================
-    const canvas = document.getElementById("skyCanvas");
-    const ctx = canvas.getContext("2d");
-    let stars = [], clouds = [], shootingStar = null;
-
-    const simState = {
-      cloudCoverage: 0.2,
-      moonIllum: 0.2,
-      isNight: true,
-      sunAltDeg: -20,
-      starVisibility: 0.9
-    };
-
-    function updateSkySimulation(item) {
-      simState.cloudCoverage = item.cloudTotal / 100;
-      simState.moonIllum = item.moonAltDeg > 0 ? item.moon.illumination : 0;
-      simState.isNight = item.isNight;
-      simState.sunAltDeg = item.sunPos.altDeg;
-      simState.starVisibility = item.isNight ? Math.max(0.15, 1 - simState.moonIllum * 0.45) : 0;
-    }
-
-    function initCanvasObjects() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      const starCount = Math.min(300, Math.floor((canvas.width * canvas.height) / 4400));
-      stars = Array.from({ length: starCount }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height * 0.88,
-        r: Math.random() < 0.12 ? Math.random() * 1.5 + 1.1 : Math.random() * 1.1 + 0.3,
-        alpha: Math.random() * 0.7 + 0.3,
-        twinkleSpeed: Math.random() * 0.025 + 0.008,
-        phase: Math.random() * Math.PI * 2,
-        tint: Math.random() < 0.2 ? "#bae6fd" : Math.random() < 0.15 ? "#fde68a" : "#ffffff"
-      }));
-
-      clouds = Array.from({ length: 12 }, (_, i) => ({
-        x: Math.random() * canvas.width,
-        y: (i / 12) * canvas.height * 0.7 + Math.random() * 40,
-        rx: 130 + Math.random() * 200,
-        ry: 38 + Math.random() * 52,
-        speed: 0.12 + Math.random() * 0.2
-      }));
-    }
-
-    function animateSky() {
-      const w = canvas.width, h = canvas.height;
-      const grad = ctx.createLinearGradient(0, 0, 0, h);
-
-      if (!simState.isNight) {
-        if (simState.sunAltDeg < 10) {
-          grad.addColorStop(0, "#1e3a8a");
-          grad.addColorStop(0.55, "#7c3aed");
-          grad.addColorStop(1, "#c2410c");
-        } else {
-          const greyMix = simState.cloudCoverage * 0.35;
-          grad.addColorStop(0, `rgb(${Math.round(14 + greyMix * 70)}, ${Math.round(68 + greyMix * 55)}, ${Math.round(138 - greyMix * 20)})`);
-          grad.addColorStop(0.65, `rgb(${Math.round(28 + greyMix * 65)}, ${Math.round(105 + greyMix * 40)}, ${Math.round(170 - greyMix * 20)})`);
-          grad.addColorStop(1, "#0c2d48");
-        }
-      } else {
-        const moonBoost = simState.moonIllum * 16;
-        grad.addColorStop(0, `rgb(${4 + moonBoost * 0.4}, ${8 + moonBoost * 0.6}, ${22 + moonBoost})`);
-        grad.addColorStop(0.65, `rgb(${10 + moonBoost * 0.5}, ${20 + moonBoost * 0.7}, ${46 + moonBoost})`);
-        grad.addColorStop(1, "#050b18");
-      }
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, w, h);
-
-      if (simState.isNight) {
-        const mwAlpha = Math.max(0.02, (1 - simState.cloudCoverage * 0.85) * (1 - simState.moonIllum * 0.6) * 0.16);
-        ctx.save();
-        ctx.translate(w * 0.5, h * 0.35);
-        ctx.rotate(-0.45);
-        const mwGrad = ctx.createRadialGradient(0, 0, 20, 0, 0, Math.max(w, h) * 0.55);
-        mwGrad.addColorStop(0, `rgba(125, 211, 252, ${mwAlpha})`);
-        mwGrad.addColorStop(0.5, `rgba(167, 139, 250, ${mwAlpha * 0.5})`);
-        mwGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
-        ctx.scale(1.8, 0.42);
-        ctx.fillStyle = mwGrad;
-        ctx.beginPath();
-        ctx.arc(0, 0, Math.max(w, h) * 0.55, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
-        const cloudFade = 1 - simState.cloudCoverage * 0.82;
-        stars.forEach(s => {
-          s.phase += s.twinkleSpeed;
-          const a = s.alpha * (0.65 + 0.35 * Math.sin(s.phase)) * simState.starVisibility * cloudFade;
-          if (a <= 0.02) return;
-          ctx.globalAlpha = a;
-          ctx.fillStyle = s.tint;
-          ctx.beginPath();
-          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-          ctx.fill();
-        });
-        ctx.globalAlpha = 1;
-
-        if (simState.cloudCoverage < 0.45 && !shootingStar && Math.random() < 0.005) {
-          shootingStar = {
-            x: Math.random() * w * 0.7 + w * 0.15,
-            y: Math.random() * h * 0.3,
-            vx: 8 + Math.random() * 5,
-            vy: 3 + Math.random() * 3,
-            life: 1.0
-          };
-        }
-        if (shootingStar) {
-          ctx.strokeStyle = `rgba(224, 242, 254, ${shootingStar.life})`;
-          ctx.lineWidth = 1.6;
-          ctx.beginPath();
-          ctx.moveTo(shootingStar.x, shootingStar.y);
-          ctx.lineTo(shootingStar.x - shootingStar.vx * 5, shootingStar.y - shootingStar.vy * 5);
-          ctx.stroke();
-          shootingStar.x += shootingStar.vx;
-          shootingStar.y += shootingStar.vy;
-          shootingStar.life -= 0.035;
-          if (shootingStar.life <= 0) shootingStar = null;
-        }
-      }
-
-      if (simState.cloudCoverage > 0.03) {
-        clouds.forEach(c => {
-          c.x += c.speed;
-          if (c.x - c.rx > w) c.x = -c.rx;
-          const cAlpha = simState.cloudCoverage * (simState.isNight ? 0.22 : 0.34);
-          const colorBase = simState.isNight ? "148, 163, 184" : "248, 250, 252";
-          const cg = ctx.createRadialGradient(c.x, c.y, c.ry * 0.2, c.x, c.y, c.rx);
-          cg.addColorStop(0, `rgba(${colorBase}, ${cAlpha})`);
-          cg.addColorStop(1, `rgba(${colorBase}, 0)`);
-          ctx.fillStyle = cg;
-          ctx.beginPath();
-          ctx.ellipse(c.x, c.y, c.rx, c.ry, 0, 0, Math.PI * 2);
-          ctx.fill();
-        });
-      }
-
-      requestAnimationFrame(animateSky);
-    }
-
-    // ==========================================
     // イベント設定・初期化
     // ==========================================
-    window.addEventListener("resize", initCanvasObjects);
+
     document.getElementById("refreshBtn").addEventListener("click", () => fetchWeather(false));
 
     document.querySelectorAll("[data-mtab]").forEach(tab => {
       tab.addEventListener("click", () => {
-        document.querySelectorAll("[data-mtab]").forEach(t => t.classList.remove("active"));
+        document.querySelectorAll("[data-mtab]").forEach(t => {
+          t.classList.remove("active");
+          t.setAttribute("aria-pressed", String(t === tab));
+        });
         tab.classList.add("active");
         activeMeteorTab = tab.dataset.mtab;
         const item = hourlyData[selectedIndex];
@@ -4248,8 +4404,8 @@
       });
     });
 
-    initCanvasObjects();
-    animateSky();
+
+    initNavigation();
     initHeroControls();
     initSpots();
     initAutoRefresh();
