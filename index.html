@@ -1687,11 +1687,12 @@
     .glass-card { min-width: 0; background: #101d33; box-shadow: none; backdrop-filter: none; }
     .view-heading { margin: 14px 0 10px; font-size: clamp(1.25rem, 4.7vw, 1.8rem); }
     .view-source { color: var(--text-sub); margin-bottom: 14px; font-size: .875rem; }
-    #view-home .hero-grid, #view-details .hero-grid { grid-template-columns: minmax(0, 1fr); }
-    #view-details > :is(.hero-grid, .sun-moon-grid, .celestial-grid, .photo-card) { margin-bottom: 16px; }
+    #view-home .hero-grid { grid-template-columns: minmax(0, 1fr); }
+    #view-details > :is(.celestial-grid, .photo-card) { margin-bottom: 16px; }
     .skip-link { position: absolute; top: 0; left: 12px; z-index: 15; transform: translateY(-120%); background: #122845; color: white; padding: 12px; }
     .skip-link:focus { transform: none; }
     :is(button, select, a, [tabindex]):focus-visible { outline: 2px solid #fce18b; outline-offset: 2px; }
+    .view-heading:focus { outline: none; }
     button, select { min-height: 44px; font: inherit; }
     button:disabled { opacity: .55; cursor: default; }
     .selection-controls { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; align-items: center; gap: 8px 16px; }
@@ -1743,8 +1744,7 @@
     .forecast-pick { font-size: .8rem; }
     .rs-box { color: var(--text-main); text-align: inherit; }
     @media (max-width: 640px) {
-      .selection-controls { grid-template-columns: 1fr; gap: 5px; }
-      .selection-controls .timezone { justify-self: center; }
+      .selection-controls { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 8px; }
       .score-panel { grid-template-columns: 94px minmax(0, 1fr); }
       .score-panel .gauge-wrap { width: 94px; height: 94px; }
       .score-panel .gauge-label { font-size: .54rem; }
@@ -1788,9 +1788,20 @@
         padding-left: max(10px, env(safe-area-inset-left));
         padding-right: max(10px, env(safe-area-inset-right));
       }
-      .selection-controls .date-nav-bar, .selection-controls .time-control-bar { padding: 4px 7px; }
-      .selection-controls select { padding-inline: 3px; }
-      .selection-controls .nav-arrow-btn, .selection-controls .time-step-btn { min-width: 44px; }
+      header { margin-bottom: 9px; column-gap: 12px; row-gap: 2px; }
+      .header-controls { width: auto; flex-wrap: nowrap; justify-content: flex-start; gap: 4px; }
+      .header-controls .status-pill {
+        flex: initial; min-height: 0; border: 0; padding: 2px 4px;
+        background: none; gap: 5px; font-size: .75rem;
+      }
+      .header-controls .dot { width: 6px; height: 6px; }
+      .header-controls .btn { min-width: 44px; padding: 0 6px; font-size: .75rem; }
+      .header-controls .refresh-icon { display: none; }
+      .selection-controls .date-nav-bar, .selection-controls .time-control-bar {
+        padding: 0; min-width: 0; border: 0; background: transparent;
+      }
+      .selection-controls select { max-width: none; padding-inline: 4px; }
+      .selection-controls .nav-arrow-btn, .selection-controls .time-step-btn { display: none; }
       .score-panel .badge-row { grid-column: 1 / -1; grid-row: 1; }
       .score-panel .gauge-wrap { grid-row: 2 / 4; }
       .score-panel .badge-row > span { line-height: 1.35; font-size: .75rem; }
@@ -1850,12 +1861,13 @@
           <span class="dot" id="statusDot"></span>
           <span id="statusText" role="status">気象データ読込中...</span>
         </div>
-        <button class="btn" id="refreshBtn">↻ 更新</button>
+        <button class="btn" id="refreshBtn" type="button"><span class="refresh-icon" aria-hidden="true">↻ </span>更新</button>
       </div>
     </header>
 
     <main id="app-main">
-      <div class="selection-controls" aria-label="撮影日時（日本時間）">          <div class="date-nav-bar">
+      <div class="selection-controls" aria-label="撮影日時（日本時間）">
+          <div class="date-nav-bar">
             <button class="nav-arrow-btn" id="prevDayBtn" aria-label="前日">◀</button>
             <div class="date-select-wrap">
               <select class="date-select" id="dateSelect" aria-label="日付選択"></select>
@@ -1972,15 +1984,8 @@
             <button type="button" role="tab" id="home-tab-events" aria-controls="panel-events" aria-selected="false" tabindex="-1">出没・海ポチャ・光スケジュール</button>
             <button type="button" role="tab" id="home-tab-moon" aria-controls="panel-moon" aria-selected="false" tabindex="-1">月齢・雲の広がり</button>
           </div>
-          <div id="homePanelSlot"></div>
-        </div>
-    </section>
-    <section id="view-details" aria-labelledby="details-heading" hidden>
-      <h2 class="view-heading" id="details-heading" tabindex="-1">詳細</h2>
-      <p class="view-source" id="detailSource"></p>
-      <div class="hero-grid">
-      <!-- 2番目：風向・詳細気象・潮位タブ -->
-      <section class="glass-card wind-panel-stack" id="panel-wind">
+          <div id="homePanelSlot">
+      <section class="glass-card wind-panel-stack" id="panel-wind" role="tabpanel" aria-labelledby="home-tab-wind" tabindex="0">
         <div>
           <div class="section-title">
             <span>🧭 WIND, WEATHER & TIDE / 風向・詳細気象・潮位</span>
@@ -2017,11 +2022,8 @@
           <svg class="tide-chart-svg" id="tideChartSvg" viewBox="0 0 300 54" preserveAspectRatio="none"></svg>
         </div>
       </section>
-    </div>
 
-    <!-- 2段目：太陽・月・出没（海ポチャ確率）・マジックアワー統合 ＆ 月齢・雲層 -->
-    <div class="sun-moon-grid">
-      <section class="glass-card sun-magic-stack" id="panel-events">
+      <section class="glass-card sun-magic-stack" id="panel-events" role="tabpanel" aria-labelledby="home-tab-events" tabindex="0" hidden>
         <div>
           <div class="section-title">
             <span>☀️🌙 SUN, MOON & MAGIC HOURS / 出没・海ポチャ・光スケジュール</span>
@@ -2055,8 +2057,7 @@
         </div>
       </section>
 
-      <!-- 右：月齢・高度別雲層カード -->
-      <section class="glass-card astro-stack" id="panel-moon">
+      <section class="glass-card astro-stack" id="panel-moon" role="tabpanel" aria-labelledby="home-tab-moon" tabindex="0" hidden>
         <div class="section-title" style="margin-bottom:0;">
           <span>🌗☁️ MOON & CLOUDS / 月齢・雲の広がり</span>
         </div>
@@ -2098,8 +2099,12 @@
           雲の層別の見え方を解析中...
         </div>
       </section>
-    </div>
-
+          </div>
+        </div>
+    </section>
+    <section id="view-details" aria-labelledby="details-heading" hidden>
+      <h2 class="view-heading" id="details-heading" tabindex="-1">星空ガイド</h2>
+      <p class="view-source" id="detailSource"></p>
     <!-- 撮影アシスト -->
     <section class="glass-card photo-card">
       <div class="section-title">
@@ -2156,7 +2161,7 @@
       <a href="#home" data-view="home" aria-current="page">ホーム</a>
       <a href="#forecast" data-view="forecast">30日予報</a>
       <a href="#spots" data-view="spots">撮影地</a>
-      <a href="#details" data-view="details">詳細</a>
+      <a href="#details" data-view="details">星空ガイド</a>
     </nav>
   </div>
 
@@ -3913,7 +3918,6 @@
         else el.removeAttribute("aria-current");
         document.getElementById("view-" + el.dataset.view).hidden = el !== link;
       });
-      placeDetailPanels(view === "home");
       if (focusHeading) {
         window.scrollTo(0, 0);
         document.getElementById(view + "-heading").focus({ preventScroll: true });
@@ -3953,12 +3957,10 @@
       const list = document.querySelector(".home-detail-tabs");
       list.querySelectorAll('[role="tab"]').forEach((tab, index) => {
         const panel = document.getElementById(tab.getAttribute("aria-controls"));
-        const origin = document.createComment(panel.id);
-        panel.before(origin);
-        homeDetailPanels.push({ tab, panel, origin });
+        homeDetailPanels.push({ tab, panel });
         tab.addEventListener("click", () => {
           activeHomeTab = index;
-          placeDetailPanels(true);
+          updateHomeTabs();
         });
       });
       list.addEventListener("keydown", event => {
@@ -3972,29 +3974,17 @@
         if (!Object.hasOwn(steps, event.key)) return;
         event.preventDefault();
         activeHomeTab = steps[event.key];
-        placeDetailPanels(true);
+        updateHomeTabs();
         homeDetailPanels[activeHomeTab].tab.focus();
       });
     }
 
-    function placeDetailPanels(atHome) {
-      const slot = document.getElementById("homePanelSlot");
-      homeDetailPanels.forEach(({ tab, panel, origin }, index) => {
+    function updateHomeTabs() {
+      homeDetailPanels.forEach(({ tab, panel }, index) => {
         const active = index === activeHomeTab;
         tab.tabIndex = active ? 0 : -1;
         tab.setAttribute("aria-selected", String(active));
-        panel.hidden = atHome && !active;
-        if (atHome) {
-          if (panel.parentNode !== slot) slot.append(panel);
-          panel.setAttribute("role", "tabpanel");
-          panel.setAttribute("aria-labelledby", tab.id);
-          panel.tabIndex = 0;
-        } else {
-          if (panel.previousSibling !== origin) origin.after(panel);
-          panel.removeAttribute("role");
-          panel.removeAttribute("aria-labelledby");
-          panel.removeAttribute("tabindex");
-        }
+        panel.hidden = !active;
       });
     }
 
