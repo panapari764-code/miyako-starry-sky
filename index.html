@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-title" content="宮古島撮影ガイド" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#040814" />
-  <title>宮古島撮影ガイド | 星空・屋外撮影 14日間予報</title>
+  <title>宮古島撮影ガイド | 星空・青空指数 14日間予報</title>
   <style>
     :root {
       --bg-deep: #040814;
@@ -409,13 +409,13 @@
     }
 
     .gauge-value {
-      font-size: 2.55rem;
+      font-size: 2.6rem;
       font-weight: 800;
       line-height: 1.05;
     }
 
     .gauge-max {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       color: var(--text-muted);
     }
 
@@ -521,6 +521,32 @@
       margin-top: 2px;
     }
 
+    /* 0.5段階 絵文字スタイル */
+    .emoji-on {
+      display: inline-block;
+      filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.45));
+    }
+
+    .emoji-off {
+      display: inline-block;
+      filter: grayscale(100%);
+      opacity: 0.22;
+    }
+
+    .emoji-half {
+      position: relative;
+      display: inline-block;
+    }
+
+    .emoji-half-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 50%;
+      overflow: hidden;
+      filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.45));
+    }
+
     /* 時間別タイムライン */
     .embedded-timeline {
       margin-top: 16px;
@@ -565,7 +591,7 @@
     }
 
     .hour-pill {
-      width: 84px;
+      width: 86px;
       padding: 9px 6px;
       border-radius: 13px;
       background: rgba(255, 255, 255, 0.03);
@@ -573,7 +599,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       cursor: pointer;
       transition: all 0.16s ease;
     }
@@ -611,10 +637,11 @@
     }
 
     .hour-rank-label {
-      font-size: 0.67rem;
-      color: var(--text-sub);
-      background: rgba(255, 255, 255, 0.06);
-      padding: 1px 7px;
+      font-size: 0.71rem;
+      font-weight: 700;
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.07);
+      padding: 1px 8px;
       border-radius: 999px;
     }
 
@@ -775,6 +802,10 @@
       border-radius: 11px;
       padding: 8px 5px;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
     }
 
     .rs-box.sun {
@@ -790,14 +821,45 @@
     .rs-label {
       font-size: 0.66rem;
       color: var(--text-sub);
-      display: block;
-      margin-bottom: 2px;
     }
 
     .rs-time {
-      font-size: 0.94rem;
+      font-size: 0.96rem;
       font-weight: 700;
       color: #f8fafc;
+    }
+
+    .umi-prob-badge {
+      font-size: 0.66rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+      white-space: nowrap;
+      margin-top: 1px;
+    }
+
+    .umi-prob-high {
+      background: rgba(94, 234, 212, 0.16);
+      border: 1px solid rgba(94, 234, 212, 0.38);
+      color: #5eead4;
+    }
+
+    .umi-prob-mid {
+      background: rgba(251, 191, 36, 0.16);
+      border: 1px solid rgba(251, 191, 36, 0.38);
+      color: #fde68a;
+    }
+
+    .umi-prob-low {
+      background: rgba(248, 113, 113, 0.14);
+      border: 1px solid rgba(248, 113, 113, 0.32);
+      color: #fca5a5;
+    }
+
+    .umi-prob-none {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-muted);
     }
 
     .sun-pos-box {
@@ -1197,7 +1259,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 6px;
+      gap: 5px;
       padding: 5px 8px;
       border-radius: 9px;
       cursor: pointer;
@@ -1220,7 +1282,7 @@
     }
 
     .rating-mode-tag {
-      font-size: 0.68rem;
+      font-size: 0.67rem;
       font-weight: 700;
       color: var(--text-sub);
       white-space: nowrap;
@@ -1230,25 +1292,17 @@
       display: flex;
       align-items: center;
       gap: 1px;
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       line-height: 1;
       white-space: nowrap;
     }
 
-    .emoji-on {
-      filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.45));
-    }
-
-    .emoji-off {
-      filter: grayscale(100%);
-      opacity: 0.22;
-    }
-
     .rating-label-chip {
-      font-size: 0.65rem;
+      font-size: 0.72rem;
+      font-weight: 700;
       color: var(--text-main);
-      background: rgba(255, 255, 255, 0.08);
-      padding: 2px 6px;
+      background: rgba(255, 255, 255, 0.09);
+      padding: 2px 7px;
       border-radius: 999px;
       white-space: nowrap;
     }
@@ -1445,16 +1499,16 @@
       </div>
     </header>
 
-    <!-- メインビュー：1番目 星空・撮影指数 / 2番目 風向・詳細気象・潮位 -->
+    <!-- メインビュー：1番目 星空・青空指数 / 2番目 風向・詳細気象・潮位 -->
     <div class="hero-grid">
-      <!-- 1番目：星空・撮影指数タブ（時間別予報を内包） -->
+      <!-- 1番目：星空・青空指数タブ -->
       <section class="glass-card swipe-card" id="heroSwipeCard">
         <div>
           <div class="section-title">
-            <span id="mainIndexCardTitle">STARRY & OUTDOOR INDEX / 星空・撮影指数</span>
+            <span id="mainIndexCardTitle">STARRY & BLUE SKY INDEX / 星空・青空指数</span>
             <div class="best-chips-row">
-              <button class="best-chip day" id="bestDayChip" title="タップで昼のベスト時刻へ">昼ベスト: --</button>
-              <button class="best-chip night" id="bestTonightChip" title="タップで夜のベスト時刻へ">夜ベスト: --</button>
+              <button class="best-chip day" id="bestDayChip" title="タップで昼の青空ベスト時刻へ">☀ 青空ベスト: --</button>
+              <button class="best-chip night" id="bestTonightChip" title="タップで夜の星空ベスト時刻へ">🌌 星空ベスト: --</button>
             </div>
           </div>
 
@@ -1467,7 +1521,7 @@
             <button class="nav-arrow-btn" id="nextDayBtn" aria-label="翌日">▶</button>
           </div>
 
-          <!-- 時間変更バー（1h前・時刻プルダウン・1h後） -->
+          <!-- 時間変更バー -->
           <div class="time-control-bar">
             <div class="time-control-top">
               <button class="time-step-btn" id="prevHourBtn" aria-label="1時間前">◀ 1h前</button>
@@ -1496,9 +1550,9 @@
                   stroke-dasharray="414.69" stroke-dashoffset="414.69" />
               </svg>
               <div class="gauge-center">
-                <span class="gauge-label" id="gaugeSubLabel">INDEX</span>
+                <span class="gauge-label" id="gaugeSubLabel">STAR INDEX</span>
                 <span class="gauge-value" id="mainScoreValue">--</span>
-                <span class="gauge-max">/ 100</span>
+                <span class="gauge-max">/ 5.0</span>
               </div>
             </div>
 
@@ -1508,7 +1562,7 @@
                 <span class="weather-code-badge" id="weatherCodeBadge">☀ --</span>
               </div>
               <h2 class="rank-title" id="rankTitle">データ取得中...</h2>
-              <p class="rank-desc" id="rankDesc">宮古島の雲量・天気・風・月齢から最適な指数を計算しています。</p>
+              <p class="rank-desc" id="rankDesc">宮古島の雲量・天気・視程・月齢から0.5段階指数を計算しています。</p>
 
               <div class="mini-metrics">
                 <div class="metric-box">
@@ -1530,7 +1584,7 @@
 
         <div class="embedded-timeline">
           <div class="embedded-timeline-head">
-            <span id="timelineTitle">⏰ 時間別予報（昼:☀️5段階 / 夜:⭐5段階）</span>
+            <span id="timelineTitle">⏰ 時間別予報（昼:青空☀️ / 夜:星空⭐ 0.5段階）</span>
             <span style="font-size:0.69rem; color:var(--text-muted);">青枠=夜間 / 水色枠=日中（タップで切替）</span>
           </div>
           <div class="chart-wrap" id="timelineScrollWrap">
@@ -1581,29 +1635,33 @@
       </section>
     </div>
 
-    <!-- 2段目：太陽・月・出没・雲層 & マジックアワー -->
+    <!-- 2段目：太陽・月・出没（海ポチャ確率）・雲層 & マジックアワー -->
     <div class="magic-weather-grid">
       <section class="glass-card astro-stack">
         <div class="section-title" style="margin-bottom:0;">
-          <span>SUN, MOON & CLOUDS / 太陽・月・雲層</span>
+          <span>SUN, MOON & CLOUDS / 出没・海ポチャ率・月齢・雲層</span>
         </div>
 
         <div class="rise-set-quad">
           <div class="rs-box sun">
             <span class="rs-label">🌅 日の出</span>
             <span class="rs-time" id="sunriseText">--:--</span>
+            <span class="umi-prob-badge umi-prob-none" id="sunriseProb">海ポチャ --%</span>
           </div>
           <div class="rs-box sun">
             <span class="rs-label">🌇 日の入り</span>
             <span class="rs-time" id="sunsetText">--:--</span>
+            <span class="umi-prob-badge umi-prob-none" id="sunsetProb">海ポチャ --%</span>
           </div>
           <div class="rs-box moon">
             <span class="rs-label">🌔 月の出</span>
             <span class="rs-time" id="moonriseText">--:--</span>
+            <span class="umi-prob-badge umi-prob-none" id="moonriseProb">海ポチャ --%</span>
           </div>
           <div class="rs-box moon">
             <span class="rs-label">🌘 月の入り</span>
             <span class="rs-time" id="moonsetText">--:--</span>
+            <span class="umi-prob-badge umi-prob-none" id="moonsetProb">海ポチャ --%</span>
           </div>
         </div>
 
@@ -1713,8 +1771,8 @@
     <div class="lower-grid">
       <section class="glass-card">
         <div class="section-title">
-          <span>14-DAY PHOTO FORECAST / 14日間撮影予報</span>
-          <span style="font-size:0.71rem; color:var(--text-muted);">☀️昼・🌌夜をタップで切替</span>
+          <span>14-DAY PHOTO FORECAST / 14日間撮影予報（0.5段階）</span>
+          <span style="font-size:0.71rem; color:var(--text-muted);">☀️青空・🌌星空をタップで切替</span>
         </div>
         <div class="weekly-list" id="weeklyList"></div>
       </section>
@@ -1729,7 +1787,7 @@
     </div>
 
     <p class="formula-note">
-      ※ 宮古島撮影ガイドの気象データ（雲量・天気コード・風向/風速/突風・気温/露点・気圧・視程・UV・日射量）はOpen-Meteoの14日間予報を使用しています。太陽位置・日の出没・月の出没・マジックアワー・潮汐（平良基準）は宮古島の経緯度に基づく天文推算値です。
+      ※ 宮古島撮影ガイドの気象データ（雲量・天気コード・風向/風速/突風・気温/露点・気圧・視程・UV・日射量）はOpen-Meteoの14日間予報を使用しています。星空指数・青空指数（0.5段階）および海ポチャ確率（水平線付近の低/中/高層雲・視程・降水確率から算出）は独自の撮影向け指標です。
     </p>
   </div>
 
@@ -2104,6 +2162,59 @@
     }
 
     // ==========================================
+    // 海ポチャ確率計算（水平線上の日の出/入・月の出/入の視認確率）
+    // ==========================================
+    function calcHorizonProbAtTime(dateStr, hhmm) {
+      if (!hhmm || hhmm === "なし" || hhmm === "--:--") return null;
+      const [hh, mm] = hhmm.split(":").map(Number);
+      if (Number.isNaN(hh)) return null;
+
+      const dayStartIdx = hourlyData.findIndex(h => h.dateStr === dateStr);
+      if (dayStartIdx < 0) return null;
+
+      const idx1 = Math.min(hourlyData.length - 1, dayStartIdx + hh);
+      const idx2 = Math.min(hourlyData.length - 1, idx1 + 1);
+      const frac = (mm || 0) / 60;
+
+      const a = hourlyData[idx1];
+      const b = hourlyData[idx2];
+      if (!a) return null;
+
+      const lerp = (v1, v2) => v1 + (v2 - v1) * frac;
+      const cLow = lerp(a.cloudLow, b.cloudLow);
+      const cMid = lerp(a.cloudMid, b.cloudMid);
+      const cHigh = lerp(a.cloudHigh, b.cloudHigh);
+      const cTotal = lerp(a.cloudTotal, b.cloudTotal);
+      const precip = lerp(a.precip, b.precip);
+      const visKm = lerp(a.visKm, b.visKm);
+
+      // 水平線（低空）を隠しやすい低層雲・中層雲を重く評価
+      const horizonBlock = cLow * 0.60 + cMid * 0.26 + cHigh * 0.08;
+      const effectiveBlock = Math.max(horizonBlock, cTotal * 0.68);
+      let prob = 100 - effectiveBlock * 0.92;
+
+      if (visKm < 16) prob -= (16 - visKm) * 1.8;
+      if (precip > 15) prob -= (precip - 15) * 0.5;
+
+      return Math.max(0, Math.min(99, Math.round(prob)));
+    }
+
+    function applyUmiProbBadge(elId, prob) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      el.classList.remove("umi-prob-high", "umi-prob-mid", "umi-prob-low", "umi-prob-none");
+      if (prob === null) {
+        el.textContent = "海ポチャ --";
+        el.classList.add("umi-prob-none");
+        return;
+      }
+      el.textContent = `🌊 海ポチャ ${prob}%`;
+      if (prob >= 70) el.classList.add("umi-prob-high");
+      else if (prob >= 40) el.classList.add("umi-prob-mid");
+      else el.classList.add("umi-prob-low");
+    }
+
+    // ==========================================
     // 天気コード・風向・気象ユーティリティ
     // ==========================================
     function getWeatherCodeInfo(code, isNight) {
@@ -2232,9 +2343,9 @@
     }
 
     // ==========================================
-    // 星空指数（夜間）＆ 屋外撮影指数（日中）計算 + 季節別コメント
+    // 星空指数（夜間）＆ 青空指数（日中）0.5段階 + 季節別コメント
     // ==========================================
-    function calcStarryIndex({ cloudLow, cloudMid, cloudHigh, cloudTotal, precipProb, humidity, moonIllum }) {
+    function calcStarryRaw({ cloudLow, cloudMid, cloudHigh, cloudTotal, precipProb, humidity, moonIllum }) {
       const weightedCloud = cloudLow * 0.62 + cloudMid * 0.28 + cloudHigh * 0.10;
       const effectiveCloud = Math.max(weightedCloud, cloudTotal * 0.78);
       let score = 100 - effectiveCloud * 0.95;
@@ -2246,32 +2357,40 @@
       return Math.max(0, Math.min(100, Math.round(score)));
     }
 
-    function calcDaytimePhotoIndex({ cloudLow, cloudMid, cloudHigh, cloudTotal, precipProb, wind, visKm, weatherCode }) {
-      const heavyCloud = cloudLow * 0.65 + cloudMid * 0.28 + cloudHigh * 0.07;
-      const cloudPenalty = heavyCloud > 18 ? (heavyCloud - 18) * 0.62 : 0;
-      let score = 100 - cloudPenalty;
+    function calcBlueSkyRaw({ cloudLow, cloudMid, cloudHigh, cloudTotal, precipProb, humidity, visKm, weatherCode }) {
+      // 青空指数：低/中層雲は青空を遮り、薄い高層雲は透過する。視程・降水・霧も反映
+      const weightedCloud = cloudLow * 0.62 + cloudMid * 0.28 + cloudHigh * 0.10;
+      const effectiveCloud = Math.max(weightedCloud, cloudTotal * 0.78);
+      let score = 100 - effectiveCloud * 0.96;
 
-      if (precipProb > 10) score -= (precipProb - 10) * 0.65;
-      if (weatherCode >= 51) score -= 22;
-      if (wind > 6.5) score -= (wind - 6.5) * 3.5;
-      if (visKm < 12) score -= (12 - visKm) * 1.5;
+      if (precipProb > 15) score -= (precipProb - 15) * 0.45;
+      if (weatherCode >= 51) score -= 22; // 降水
+      else if (weatherCode === 45 || weatherCode === 48) score -= 18; // 霧
+      if (visKm < 15) score -= (15 - visKm) * 1.4;
+      if (humidity > 85) score -= (humidity - 85) * 0.4;
 
       return Math.max(0, Math.min(100, Math.round(score)));
     }
 
-    function getRating5(score, isNight) {
+    // 0〜100の内部スコアを 0.0〜5.0 の 0.5刻み指数に変換
+    function toHalfStep5(rawScore) {
+      const val = Math.round((rawScore / 20) * 2) / 2;
+      return Math.max(0, Math.min(5.0, val));
+    }
+
+    function getRatingLabel5(val5, isNight) {
       if (isNight) {
-        if (score >= 80) return { count: 5, label: "最高" };
-        if (score >= 60) return { count: 4, label: "良好" };
-        if (score >= 40) return { count: 3, label: "雲間" };
-        if (score >= 20) return { count: 2, label: "厳しめ" };
-        return { count: 1, label: "困難" };
+        if (val5 >= 4.5) return "最高";
+        if (val5 >= 3.5) return "良好";
+        if (val5 >= 2.5) return "雲間";
+        if (val5 >= 1.5) return "厳しめ";
+        return "困難";
       } else {
-        if (score >= 80) return { count: 5, label: "最高" };
-        if (score >= 60) return { count: 4, label: "良好" };
-        if (score >= 40) return { count: 3, label: "晴れ間" };
-        if (score >= 20) return { count: 2, label: "曇天" };
-        return { count: 1, label: "荒天" };
+        if (val5 >= 4.5) return "快晴";
+        if (val5 >= 3.5) return "青空";
+        if (val5 >= 2.5) return "晴れ間";
+        if (val5 >= 1.5) return "曇りがち";
+        return "曇雨";
       }
     }
 
@@ -2283,92 +2402,92 @@
       return "autumn";
     }
 
-    function getRankInfo(score, isNight, month) {
+    function getRankInfo(val5, isNight, month) {
       const season = getMiyakoSeasonKey(month);
 
       const NIGHT_TEXT = {
         winter: {
-          85: ["冬空の宝石箱・最高の星空！", "冬の宮古島では貴重な快晴夜！澄んだ空気の中、オリオン座やカノープス、未明には南十字星もくっきり輝きます。防寒と風対策をして出かけましょう。"],
-          70: ["冬の澄んだ星空日和", "湿度が下がり星の輪郭がシャープに見える好条件です。海風が冷えるため羽織ものを用意しつつ、冬のダイヤモンドや南天の星々を楽しめます。"],
-          50: ["冬の雲間・一等星チャンス", "冬特有の季節風（ミーニシ）で雲が流れやすい空模様ですが、雲が切れた瞬間にシリウスやオリオン座が鮮やかに顔を出します。"],
-          30: ["冬の曇り空・部分的な観測", "北風に伴う低い雲が広がりやすいコンディションです。雲が薄い瞬間に明るい冬の星々や月を探してみてください。"],
-          0:  ["冬の悪天・観測困難", "冷たい風や厚い雲・雨の気配があります。無理をせず、天気図が回復する別日を狙いましょう。"]
+          4.5: ["冬空の宝石箱・最高の星空！", "冬の宮古島では貴重な快晴夜！澄んだ空気の中、オリオン座やカノープス、未明には南十字星もくっきり輝きます。防寒と風対策をして出かけましょう。"],
+          3.5: ["冬の澄んだ星空日和", "湿度が下がり星の輪郭がシャープに見える好条件です。海風が冷えるため羽織ものを用意しつつ、冬のダイヤモンドや南天の星々を楽しめます。"],
+          2.5: ["冬の雲間・一等星チャンス", "冬特有の季節風（ミーニシ）で雲が流れやすい空模様ですが、雲が切れた瞬間にシリウスやオリオン座が鮮やかに顔を出します。"],
+          1.5: ["冬の曇り空・部分的な観測", "北風に伴う低い雲が広がりやすいコンディションです。雲が薄い瞬間に明るい冬の星々や月を探してみてください。"],
+          0.0: ["冬の悪天・観測困難", "冷たい風や厚い雲・雨の気配があります。無理をせず、天気図が回復する別日を狙いましょう。"]
         },
         spring: {
-          85: ["うりずん最高峰・南十字星＆天の川！", "最も過ごしやすい春の宮古島で満天の星空！南の水平線に昇る南十字星や、深夜から昇る濃い天の川まで快適に観測できる絶好の夜です。"],
-          70: ["うりずんの爽やかな星空日和", "寒すぎず暑すぎず虫も少ない最高の観測気候です。春の大曲線から南天の星々まで心地よい夜風のもとでじっくり楽しめます。"],
-          50: ["春霞・雲の切れ間が狙い目", "季節の変わり目で雲が出やすい時間帯ですが、風で空が開ける瞬間があります。南が開けたインギャーや前浜ビーチで粘るのもおすすめです。"],
-          30: ["春の曇天・ぼんやり星空", "湿った空気で雲が多めです。明るい一等星（アークトゥルスやスピカ）や月が見え隠れする空模様になりそうです。"],
-          0:  ["春の雨模様・観測困難", "厚い雲や雨が予想されます。うりずんの天気は変わりやすいため、下の時間別予報で晴れる時間帯を探してみてください。"]
+          4.5: ["うりずん最高峰・南十字星＆天の川！", "最も過ごしやすい春の宮古島で満天の星空！南の水平線に昇る南十字星や、深夜から昇る濃い天の川まで快適に観測できる絶好の夜です。"],
+          3.5: ["うりずんの爽やかな星空日和", "寒すぎず暑すぎず虫も少ない最高の観測気候です。春の大曲線から南天の星々まで心地よい夜風のもとでじっくり楽しめます。"],
+          2.5: ["春霞・雲の切れ間が狙い目", "季節の変わり目で雲が出やすい時間帯ですが、風で空が開ける瞬間があります。南が開けたインギャーや前浜ビーチで粘るのもおすすめです。"],
+          1.5: ["春の曇天・ぼんやり星空", "湿った空気で雲が多めです。明るい一等星（アークトゥルスやスピカ）や月が見え隠れする空模様になりそうです。"],
+          0.0: ["春の雨模様・観測困難", "厚い雲や雨が予想されます。うりずんの天気は変わりやすいため、下の時間別予報で晴れる時間帯を探してみてください。"]
         },
         earlySummer: {
-          85: ["初夏・南十字星と天の川の競演！", "梅雨の晴れ間やカーチベー後の澄んだ空！宵は南十字星、深夜にかけて濃厚な夏の天の川が昇る宮古島ならではの豪華な夜空です。"],
-          70: ["初夏の好天・天の川日和", "南風が吹き抜け空気がクリアな夜です。海上の湿気に気をつけつつ、さそり座からいて座へ続く天の川の帯を肉眼で堪能できます。"],
-          50: ["初夏の雲間・天の川チャンス", "南から流れる雲が点在しますが、晴れ間が覗けばさそり座の赤いアンタレスや天の川が力強く輝きます。"],
-          30: ["湿潤な曇り空・部分観測", "梅雨時期特有の湿った雲が広がりやすくなっています。視界が開けるわずかな時間に明るい星を狙う形になります。"],
-          0:  ["梅雨雲・雨天のため観測困難", "まとまった雲や雨のリスクが高い夜です。梅雨明け後や翌週の晴れ予報に期待しましょう。"]
+          4.5: ["初夏・南十字星と天の川の競演！", "梅雨の晴れ間やカーチベー後の澄んだ空！宵は南十字星、深夜にかけて濃厚な夏の天の川が昇る宮古島ならではの豪華な夜空です。"],
+          3.5: ["初夏の好天・天の川日和", "南風が吹き抜け空気がクリアな夜です。海上の湿気に気をつけつつ、さそり座からいて座へ続く天の川の帯を肉眼で堪能できます。"],
+          2.5: ["初夏の雲間・天の川チャンス", "南から流れる雲が点在しますが、晴れ間が覗けばさそり座の赤いアンタレスや天の川が力強く輝きます。"],
+          1.5: ["湿潤な曇り空・部分観測", "梅雨時期特有の湿った雲が広がりやすくなっています。視界が開けるわずかな時間に明るい星を狙う形になります。"],
+          0.0: ["梅雨雲・雨天のため観測困難", "まとまった雲や雨のリスクが高い夜です。梅雨明け後や翌週の晴れ予報に期待しましょう。"]
         },
         summer: {
-          85: ["真夏の天の川アーチ・最高の夜空！", "スコール後の抜けるような夏空！頭上を貫く天の川の大アーチと無数の星々が降り注ぎ、波の音を聞きながら最高の天体ショーを楽しめます。"],
-          70: ["夏夜の天の川＆流星日和", "夜も暖かく砂浜に寝転んで観察しやすいコンディションです。天頂付近の夏の大三角や南西のさそり座がくっきり見えます。"],
-          50: ["夏雲の切れ間・スコール注意", "積雲が流れたり一時的な通り雨が起きやすい夏空ですが、雲が抜けた後の透明感は抜群。雨雲の動きを見つつ楽しみましょう。"],
-          30: ["南風の夏雲多め", "湿った南風による低い雲が視界を遮りがちです。ベガやアルタイルなど明るい夏の星々が雲間から覗きます。"],
-          0:  ["夏の荒天・スコール注意", "強い雨雲や風の影響を受けやすい状態です。落雷や突風に注意し、安全な屋内でお過ごしください。"]
+          4.5: ["真夏の天の川アーチ・最高の夜空！", "スコール後の抜けるような夏空！頭上を貫く天の川の大アーチと無数の星々が降り注ぎ、波の音を聞きながら最高の天体ショーを楽しめます。"],
+          3.5: ["夏夜の天の川＆流星日和", "夜も暖かく砂浜に寝転んで観察しやすいコンディションです。天頂付近の夏の大三角や南西のさそり座がくっきり見えます。"],
+          2.5: ["夏雲の切れ間・スコール注意", "積雲が流れたり一時的な通り雨が起きやすい夏空ですが、雲が抜けた後の透明感は抜群。雨雲の動きを見つつ楽しみましょう。"],
+          1.5: ["南風の夏雲多め", "湿った南風による低い雲が視界を遮りがちです。ベガやアルタイルなど明るい夏の星々が雲間から覗きます。"],
+          0.0: ["夏の荒天・スコール注意", "強い雨雲や風の影響を受けやすい状態です。落雷や突風に注意し、安全な屋内でお過ごしください。"]
         },
         autumn: {
-          85: ["秋晴れ・透明度抜群の満天の星！", "夏の猛暑が和らぎ空気が澄み渡る秋のベストコンディション！秋の星座やアンドロメダ銀河、東から昇るすばるまで抜群の抜けで見えます。"],
-          70: ["爽やかな秋夜の星空日和", "湿度が落ち着きレンズも結露しにくい快適な観測日和です。西へ傾く天の川から冬の先駆けの星々まで長く楽しめます。"],
-          50: ["秋空の雲間・星見チャンス", "北東風に乗り雲が流れますが、風裏のビーチを選べば雲の隙間から秋の四辺形や流星を十分に捉えられます。"],
-          30: ["秋雨前線・曇りがちの空", "上空の雲が広がりやすい夜です。月や明るい惑星・一等星が時折雲を透かして見える程度になりそうです。"],
-          0:  ["秋の悪天・観測困難", "厚い雲や強風・雨が予想されます。秋は天気が周期的に変わるため、14日間撮影予報で次の晴れ間をチェックしましょう。"]
+          4.5: ["秋晴れ・透明度抜群の満天の星！", "夏の猛暑が和らぎ空気が澄み渡る秋のベストコンディション！秋の星座やアンドロメダ銀河、東から昇るすばるまで抜群の抜けで見えます。"],
+          3.5: ["爽やかな秋夜の星空日和", "湿度が落ち着きレンズも結露しにくい快適な観測日和です。西へ傾く天の川から冬の先駆けの星々まで長く楽しめます。"],
+          2.5: ["秋空の雲間・星見チャンス", "北東風に乗り雲が流れますが、風裏のビーチを選べば雲の隙間から秋の四辺形や流星を十分に捉えられます。"],
+          1.5: ["秋雨前線・曇りがちの空", "上空の雲が広がりやすい夜です。月や明るい惑星・一等星が時折雲を透かして見える程度になりそうです。"],
+          0.0: ["秋の悪天・観測困難", "厚い雲や強風・雨が予想されます。秋は天気が周期的に変わるため、14日間撮影予報で次の晴れ間をチェックしましょう。"]
         }
       };
 
       const DAY_TEXT = {
         winter: {
-          85: ["冬の極上宮古ブルー日和！", "北風が落ち着き冬特有の澄み切った青空！太陽の角度がやや低いため海の青が深く濃く映え、透明感抜群の絶景写真が撮れます。"],
-          70: ["爽やかな冬晴れの撮影日和", "日差しが心地よく汗ばみにくいため、ビーチ巡りや展望台からの風景撮影が快適に楽しめる好コンディションです。"],
-          50: ["冬雲と晴れ間のドラマチック空", "ミーニシ（北風）で雲が動きます。太陽が雲間から差し込んだ瞬間にエメラルドの海が一気に輝くドラマチックな撮影が楽しめます。"],
-          30: ["冬の曇天・落ち着き光（人物◎）", "北風による曇り空ですが、直射の強い影が出ないためポートレートや街歩き・カフェ巡りの撮影は柔らかく綺麗に撮れます。"],
-          0:  ["冬の荒天・強風＆冷え込み注意", "強い北風や雨で海が荒れやすい時間帯です。機材への塩分付着や防寒対策に気を配りましょう。"]
+          4.5: ["冬の澄み切った極上青空！", "冬の宮古島で貴重な抜けるような青空！空気が乾燥して視程が伸び、太陽の低い光が海の青さを深く濃く際立たせます。"],
+          3.5: ["爽やかな冬晴れの青空日和", "青い空と白い雲のバランスが心地よい冬の晴れ模様です。汗ばみにくくビーチ巡りや展望台撮影が快適に楽しめます。"],
+          2.5: ["冬雲と青空のミックス空", "ミーニシ（北風）で雲が動きます。雲が切れて太陽が差し込んだ瞬間、海の色が一気にエメラルドグリーンへ変わります。"],
+          1.5: ["冬曇り・青空は控えめ", "北風による低い雲が広がりやすい時間帯です。青空は少なめですが、柔らかな曇り光で人物撮影や街歩きには向いています。"],
+          0.0: ["冬の曇雨天・青空期待薄", "厚い雲や雨の気配で青空が見えにくい状態です。海も荒れやすいため屋内施設や晴れ待ちがおすすめです。"]
         },
         spring: {
-          85: ["うりずん最高潮・輝く宮古ブルー！", "春〜初夏の爽やかな陽光と穏やかな海！1年でもトップクラスに過ごしやすい気候で、ビーチフォトもドローン空撮も思いのままです。"],
-          70: ["うりずんの心地よい屋外撮影日和", "柔らかな南風と明るい青空が広がります。前浜ビーチや17ENDなど、真っ白な砂浜とエメラルドの海の撮影にぴったりです。"],
-          50: ["春雲の移ろい・ビーチ日和", "薄い雲や白い積雲が浮かぶ春らしい空。海の近くは風が心地よく、雲が抜けるタイミングを待てば鮮やかな海色が撮れます。"],
-          30: ["春曇り・ソフトライト撮影", "柔らかな雲が天然のディフューザーとなり、逆光を気にせず人物撮影やウェディング・ファミリーフォトが撮りやすい光環境です。"],
-          0:  ["春の雨天・屋内シフト推奨", "低気圧や湿った空気で雨がちです。天気の回復が早い季節なので、時間別予報で次の晴れ間を確認しましょう。"]
+          4.5: ["うりずん最高峰の宮古ブルー！", "春〜初夏の抜けるような青空！1年でも最も過ごしやすい気候のもと、真っ白な砂浜と鮮烈なコバルトブルーの海が広がります。"],
+          3.5: ["うりずんの爽やかな青空日和", "明るい青い空と南国らしい白い積雲が広がります。前浜ビーチや17ENDでの宮古ブルー撮影に絶好のコンディションです。"],
+          2.5: ["春雲の間から青空チャンス", "春特有の薄い雲や移動性の雲が浮かびますが、晴れ間が覗けば南国らしい明るい海と空の色がしっかり現れます。"],
+          1.5: ["春霞・雲多めの空模様", "青空の割合は少なめですが、柔らかな光が天然のディフューザーとなりポートレート撮影などには優しい光環境です。"],
+          0.0: ["春の雨模様・青空なし", "湿った空気と厚い雲で雨がちです。うりずんは天気の移り変わりが早いため、時間別予報で次の晴れ間を確認しましょう。"]
         },
         earlySummer: {
-          85: ["夏至南風・鮮烈な初夏の宮古ブルー！", "梅雨を吹き飛ばす太陽とクリアな海！日差しが一気に強まり、遠浅の珊瑚礁とコバルトブルーのコントラストが眩しい絶好の撮影日和です。"],
-          70: ["初夏の陽気・爽快ビーチ撮影日和", "暖かな南風と白い雲が南国らしさ満点のコンディション。日焼けと水分補給に気をつけてビーチや大橋の絶景を満喫できます。"],
-          50: ["梅雨雲の合間・晴れ間チャンス", "雲が通り過ぎると一瞬で真夏のような海色が現れます。干潮時間の17ENDや佐和田の浜など、短い晴れ間でも映える場所が狙い目です。"],
-          30: ["梅雨空・しっとり南国スナップ", "蒸し暑さと曇天が続きますが、亜熱帯の緑やハイビスカスの赤がしっとりと濃く発色する季節ならではの撮影が楽しめます。"],
-          0:  ["梅雨前線・強雨＆スコール注意", "雨脚が強まりやすい時間帯です。カメラの防水対策を徹底し、雨が止むタイミングを待ちましょう。"]
+          4.5: ["夏至南風・鮮烈な初夏の青空！", "梅雨を吹き飛ばす真っ青な空とクリアな海！日差しが一気に強まり、遠浅の珊瑚礁が眩しく輝く最高の宮古ブルーが望めます。"],
+          3.5: ["初夏の眩しい青空日和", "南国の太陽と力強い青空が広がります。入道雲が映える夏の始まりらしい絶景をビーチや大橋から楽しめます。"],
+          2.5: ["梅雨雲の合間・青空チャンス", "雲が通り過ぎると一瞬で真夏のような青空と海色が現れます。短い晴れ間でも映える17ENDや佐和田の浜が狙い目です。"],
+          1.5: ["梅雨空・雲が広がる時間帯", "湿った雲が青空を覆いがちです。亜熱帯の緑やハイビスカスの彩りが濃く映えるしっとりしたスナップ日和です。"],
+          0.0: ["梅雨前線・雨雲が覆う空", "青空は期待しにくく雨脚が強まりやすい時間帯です。カメラの防水対策を徹底し、晴れ間を待ちましょう。"]
         },
         summer: {
-          85: ["真夏の全開ターコイズブルー！", "強烈な太陽が真上から海を照らし、宮古ブルーの発色が年間最高潮に達する時間帯！熱中症・紫外線対策を万全にして絶景を収めましょう。"],
-          70: ["王道の南国夏空・撮影日和", "真っ青な空にモクモクとした白い入道雲が浮かぶ絵に描いたような宮古島の夏。海遊びと絶景撮影の両方に最高です。"],
-          50: ["夏空とスコール雲のせめぎ合い", "基本は明るい夏空ですが、局地的な雨雲が近づくことがあります。海の色が綺麗なうちに素早く撮影し、雲行きもチェックしましょう。"],
-          30: ["夏雲多め・暑さ控えめ撮影", "強い日差しが雲で遮られるため真夏の撮影としては体力を消耗しにくい時間帯。海辺の散策やポートレートに向いています。"],
-          0:  ["夏のスコール・強風注意", "急な激しい雨や突風に注意が必要です。ビーチや岬では天候の急変に気をつけて安全な場所へ退避してください。"]
+          4.5: ["真夏の全開・極限の宮古ブルー！", "雲ひとつない抜ける夏空！強烈な太陽が真上から海を照らし、宮古ブルーの発色が年間最高潮に達する極上のコンディションです。"],
+          3.5: ["王道の南国夏空・青空日和", "濃い青空に真っ白な入道雲がモクモクと浮かぶ、絵に描いたような宮古島の夏空！UV・熱中症対策をして絶景を楽しみましょう。"],
+          2.5: ["夏空とスコール雲のせめぎ合い", "基本は明るい青空ですが、局地的な雨雲が通過することがあります。青空が綺麗なうちに素早く撮影するのがコツです。"],
+          1.5: ["夏雲多め・日差し控えめ", "南風による雲が多く青空の面積は少なめ。強い直射が和らぐため、日中のビーチ散策や海辺の人物撮影は過ごしやすいです。"],
+          0.0: ["夏のスコール雲・荒天注意", "雨雲が発達し青空が隠れています。急な激しい雨や突風・落雷に注意し、安全な建物内でお過ごしください。"]
         },
         autumn: {
-          85: ["秋晴れ・澄み渡る宮古ブルー最高日和！", "猛暑が落ち着き空気の透明度が上がる秋の絶好日！遠くの離島や水平線までくっきり抜け、風景も人物も快適に撮れる理想的な1日です。"],
-          70: ["爽やかな秋風・快適撮影日和", "湿度が下がりベタつきにくく、長時間の屋外ロケーション撮影にも最適。午後からサンセットにかけての斜光も美しく映えます。"],
-          50: ["秋空の雲模様・光の演出チャンス", "季節の移り変わりで雲が流れていきますが、太陽が斜めに差す秋は雲の陰影と海のグラデーションが美しく仕上がります。"],
-          30: ["秋の曇り空・穏やかな散策日和", "涼しく過ごしやすい曇天です。風裏のビーチやカフェ・島内ドライブを楽しみながらスナップ撮影するのに向いています。"],
-          0:  ["秋の雨風・高波注意", "前線や季節風の影響で天気・海況が崩れやすい時間帯です。屋外撮影やドローンは控え、回復後の澄んだ空を待ちましょう。"]
+          4.5: ["秋晴れ・透明度抜群の紺碧の空！", "猛暑が落ち着き空気の透明度が上がる秋の極上青空！水平線の彼方までくっきり抜け、深いブルーの海と空を快適に撮影できます。"],
+          3.5: ["爽やかな秋風と青空日和", "湿度が下がりカラッとした青空が広がります。午後から夕暮れにかけての斜光とマジックアワーのグラデーションも美しいです。"],
+          2.5: ["秋空の雲間・青空と光の演出", "季節風の雲が流れますが、青空の合間から斜めに太陽が差す秋は、雲の陰影と海のコントラストがドラマチックに映えます。"],
+          1.5: ["秋の曇り空・青空少なめ", "涼しく過ごしやすい曇天です。青空撮影には少し物足りませんが、島内ドライブやカフェ巡りのスナップには快適です。"],
+          0.0: ["秋の悪天・厚い雲と雨", "前線や北風の影響で青空が見えない時間帯です。秋は周期的に天気が変わるため、14日間予報で次の快晴日を狙いましょう。"]
         }
       };
 
       const table = isNight ? NIGHT_TEXT[season] : DAY_TEXT[season];
-      let threshold = 0;
+      let threshold = 0.0;
       let color = "#f87171";
-      if (score >= 85) { threshold = 85; color = isNight ? "#5eead4" : "#38bdf8"; }
-      else if (score >= 70) { threshold = 70; color = isNight ? "#60a5fa" : "#5eead4"; }
-      else if (score >= 50) { threshold = 50; color = "#fbbf24"; }
-      else if (score >= 30) { threshold = 30; color = isNight ? "#f472b6" : "#c084fc"; }
+      if (val5 >= 4.5) { threshold = 4.5; color = isNight ? "#5eead4" : "#38bdf8"; }
+      else if (val5 >= 3.5) { threshold = 3.5; color = isNight ? "#60a5fa" : "#5eead4"; }
+      else if (val5 >= 2.5) { threshold = 2.5; color = "#fbbf24"; }
+      else if (val5 >= 1.5) { threshold = 1.5; color = isNight ? "#f472b6" : "#c084fc"; }
 
       const [title, desc] = table[threshold];
       return { title, desc, color };
@@ -2451,15 +2570,18 @@
         const radiation = h.shortwave_radiation?.[idx] ?? 0;
         const weatherCode = h.weather_code?.[idx] ?? (cTotal < 20 ? 0 : cTotal < 60 ? 2 : 3);
 
-        const starScore = calcStarryIndex({
+        const starRaw = calcStarryRaw({
           cloudLow: cLow, cloudMid: cMid, cloudHigh: cHigh, cloudTotal: cTotal,
           precipProb: precip, humidity: hum, moonIllum: moon.illumination
         });
 
-        const dayScore = calcDaytimePhotoIndex({
+        const blueSkyRaw = calcBlueSkyRaw({
           cloudLow: cLow, cloudMid: cMid, cloudHigh: cHigh, cloudTotal: cTotal,
-          precipProb: precip, wind, visKm, weatherCode
+          precipProb: precip, humidity: hum, visKm, weatherCode
         });
+
+        const starIndex5 = toHalfStep5(starRaw);
+        const blueSkyIndex5 = toHalfStep5(blueSkyRaw);
 
         return {
           idx, time: t, utcMs,
@@ -2485,9 +2607,12 @@
           sunPos,
           moon,
           isNight,
-          starScore,
-          dayScore,
-          score: isNight ? starScore : dayScore,
+          starRaw,
+          blueSkyRaw,
+          starIndex5,
+          blueSkyIndex5,
+          score5: isNight ? starIndex5 : blueSkyIndex5,
+          rawScore: isNight ? starRaw : blueSkyRaw,
           sunset: dailyMap[t.slice(0, 10)]?.sunset.slice(11, 16) || "18:55",
           sunrise: dailyMap[t.slice(0, 10)]?.sunrise.slice(11, 16) || "06:08"
         };
@@ -2541,10 +2666,10 @@
 
         const eveningHours = nightHours.filter(h => h.hourNum >= 19);
         const targetNightPool = eveningHours.length > 0 ? eveningHours : nightHours;
-        const bestNight = targetNightPool.reduce((a, b) => (b.starScore > a.starScore ? b : a), targetNightPool[0]);
+        const bestNight = targetNightPool.reduce((a, b) => (b.starRaw > a.starRaw ? b : a), targetNightPool[0]);
 
         const bestDay = dayHours.length > 0
-          ? dayHours.reduce((a, b) => (b.dayScore > a.dayScore ? b : a), dayHours[0])
+          ? dayHours.reduce((a, b) => (b.blueSkyRaw > a.blueSkyRaw ? b : a), dayHours[0])
           : bestNight;
 
         const dayAvgCloud = dayHours.length > 0
@@ -2563,11 +2688,11 @@
           shortLabel: idx === 0 ? `今日 (${m}/${day})` : `${m}/${day} (${wd})`,
           bestNightIdx: bestNight.idx,
           bestNightStr: bestNight.hourStr,
-          nightPeak: bestNight.starScore,
+          nightPeak5: bestNight.starIndex5,
           nightAvgCloud,
           bestDayIdx: bestDay.idx,
           bestDayStr: bestDay.hourStr,
-          dayPeak: bestDay.dayScore,
+          dayPeak5: bestDay.blueSkyIndex5,
           dayAvgCloud,
           moonPct: Math.round(bestNight.moon.illumination * 100),
           firstIdxOfDay: hourlyData.findIndex(h => h.dateStr === d.date)
@@ -2628,8 +2753,8 @@
       }
       document.getElementById("prevDayBtn").disabled = dayIdx === 0;
       document.getElementById("nextDayBtn").disabled = dayIdx === dailySummaries.length - 1;
-      document.getElementById("bestDayChip").textContent = `☀ 昼ベスト ${summary.bestDayStr} (${summary.dayPeak})`;
-      document.getElementById("bestTonightChip").textContent = `🌌 夜ベスト ${summary.bestNightStr} (${summary.nightPeak})`;
+      document.getElementById("bestDayChip").textContent = `☀ 青空ベスト ${summary.bestDayStr} (${summary.dayPeak5.toFixed(1)})`;
+      document.getElementById("bestTonightChip").textContent = `🌌 星空ベスト ${summary.bestNightStr} (${summary.nightPeak5.toFixed(1)})`;
       document.querySelectorAll(".swipe-dot").forEach((dot, i) => dot.classList.toggle("active", i === dayIdx));
     }
 
@@ -2678,12 +2803,12 @@
       document.getElementById("nextHourBtn").disabled = idx >= hourlyData.length - 1;
 
       const circumference = 2 * Math.PI * 66;
-      document.getElementById("gaugeArc").style.strokeDashoffset = (circumference - (item.score / 100) * circumference).toFixed(1);
-      document.getElementById("mainScoreValue").textContent = item.score;
-      document.getElementById("gaugeSubLabel").textContent = item.isNight ? "STAR INDEX" : "OUTDOOR PHOTO";
+      document.getElementById("gaugeArc").style.strokeDashoffset = (circumference - (item.score5 / 5.0) * circumference).toFixed(1);
+      document.getElementById("mainScoreValue").textContent = item.score5.toFixed(1);
+      document.getElementById("gaugeSubLabel").textContent = item.isNight ? "STAR INDEX" : "BLUE SKY";
       document.getElementById("mainIndexCardTitle").textContent = item.isNight
         ? "STARRY SKY INDEX / 星空指数（夜間モード）"
-        : "OUTDOOR PHOTO INDEX / 屋外撮影指数（日中モード）";
+        : "BLUE SKY INDEX / 青空指数（日中モード）";
 
       const [yyyy, mm, dd] = item.dateStr.split("-").map(Number);
       document.getElementById("selectedTimeBadge").textContent =
@@ -2692,7 +2817,7 @@
       const wc = getWeatherCodeInfo(item.weatherCode, item.isNight);
       document.getElementById("weatherCodeBadge").textContent = `${wc.icon} ${wc.text}`;
 
-      const rank = getRankInfo(item.score, item.isNight, mm);
+      const rank = getRankInfo(item.score5, item.isNight, mm);
       const rankTitleEl = document.getElementById("rankTitle");
       rankTitleEl.textContent = rank.title;
       rankTitleEl.style.color = rank.color;
@@ -2706,10 +2831,16 @@
 
       const astro = getDayAstroData(item.dateStr);
 
+      // 日の出・日の入り・月の出・月の入り + 海ポチャ確率
       document.getElementById("sunriseText").textContent = item.sunrise;
       document.getElementById("sunsetText").textContent = item.sunset;
       document.getElementById("moonriseText").textContent = astro.moonRS.rise;
       document.getElementById("moonsetText").textContent = astro.moonRS.set;
+
+      applyUmiProbBadge("sunriseProb", calcHorizonProbAtTime(item.dateStr, item.sunrise));
+      applyUmiProbBadge("sunsetProb", calcHorizonProbAtTime(item.dateStr, item.sunset));
+      applyUmiProbBadge("moonriseProb", calcHorizonProbAtTime(item.dateStr, astro.moonRS.rise));
+      applyUmiProbBadge("moonsetProb", calcHorizonProbAtTime(item.dateStr, astro.moonRS.set));
 
       const sunDir = getDirectionName16(item.sunPos.azDeg);
       document.getElementById("sunPosText").textContent = item.sunPos.altDeg > 0
@@ -2881,7 +3012,7 @@
       document.getElementById("photoDateBadge").textContent = `${mm}/${dd} ${item.hourStr} 基準`;
 
       if (!item.isNight) {
-        document.getElementById("photoSectionTitle").textContent = "📸 OUTDOOR PHOTO GUIDE / 日中・屋外撮影アシスト";
+        document.getElementById("photoSectionTitle").textContent = "📸 BLUE SKY PHOTO GUIDE / 日中・青空撮影アシスト";
         const sunDir = getDirectionName16(item.sunPos.azDeg);
         const oppDir = getDirectionName16((item.sunPos.azDeg + 180) % 360);
         const alt = item.sunPos.altDeg;
@@ -2892,13 +3023,13 @@
           : `斜めの柔らかい光で風景に立体感が出ます。${oppDir.jp}向きが順光、${sunDir.jp}向きがドラマチックな逆光になります。`;
 
         let camMain = "ISO 100 • F8 • 1/500秒";
-        let camSub = "快晴風景の標準値。海面の反射を消して透明感を出すにはPL(偏光)フィルターが効果的です。";
+        let camSub = "快晴青空の標準値。海面の反射を消して宮古ブルーを濃く出すにはPL(偏光)フィルターが効果的です。";
         if (item.cloudTotal >= 65) {
           camMain = "ISO 200 • F5.6 • 1/250秒";
           camSub = "曇天のフラットな光は白飛び・黒潰れが起きにくく、ポートレートや街角スナップに好適です。";
         } else if (alt < 15) {
           camMain = "ISO 100〜200 • F5.6〜8";
-          camSub = `夕ゴールデン(${astro.sunMagic.eveGold})付近は露出補正を-0.3〜-0.7EVにすると空の階調が豊かに残ります。`;
+          camSub = `夕:ゴールデン(${astro.sunMagic.eveGold})付近は露出補正を-0.3〜-0.7EVにすると空の階調が豊かに残ります。`;
         }
         const droneText = item.wind < 5.0
           ? `ドローン良好(平均${item.wind.toFixed(1)}m/s)`
@@ -3021,30 +3152,37 @@
       `;
     }
 
-    function buildEmojiStars(count, emojiChar) {
+    // 0.5段階対応の絵文字5連描画
+    function buildEmojiStars(val5, emojiChar) {
       let html = "";
       for (let st = 1; st <= 5; st++) {
-        html += `<span class="${st <= count ? "emoji-on" : "emoji-off"}">${emojiChar}</span>`;
+        if (val5 >= st) {
+          html += `<span class="emoji-on">${emojiChar}</span>`;
+        } else if (val5 >= st - 0.5) {
+          html += `<span class="emoji-half"><span class="emoji-off">${emojiChar}</span><span class="emoji-half-fill">${emojiChar}</span></span>`;
+        } else {
+          html += `<span class="emoji-off">${emojiChar}</span>`;
+        }
       }
       return html;
     }
 
     function renderTimeline(startIdx, dayLabelText) {
       currentTimelineStart = Math.max(0, startIdx);
-      document.getElementById("timelineTitle").textContent = `⏰ ${dayLabelText}〜 時間別予報（昼:☀️5段階 / 夜:⭐5段階）`;
+      document.getElementById("timelineTitle").textContent = `⏰ ${dayLabelText}〜 時間別予報（昼:青空☀️ / 夜:星空⭐ 0.5段階）`;
       const strip = document.getElementById("hourlyStrip");
       strip.innerHTML = "";
       const sliceEnd = Math.min(hourlyData.length, currentTimelineStart + 48);
 
       for (let i = currentTimelineStart; i < sliceEnd; i++) {
         const item = hourlyData[i];
-        const rating = getRating5(item.score, item.isNight);
+        const labelText = getRatingLabel5(item.score5, item.isNight);
         const emojiChar = item.isNight ? "⭐" : "☀️";
 
         const pill = document.createElement("div");
         pill.className = `hour-pill ${item.isNight ? "is-night" : "is-day"} ${i === selectedIndex ? "active" : ""}`;
         pill.dataset.idx = i;
-        pill.title = `${item.hourStr} 指数: ${item.score}/100 (${rating.label})`;
+        pill.title = `${item.hourStr} ${item.isNight ? "星空指数" : "青空指数"}: ${item.score5.toFixed(1)}/5.0 (${labelText})`;
 
         const dateLabel = item.hourStr === "00:00"
           ? `${Number(item.dateStr.slice(5, 7))}/${Number(item.dateStr.slice(8, 10))} 0時`
@@ -3052,8 +3190,8 @@
 
         pill.innerHTML = `
           <span class="hour-time">${dateLabel}</span>
-          <div class="hour-stars" aria-label="5段階中 ${rating.count}">${buildEmojiStars(rating.count, emojiChar)}</div>
-          <span class="hour-rank-label">${rating.label}</span>
+          <div class="hour-stars" aria-label="5段階中 ${item.score5.toFixed(1)}">${buildEmojiStars(item.score5, emojiChar)}</div>
+          <span class="hour-rank-label">${item.score5.toFixed(1)} • ${labelText}</span>
           <span class="hour-cloud">${item.isNight ? "🌌" : "☀️"}雲${item.cloudTotal}%</span>
         `;
         pill.addEventListener("click", () => selectHour(i));
@@ -3120,7 +3258,7 @@
 
         const advice = ev.inActive
           ? (moonGood
-              ? `◎ 月明かり少なく好条件 (輝面率${illumPct}%・星空指数${selectedItem.starScore})`
+              ? `◎ 月明かり少なく好条件 (輝面率${illumPct}%・星空指数 ${selectedItem.starIndex5.toFixed(1)})`
               : `△ 月明かりあり(輝面率${illumPct}%)：月と逆方向を中心に観察がおすすめ`)
           : `極大日: ${ev.peak[0]}月${ev.peak[1]}日頃 • ${ev.dir}`;
 
@@ -3144,8 +3282,8 @@
       const selectedDate = hourlyData[selectedIndex]?.dateStr;
 
       dailySummaries.forEach((s, i) => {
-        const dayRating = getRating5(s.dayPeak, false);
-        const nightRating = getRating5(s.nightPeak, true);
+        const dayLabel = getRatingLabel5(s.dayPeak5, false);
+        const nightLabel = getRatingLabel5(s.nightPeak5, true);
 
         const row = document.createElement("div");
         row.className = `day-row ${s.date === selectedDate ? "selected" : ""}`;
@@ -3157,15 +3295,15 @@
             <div class="day-sub">🌙月${s.moonPct}%</div>
           </div>
           <div class="day-dual-ratings">
-            <div class="rating-pill day-side" data-jump="${s.bestDayIdx}" title="昼ベスト ${s.bestDayStr} (指数${s.dayPeak})">
-              <span class="rating-mode-tag">昼</span>
-              <div class="day-stars" aria-label="昼5段階中 ${dayRating.count}">${buildEmojiStars(dayRating.count, "☀️")}</div>
-              <span class="rating-label-chip">${dayRating.label}</span>
+            <div class="rating-pill day-side" data-jump="${s.bestDayIdx}" title="青空ベスト ${s.bestDayStr} (青空指数 ${s.dayPeak5.toFixed(1)} • ${dayLabel})">
+              <span class="rating-mode-tag">青空</span>
+              <div class="day-stars" aria-label="青空5段階中 ${s.dayPeak5.toFixed(1)}">${buildEmojiStars(s.dayPeak5, "☀️")}</div>
+              <span class="rating-label-chip">${s.dayPeak5.toFixed(1)}</span>
             </div>
-            <div class="rating-pill night-side" data-jump="${s.bestNightIdx}" title="夜ベスト ${s.bestNightStr} (指数${s.nightPeak})">
-              <span class="rating-mode-tag">夜</span>
-              <div class="day-stars" aria-label="夜5段階中 ${nightRating.count}">${buildEmojiStars(nightRating.count, "⭐")}</div>
-              <span class="rating-label-chip">${nightRating.label}</span>
+            <div class="rating-pill night-side" data-jump="${s.bestNightIdx}" title="星空ベスト ${s.bestNightStr} (星空指数 ${s.nightPeak5.toFixed(1)} • ${nightLabel})">
+              <span class="rating-mode-tag">星空</span>
+              <div class="day-stars" aria-label="星空5段階中 ${s.nightPeak5.toFixed(1)}">${buildEmojiStars(s.nightPeak5, "⭐")}</div>
+              <span class="rating-label-chip">${s.nightPeak5.toFixed(1)}</span>
             </div>
           </div>
         `;
