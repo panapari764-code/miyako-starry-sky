@@ -479,18 +479,24 @@
       border-radius: 999px;
     }
 
+    /* 青空ベスト・星空ベストは常に横2列で並べる */
     .best-chips-row {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 6px;
-      flex-wrap: wrap;
+      width: 100%;
     }
 
     .best-chip {
       cursor: pointer;
       font-size: 0.72rem;
-      padding: 4px 10px;
+      padding: 5px 9px;
       border-radius: 999px;
       transition: all 0.16s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
     }
 
     .best-chip.night {
@@ -970,27 +976,6 @@
       font-size: 0.66rem;
       color: var(--text-muted);
       margin-top: 2px;
-    }
-
-    .magic-bar-legend {
-      margin-top: 2px;
-    }
-
-    .magic-gradient-bar {
-      height: 8px;
-      border-radius: 999px;
-      background: linear-gradient(90deg,
-        #1e3a8a 0%, #3b82f6 12%, #f59e0b 24%, #fde68a 32%,
-        #38bdf8 46%, #fde68a 64%, #f97316 74%, #2563eb 84%, #0f172a 94%, #020617 100%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      margin-bottom: 4px;
-    }
-
-    .magic-bar-labels {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.65rem;
-      color: var(--text-muted);
     }
 
     .sun-pos-box {
@@ -1535,6 +1520,10 @@
       .brand h1 {
         font-size: 1.1rem;
       }
+      .best-chip {
+        font-size: 0.68rem;
+        padding: 5px 6px;
+      }
       .score-panel {
         flex-direction: column;
         align-items: center;
@@ -1557,9 +1546,6 @@
       }
       .rank-title {
         font-size: 1.15rem;
-      }
-      .quick-umipocha-grid {
-        grid-template-columns: repeat(2, 1fr);
       }
       .rise-set-quad {
         grid-template-columns: repeat(2, 1fr);
@@ -1599,7 +1585,6 @@
   <div class="app-container">
     <header>
       <div class="brand">
-        <!-- パターンA：星空＋海ポチャ太陽＋宮古ブルー -->
         <div class="brand-icon">
           <svg viewBox="0 0 44 44" width="44" height="44" aria-hidden="true">
             <defs>
@@ -1699,15 +1684,15 @@
                 <span class="climate-badge" id="sourceTypeBadge">📡 ライブ予報</span>
               </div>
               <h2 class="rank-title" id="rankTitle">データ取得中...</h2>
-              <p class="rank-desc" id="rankDesc">宮古島の雲量・天気・視程・月齢から指数を計算しています。</p>
+              <p class="rank-desc" id="rankDesc">宮古島の雲層・直達日射・月高度・視程・露点差から指数を計算しています。</p>
 
               <div class="mini-metrics">
                 <div class="metric-box">
-                  <div class="k">雲量 / 日射</div>
+                  <div class="k">雲量 / 直達日射</div>
                   <div class="v" id="metricCloud">--%</div>
                 </div>
                 <div class="metric-box">
-                  <div class="k">降水確率</div>
+                  <div class="k">降水確率 / 量</div>
                   <div class="v" id="metricRain">--%</div>
                 </div>
                 <div class="metric-box">
@@ -1787,25 +1772,12 @@
             <span id="magicDateBadge" style="font-size:0.73rem; color:var(--accent-gold);">--月--日</span>
           </div>
 
-          <!-- 日の出・日の入り・月の出・月の入り & 海ポチャ確率（1か所に集約） -->
+          <!-- 日の出・日の入り・月の出・月の入り & 海ポチャ確率 -->
           <div class="rise-set-quad" id="detailUmipochaQuad"></div>
         </div>
 
         <!-- ゴールデンアワー・ブルーアワー・完全暗夜 -->
-        <div>
-          <div class="magic-rows" id="magicRows"></div>
-          <div class="magic-bar-legend" style="margin-top:8px;">
-            <div class="magic-gradient-bar"></div>
-            <div class="magic-bar-labels">
-              <span>朝:ブルー</span>
-              <span>朝:ゴールデン</span>
-              <span>日中</span>
-              <span>夕:ゴールデン</span>
-              <span>夕:ブルー</span>
-              <span>完全暗夜</span>
-            </div>
-          </div>
-        </div>
+        <div class="magic-rows" id="magicRows"></div>
 
         <!-- 太陽位置・UV・日射量 -->
         <div class="sun-pos-box">
@@ -1818,7 +1790,7 @@
             <div class="v" id="uvIndexText">--</div>
           </div>
           <div>
-            <div class="k">⚡ 日射量</div>
+            <div class="k">⚡ 直達 / 全天日射</div>
             <div class="v" id="radiationText">-- W/m²</div>
           </div>
         </div>
@@ -1920,7 +1892,7 @@
     </div>
 
     <p class="formula-note">
-      ※ 1〜16日目はOpen-Meteoの最新気象予報（📡ライブ）、17〜30日目は天文計算（月齢・出没・潮汐・太陽位置・星座・流星群）と宮古島の月別気候平年値を組み合わせた参考予報（🔭天文+気候参考）として表示しています。海ポチャ確率は水平線付近の低/中/高層雲・視程・降水確率から算出した視認可能性の目安です。
+      ※ 1〜16日目はOpen-Meteoの最新気象予報（📡ライブ）を用い、雲層別透過率・直達日射量（晴天指数）・実降水量・露点差（大気透明度）・視程・太陽高度（薄明）・月高度（出没反映）を加味して高精度に算出しています。17〜30日目は天文計算と月間補間気候平年値を連続接続した参考予報（🔭天文+気候参考）です。
     </p>
   </div>
 
@@ -2119,7 +2091,7 @@
     const dayAstroCache = {};
 
     // ==========================================
-    // 天文計算（太陽位置・出没・月・マジックアワー・潮汐）
+    // 天文計算（太陽位置・出没・月位置・マジックアワー・潮汐）
     // ==========================================
     function toDaysJ2000(utcMs) {
       return utcMs / 86400000 - 10957.5;
@@ -2282,10 +2254,11 @@
       const Hs = lst - sun.ra;
       const distFactor = Math.pow(384400 / moon.dist, 3);
 
-      const m2 = 56 * distFactor * Math.pow(Math.cos(moon.dec), 2) * Math.cos(2 * Hm - 198 * RAD);
-      const s2 = 25 * Math.pow(Math.cos(sun.dec), 2) * Math.cos(2 * Hs - 220 * RAD);
-      const k1o1 = 30 * distFactor * Math.sin(2 * moon.dec) * Math.cos(Hm - 195 * RAD)
-                 + 12 * Math.sin(2 * sun.dec) * Math.cos(Hs - 205 * RAD);
+      const m2 = 54 * distFactor * Math.pow(Math.cos(moon.dec), 2) * Math.cos(2 * Hm - 199 * RAD);
+      const s2 = 23 * Math.pow(Math.cos(sun.dec), 2) * Math.cos(2 * Hs - 223 * RAD);
+      const k1o1 = 21 * distFactor * Math.sin(2 * moon.dec) * Math.cos(Hm - 207 * RAD)
+                 + 16 * distFactor * Math.sin(2 * moon.dec) * Math.cos(Hm - 186 * RAD) * 0.45
+                 + 11 * Math.sin(2 * sun.dec) * Math.cos(Hs - 205 * RAD);
 
       return 115 + m2 + s2 + k1o1;
     }
@@ -2333,7 +2306,7 @@
     }
 
     // ==========================================
-    // 海ポチャ確率計算 & 視覚表示（1か所に統合）
+    // 海ポチャ確率計算 & 視覚表示（水平線透過・視程・実降水・露点差考慮）
     // ==========================================
     function calcHorizonProbAtTime(dateStr, hhmm) {
       if (!hhmm || hhmm === "なし" || hhmm === "--:--") return null;
@@ -2357,14 +2330,21 @@
       const cHigh = lerp(a.cloudHigh, b.cloudHigh);
       const cTotal = lerp(a.cloudTotal, b.cloudTotal);
       const precip = lerp(a.precip, b.precip);
+      const precipMm = lerp(a.precipMm, b.precipMm);
       const visKm = lerp(a.visKm, b.visKm);
+      const dewDiff = lerp(a.temp - a.dewPoint, b.temp - b.dewPoint);
 
-      const horizonBlock = cLow * 0.60 + cMid * 0.26 + cHigh * 0.08;
-      const effectiveBlock = Math.max(horizonBlock, cTotal * 0.68);
-      let prob = 100 - effectiveBlock * 0.92;
+      // 水平線付近は特に低層雲と中層雲の影響が大きい
+      const horizonBlock = Math.min(100, cLow * 0.65 + cMid * 0.28 + cHigh * 0.07);
+      const effectiveBlock = Math.max(horizonBlock, cTotal * 0.64);
+      let prob = 100 - effectiveBlock * 0.90;
 
-      if (visKm < 16) prob -= (16 - visKm) * 1.8;
-      if (precip > 15) prob -= (precip - 15) * 0.5;
+      if (visKm < 18) prob -= (18 - visKm) * 1.9;
+      else if (visKm >= 24) prob += 3;
+
+      if (dewDiff < 2.2) prob -= (2.2 - dewDiff) * 4.5;
+      if (precipMm > 0.1) prob -= Math.min(40, precipMm * 18 + 8);
+      if (precip > 20) prob -= (precip - 20) * 0.42;
 
       return Math.max(0, Math.min(99, Math.round(prob)));
     }
@@ -2429,7 +2409,7 @@
     // 天気コード・風向・月齢絵文字ユーティリティ
     // ==========================================
     function getWeatherCodeInfo(code, isNight, isClimateRef = false) {
-      if (isClimateRef) return { icon: isNight ? "🔭" : "🌤️", text: "気候平年傾向" };
+      if (isClimateRef) return { icon: isNight ? "🔭" : "🌤️", text: "気候補間傾向" };
       if (code === 0) return { icon: isNight ? "✨" : "☀️", text: "快晴" };
       if (code === 1) return { icon: isNight ? "🌙" : "🌤️", text: "おおむね晴れ" };
       if (code === 2) return { icon: "⛅", text: "一部曇り" };
@@ -2566,30 +2546,86 @@
     }
 
     // ==========================================
-    // 星空指数（夜間）＆ 青空指数（日中）0.5段階 + 季節別コメント
+    // 高精度 星空指数（夜間）＆ 青空指数（日中）0.5段階 + 季節別コメント
     // ==========================================
-    function calcStarryRaw({ cloudLow, cloudMid, cloudHigh, cloudTotal, precipProb, humidity, moonIllum }) {
-      const weightedCloud = cloudLow * 0.62 + cloudMid * 0.28 + cloudHigh * 0.10;
-      const effectiveCloud = Math.max(weightedCloud, cloudTotal * 0.78);
-      let score = 100 - effectiveCloud * 0.95;
+    function calcStarryRaw({
+      cloudLow, cloudMid, cloudHigh, cloudTotal,
+      precipProb, precipMm, humidity, dewDiff, visKm,
+      moonIllum, moonAltDeg, sunAltDeg, weatherCode
+    }) {
+      // 1. 雲層別の物理的遮蔽（低層雲は遮光大・高層巻雲は明るい星を通す）
+      const layerBlocked = Math.min(100, cloudLow * 0.72 + cloudMid * 0.42 + cloudHigh * 0.16);
+      const effectiveCloud = Math.max(layerBlocked, cloudTotal * 0.65);
+      let score = 100 - effectiveCloud * 0.94;
 
-      if (precipProb > 15) score -= (precipProb - 15) * 0.35;
-      if (humidity > 80) score -= (humidity - 80) * 0.45;
-      score -= moonIllum * 18;
+      // 2. 太陽高度による薄明の明るさ減衰
+      if (sunAltDeg > -18) {
+        if (sunAltDeg <= -12) {
+          score -= (sunAltDeg + 18) * 2.0; // 天文薄明
+        } else if (sunAltDeg <= -6) {
+          score -= 12 + (sunAltDeg + 12) * 4.5; // 航海薄明
+        } else {
+          score -= 39 + (sunAltDeg + 6) * 8.0; // 市民薄明〜昼
+        }
+      }
+
+      // 3. 月高度を考慮した月明かりペナルティ（月が沈んでいれば影響0）
+      let moonFactor = 0;
+      if (moonAltDeg > -2) {
+        moonFactor = moonAltDeg >= 15 ? 1.0 : (moonAltDeg + 2) / 17;
+      }
+      const scatterBoost = 1 + Math.min(0.35, (cloudHigh + cloudMid) / 250);
+      score -= moonIllum * 22 * moonFactor * scatterBoost;
+
+      // 4. 実降水量・降水確率・天気コード
+      if (precipMm > 0.05) score -= Math.min(45, precipMm * 18 + 10);
+      if (precipProb > 20) score -= (precipProb - 20) * 0.28;
+      if (weatherCode >= 95) score -= 25;
+      else if (weatherCode >= 51) score -= 15;
+      else if (weatherCode === 45 || weatherCode === 48) score -= 18;
+
+      // 5. 大気透明度（露点差・視程・湿度）
+      if (dewDiff < 2.5) score -= (2.5 - dewDiff) * 5.0;
+      if (visKm < 15) score -= (15 - visKm) * 1.2;
+      if (humidity > 85) score -= (humidity - 85) * 0.35;
 
       return Math.max(0, Math.min(100, Math.round(score)));
     }
 
-    function calcBlueSkyRaw({ cloudLow, cloudMid, cloudHigh, cloudTotal, precipProb, humidity, visKm, weatherCode }) {
-      const weightedCloud = cloudLow * 0.62 + cloudMid * 0.28 + cloudHigh * 0.10;
-      const effectiveCloud = Math.max(weightedCloud, cloudTotal * 0.78);
-      let score = 100 - effectiveCloud * 0.96;
+    function calcBlueSkyRaw({
+      cloudLow, cloudMid, cloudHigh, cloudTotal,
+      precipProb, precipMm, humidity, dewDiff, visKm,
+      weatherCode, sunAltDeg, directRad
+    }) {
+      // 1. 雲層別の遮蔽
+      const layerBlocked = Math.min(100, cloudLow * 0.68 + cloudMid * 0.38 + cloudHigh * 0.14);
+      const effectiveCloud = Math.max(layerBlocked, cloudTotal * 0.65);
+      let score = 100 - effectiveCloud * 0.92;
 
-      if (precipProb > 15) score -= (precipProb - 15) * 0.45;
-      if (weatherCode >= 51) score -= 22;
+      // 2. 直達日射量に基づく晴天指数（宮古ブルーに必要な太陽光の強さ）
+      if (sunAltDeg > 5 && typeof directRad === "number") {
+        const clearDirect = 950 * Math.pow(Math.sin(sunAltDeg * RAD), 1.15);
+        const directRatio = Math.min(1.15, directRad / Math.max(40, clearDirect));
+        if (directRatio >= 0.72) {
+          score += (directRatio - 0.72) * 24; // 強い直射あり（雲が薄いか散在）
+        } else if (directRatio < 0.35) {
+          score -= (0.35 - directRatio) * 32; // 分厚い雲で日差しが遮られている
+        }
+      } else if (sunAltDeg <= 5) {
+        score -= Math.max(0, (5 - sunAltDeg) * 2.5);
+      }
+
+      // 3. 実降水量・降水確率・天気コード
+      if (precipMm > 0.05) score -= Math.min(45, precipMm * 18 + 10);
+      if (precipProb > 20) score -= (precipProb - 20) * 0.35;
+      if (weatherCode >= 95) score -= 28;
+      else if (weatherCode >= 51) score -= 20;
       else if (weatherCode === 45 || weatherCode === 48) score -= 18;
-      if (visKm < 15) score -= (15 - visKm) * 1.4;
-      if (humidity > 85) score -= (humidity - 85) * 0.4;
+
+      // 4. 視程・露点差・湿度
+      if (visKm < 16) score -= (16 - visKm) * 1.3;
+      if (dewDiff < 2.0) score -= (2.0 - dewDiff) * 4.0;
+      if (humidity > 86) score -= (humidity - 86) * 0.35;
 
       return Math.max(0, Math.min(100, Math.round(score)));
     }
@@ -2724,6 +2760,39 @@
       return hour >= Math.ceil(sunsetH) || hour < Math.floor(sunriseH);
     }
 
+    // 17〜30日目用：月間日付補間による滑らかな平年値算出
+    function getInterpolatedClimate(month, day) {
+      const curr = MIYAKO_CLIMATE_MONTHLY[month];
+      let otherMonth = month;
+      let t = 0;
+      if (day < 15) {
+        otherMonth = month === 1 ? 12 : month - 1;
+        t = (15 - day) / 30;
+      } else if (day > 15) {
+        otherMonth = month === 12 ? 1 : month + 1;
+        t = (day - 15) / 30;
+      }
+      const other = MIYAKO_CLIMATE_MONTHLY[otherMonth];
+      const lerp = (a, b) => a * (1 - t) + b * t;
+
+      // 風向の円周補間
+      const r1 = curr.windDir * RAD;
+      const r2 = other.windDir * RAD;
+      const sinMix = Math.sin(r1) * (1 - t) + Math.sin(r2) * t;
+      const cosMix = Math.cos(r1) * (1 - t) + Math.cos(r2) * t;
+      const windDir = ((Math.atan2(sinMix, cosMix) * DEG) + 360) % 360;
+
+      return {
+        tempAvg: lerp(curr.tempAvg, other.tempAvg),
+        hum: lerp(curr.hum, other.hum),
+        cloud: lerp(curr.cloud, other.cloud),
+        precip: lerp(curr.precip, other.precip),
+        wind: lerp(curr.wind, other.wind),
+        windDir,
+        visKm: lerp(curr.visKm, other.visKm)
+      };
+    }
+
     // ==========================================
     // データ取得（Open-Meteo 最大16日ライブ ＋ 17〜30日天文気候補完）
     // ==========================================
@@ -2731,11 +2800,11 @@
       const statusDot = document.getElementById("statusDot");
       const statusText = document.getElementById("statusText");
 
-      statusText.textContent = "1か月予報取得中...";
+      statusText.textContent = "高精度1か月予報取得中...";
       statusDot.classList.remove("error");
 
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${MIYAKO_LAT}&longitude=${MIYAKO_LON}` +
-        `&hourly=cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,precipitation_probability,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,temperature_2m,dew_point_2m,surface_pressure,visibility,uv_index,shortwave_radiation,weather_code` +
+        `&hourly=cloud_cover,cloud_cover_low,cloud_cover_mid,cloud_cover_high,precipitation_probability,precipitation,relative_humidity_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m,temperature_2m,dew_point_2m,surface_pressure,visibility,uv_index,shortwave_radiation,direct_radiation,weather_code` +
         `&daily=sunrise,sunset&wind_speed_unit=ms&timezone=Asia%2FTokyo&forecast_days=16`;
 
       try {
@@ -2770,6 +2839,7 @@
       hourlyData = h.time.map((t, idx) => {
         const utcMs = parseJstIsoToMs(t);
         const moon = getMoonInfo(utcMs);
+        const moonAltDeg = getMoonAltDeg(utcMs);
         const sunPos = getSunPosition(utcMs);
         const isNight = isNightHour(t, dailyMap);
 
@@ -2778,27 +2848,32 @@
         const cMid = h.cloud_cover_mid?.[idx] ?? Math.round(cTotal * 0.3);
         const cHigh = h.cloud_cover_high?.[idx] ?? Math.round(cTotal * 0.2);
         const precip = h.precipitation_probability?.[idx] ?? Math.round(cTotal * 0.35);
+        const precipMm = h.precipitation?.[idx] ?? 0;
         const hum = h.relative_humidity_2m?.[idx] ?? 75;
         const wind = h.wind_speed_10m?.[idx] ?? 3.5;
         const windDir = h.wind_direction_10m?.[idx] ?? 60;
         const windGust = h.wind_gusts_10m?.[idx] ?? Math.round((wind * 1.5) * 10) / 10;
         const temp = h.temperature_2m?.[idx] ?? 24.0;
         const dewPoint = h.dew_point_2m?.[idx] ?? (temp - 4.0);
+        const dewDiff = Math.max(0, temp - dewPoint);
         const pressure = h.surface_pressure?.[idx] ?? 1013;
         const visMeters = h.visibility?.[idx] ?? 20000;
         const visKm = Math.round(visMeters / 1000);
         const uvIndex = h.uv_index?.[idx] ?? (isNight ? 0 : Math.max(0, Math.round(Math.sin(Math.max(0, sunPos.altDeg) * RAD) * 10)));
         const radiation = h.shortwave_radiation?.[idx] ?? 0;
+        const directRad = h.direct_radiation?.[idx] ?? (isNight ? 0 : Math.round(radiation * (1 - cTotal / 120)));
         const weatherCode = h.weather_code?.[idx] ?? (cTotal < 20 ? 0 : cTotal < 60 ? 2 : 3);
 
         const starRaw = calcStarryRaw({
           cloudLow: cLow, cloudMid: cMid, cloudHigh: cHigh, cloudTotal: cTotal,
-          precipProb: precip, humidity: hum, moonIllum: moon.illumination
+          precipProb: precip, precipMm, humidity: hum, dewDiff, visKm,
+          moonIllum: moon.illumination, moonAltDeg, sunAltDeg: sunPos.altDeg, weatherCode
         });
 
         const blueSkyRaw = calcBlueSkyRaw({
           cloudLow: cLow, cloudMid: cMid, cloudHigh: cHigh, cloudTotal: cTotal,
-          precipProb: precip, humidity: hum, visKm, weatherCode
+          precipProb: precip, precipMm, humidity: hum, dewDiff, visKm,
+          weatherCode, sunAltDeg: sunPos.altDeg, directRad
         });
 
         const starIndex5 = toHalfStep5(starRaw);
@@ -2814,6 +2889,7 @@
           cloudMid: Math.round(cMid),
           cloudHigh: Math.round(cHigh),
           precip: Math.round(precip),
+          precipMm: Number(precipMm.toFixed(1)),
           humidity: Math.round(hum),
           wind: Number(wind),
           windDir: Number(windDir),
@@ -2824,8 +2900,10 @@
           visKm,
           uvIndex: Number(uvIndex),
           radiation: Math.round(radiation),
+          directRad: Math.round(directRad),
           weatherCode,
           sunPos,
+          moonAltDeg,
           moon,
           isNight,
           isClimateRef: false,
@@ -2840,16 +2918,32 @@
         };
       });
 
-      const lastDateStr = dailyData[dailyData.length - 1].date;
-      const [ly, lm, ld] = lastDateStr.split("-").map(Number);
+      // 16日目最終日の平均状態を算出し、17〜20日目に滑らかに連続接続させる
+      const lastLiveDate = dailyData[dailyData.length - 1].date;
+      const lastDaySlice = hourlyData.filter(x => x.dateStr === lastLiveDate);
+      const lastTail = {
+        cloud: lastDaySlice.reduce((s, x) => s + x.cloudTotal, 0) / Math.max(1, lastDaySlice.length),
+        precip: lastDaySlice.reduce((s, x) => s + x.precip, 0) / Math.max(1, lastDaySlice.length),
+        temp: lastDaySlice.reduce((s, x) => s + x.temp, 0) / Math.max(1, lastDaySlice.length),
+        hum: lastDaySlice.reduce((s, x) => s + x.humidity, 0) / Math.max(1, lastDaySlice.length),
+        wind: lastDaySlice.reduce((s, x) => s + x.wind, 0) / Math.max(1, lastDaySlice.length),
+        visKm: lastDaySlice.reduce((s, x) => s + x.visKm, 0) / Math.max(1, lastDaySlice.length),
+        pressure: lastDaySlice.reduce((s, x) => s + x.pressure, 0) / Math.max(1, lastDaySlice.length)
+      };
+
+      const [ly, lm, ld] = lastLiveDate.split("-").map(Number);
       const liveDaysCount = dailyData.length;
 
       for (let offset = 1; offset <= FORECAST_TOTAL_DAYS - liveDaysCount; offset++) {
         const dt = new Date(Date.UTC(ly, lm - 1, ld + offset, 0, 0, 0));
         const dateStr = `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-${String(dt.getUTCDate()).padStart(2, '0')}`;
         const month = dt.getUTCMonth() + 1;
-        const clim = MIYAKO_CLIMATE_MONTHLY[month] || MIYAKO_CLIMATE_MONTHLY[4];
+        const dayOfMonth = dt.getUTCDate();
+        const clim = getInterpolatedClimate(month, dayOfMonth);
         const sunRS = calcSunRiseSet(dateStr);
+
+        // 16日目予報終端の影響を指数減衰させつつ平年値へ接続
+        const persistWeight = Math.exp(-offset * 0.55);
 
         const dayItem = { date: dateStr, sunrise: sunRS.sunrise, sunset: sunRS.sunset, isClimateRef: true };
         dailyMap[dateStr] = dayItem;
@@ -2859,34 +2953,50 @@
           const t = `${dateStr}T${String(hr).padStart(2, '0')}:00`;
           const utcMs = parseJstIsoToMs(t);
           const moon = getMoonInfo(utcMs);
+          const moonAltDeg = getMoonAltDeg(utcMs);
           const sunPos = getSunPosition(utcMs);
           const isNight = isNightHour(t, dailyMap);
 
-          const diurnalTemp = clim.tempAvg + Math.sin(((hr - 9) / 24) * Math.PI * 2) * 2.4;
-          const hum = Math.min(95, Math.round(clim.hum + (isNight ? 4 : -4)));
-          const cTotal = clim.cloud;
-          const cLow = Math.round(cTotal * 0.45);
-          const cMid = Math.round(cTotal * 0.35);
+          const baseTemp = clim.tempAvg * (1 - persistWeight) + lastTail.temp * persistWeight;
+          const diurnalTemp = baseTemp + Math.sin(((hr - 9) / 24) * Math.PI * 2) * 2.4;
+
+          const baseHum = clim.hum * (1 - persistWeight) + lastTail.hum * persistWeight;
+          const hum = Math.min(95, Math.round(baseHum + (isNight ? 4 : -4)));
+
+          // 宮古島の日周雲量傾向（午後13〜15時は積雲がやや増え、夜間〜未明は落ち着きやすい）
+          const diurnalCloudOffset = Math.sin(((hr - 9) / 24) * Math.PI * 2) * 5;
+          const baseCloud = clim.cloud * (1 - persistWeight) + lastTail.cloud * persistWeight;
+          const cTotal = Math.max(8, Math.min(95, Math.round(baseCloud + diurnalCloudOffset)));
+          const cLow = Math.round(cTotal * 0.44);
+          const cMid = Math.round(cTotal * 0.34);
           const cHigh = Math.round(cTotal * 0.25);
-          const precip = clim.precip;
-          const wind = clim.wind;
-          const windDir = clim.windDir;
+
+          const precip = Math.round(clim.precip * (1 - persistWeight) + lastTail.precip * persistWeight);
+          const precipMm = 0;
+          const wind = Number((clim.wind * (1 - persistWeight) + lastTail.wind * persistWeight).toFixed(1));
+          const windDir = Math.round(clim.windDir);
           const windGust = Math.round(wind * 1.45 * 10) / 10;
           const dewPoint = Number((diurnalTemp - ((100 - hum) / 5)).toFixed(1));
-          const visKm = clim.visKm;
+          const dewDiff = Math.max(0, diurnalTemp - dewPoint);
+          const visKm = Math.round(clim.visKm * (1 - persistWeight) + lastTail.visKm * persistWeight);
+          const pressure = Math.round(1013 * (1 - persistWeight) + lastTail.pressure * persistWeight);
+
           const sunSin = Math.max(0, Math.sin(Math.max(0, sunPos.altDeg) * RAD));
           const uvIndex = isNight ? 0 : Number((sunSin * 10.5 * (1 - cTotal / 220)).toFixed(1));
           const radiation = isNight ? 0 : Math.round(sunSin * 920 * (1 - cTotal / 170));
+          const directRad = isNight ? 0 : Math.round(sunSin * 850 * Math.max(0.08, 1 - cLow * 0.01 - cMid * 0.005));
           const weatherCode = cTotal < 25 ? 0 : cTotal < 55 ? 2 : 3;
 
           const starRaw = calcStarryRaw({
             cloudLow: cLow, cloudMid: cMid, cloudHigh: cHigh, cloudTotal: cTotal,
-            precipProb: precip, humidity: hum, moonIllum: moon.illumination
+            precipProb: precip, precipMm, humidity: hum, dewDiff, visKm,
+            moonIllum: moon.illumination, moonAltDeg, sunAltDeg: sunPos.altDeg, weatherCode
           });
 
           const blueSkyRaw = calcBlueSkyRaw({
             cloudLow: cLow, cloudMid: cMid, cloudHigh: cHigh, cloudTotal: cTotal,
-            precipProb: precip, humidity: hum, visKm, weatherCode
+            precipProb: precip, precipMm, humidity: hum, dewDiff, visKm,
+            weatherCode, sunAltDeg: sunPos.altDeg, directRad
           });
 
           const starIndex5 = toHalfStep5(starRaw);
@@ -2903,18 +3013,21 @@
             cloudMid: cMid,
             cloudHigh: cHigh,
             precip,
+            precipMm,
             humidity: hum,
             wind,
             windDir,
             windGust,
             temp: Number(diurnalTemp.toFixed(1)),
             dewPoint,
-            pressure: 1013,
+            pressure,
             visKm,
             uvIndex,
             radiation,
+            directRad,
             weatherCode,
             sunPos,
+            moonAltDeg,
             moon,
             isNight,
             isClimateRef: true,
@@ -2976,12 +3089,20 @@
         const dayHours = hourlyData.filter(h => h.dateStr === d.date && !h.isNight);
         if (nightHours.length === 0) return;
 
+        // 星空ベスト：天文・航海薄明後（太陽高度 <= -12°）を優先選出
+        const darkEveningHours = nightHours.filter(h => h.hourNum >= 19 && h.sunPos.altDeg <= -12);
+        const darkAllNight = nightHours.filter(h => h.sunPos.altDeg <= -12);
         const eveningHours = nightHours.filter(h => h.hourNum >= 19);
-        const targetNightPool = eveningHours.length > 0 ? eveningHours : nightHours;
+        const targetNightPool = darkEveningHours.length > 0
+          ? darkEveningHours
+          : (darkAllNight.length > 0 ? darkAllNight : (eveningHours.length > 0 ? eveningHours : nightHours));
         const bestNight = targetNightPool.reduce((a, b) => (b.starRaw > a.starRaw ? b : a), targetNightPool[0]);
 
-        const bestDay = dayHours.length > 0
-          ? dayHours.reduce((a, b) => (b.blueSkyRaw > a.blueSkyRaw ? b : a), dayHours[0])
+        // 青空ベスト：太陽高度が12°以上の十分な日中時間帯を優先選出
+        const brightDayHours = dayHours.filter(h => h.sunPos.altDeg >= 12);
+        const targetDayPool = brightDayHours.length > 0 ? brightDayHours : dayHours;
+        const bestDay = targetDayPool.length > 0
+          ? targetDayPool.reduce((a, b) => (b.blueSkyRaw > a.blueSkyRaw ? b : a), targetDayPool[0])
           : bestNight;
 
         const dayAvgCloud = dayHours.length > 0
@@ -3109,7 +3230,6 @@
       document.getElementById("prevHourBtn").disabled = idx <= 0;
       document.getElementById("nextHourBtn").disabled = idx >= hourlyData.length - 1;
 
-      // 円グラフは％表示
       const circumference = 2 * Math.PI * 66;
       document.getElementById("gaugeArc").style.strokeDashoffset = (circumference - (item.rawScore / 100) * circumference).toFixed(1);
       document.getElementById("mainScoreValue").innerHTML = `${item.rawScore}<span class="pct-unit">%</span>`;
@@ -3134,13 +3254,15 @@
       rankTitleEl.textContent = rank.title;
       rankTitleEl.style.color = rank.color;
       document.getElementById("rankDesc").textContent = item.isClimateRef
-        ? `【17〜30日目：天文計算＋月別気候傾向】${rank.desc}`
+        ? `【17〜30日目：天文計算＋月間補間気候傾向】${rank.desc}`
         : rank.desc;
 
       document.getElementById("metricCloud").textContent = item.isNight
         ? `${item.cloudTotal}%`
-        : `${item.cloudTotal}% / ${item.radiation}W`;
-      document.getElementById("metricRain").textContent = `${item.precip}%`;
+        : `${item.cloudTotal}% / ${item.directRad}W`;
+      document.getElementById("metricRain").textContent = item.precipMm > 0
+        ? `${item.precip}% / ${item.precipMm}mm`
+        : `${item.precip}%`;
       document.getElementById("metricTempWind").textContent = `${item.temp.toFixed(0)}℃ / ${item.wind.toFixed(1)}m`;
 
       const astro = getDayAstroData(item.dateStr);
@@ -3152,13 +3274,15 @@
         ? `${Math.round(item.sunPos.altDeg)}° (${sunDir.jp})`
         : `地平線下 (${Math.round(item.sunPos.altDeg)}°)`;
       document.getElementById("uvIndexText").textContent = `${item.uvIndex.toFixed(1)} ${item.uvIndex >= 6 ? "(強)" : item.uvIndex >= 3 ? "(中)" : "(弱)"}`;
-      document.getElementById("radiationText").textContent = `${item.radiation} W/m²`;
+      document.getElementById("radiationText").textContent = `${item.directRad} / ${item.radiation} W/m²`;
 
       document.getElementById("moonSvgContainer").innerHTML = renderMoonSvg(item.moon.phase);
       document.getElementById("moonName").textContent = `${item.moon.emoji} 月齢 ${item.moon.age.toFixed(1)} • ${item.moon.name}`;
       const illumPct = Math.round(item.moon.illumination * 100);
-      const impactText = illumPct > 70 ? "強め" : illumPct > 30 ? "中程度" : "弱い (好条件)";
-      document.getElementById("moonDetail").textContent = `輝面率 ${illumPct}% • 月明かり影響: ${impactText}`;
+      const moonStateText = item.moonAltDeg <= -2
+        ? "月没中（月明かり影響なし）"
+        : (illumPct > 70 ? "強め" : illumPct > 30 ? "中程度" : "弱い (好条件)");
+      document.getElementById("moonDetail").textContent = `輝面率 ${illumPct}% • ${moonStateText}`;
 
       document.getElementById("barHigh").style.width = `${item.cloudHigh}%`;
       document.getElementById("valHigh").textContent = `${item.cloudHigh}%`;
@@ -3335,7 +3459,7 @@
 
         let camMain = "ISO 100 • F8 • 1/500秒";
         let camSub = "快晴青空の標準値。海面の反射を消して宮古ブルーを濃く出すにはPL(偏光)フィルターが効果的です。";
-        if (item.cloudTotal >= 65) {
+        if (item.cloudTotal >= 65 && item.directRad < 220) {
           camMain = "ISO 200 • F5.6 • 1/250秒";
           camSub = "曇天のフラットな光は白飛び・黒潰れが起きにくく、ポートレートや街角スナップに好適です。";
         } else if (alt < 15) {
@@ -3394,14 +3518,15 @@
       const darkMain = `${astro.sunMagic.darkStart} 〜 ${astro.sunMagic.darkEnd}`;
 
       let moonTimingNote = "";
-      if (illumPct <= 25) moonTimingNote = "月明かりが弱く、暗夜全体が天の川撮影に最適です。";
+      if (item.moonAltDeg <= -2) moonTimingNote = "この時刻は月が地平線下に沈んでいるため、月明かりの影響なく天の川を狙えます。";
+      else if (illumPct <= 25) moonTimingNote = "月明かりが弱く、暗夜全体が天の川撮影に最適です。";
       else if (astro.moonRS.rise !== "なし" && astro.moonRS.rise >= "19:00") moonTimingNote = `月の出(${astro.moonRS.rise})前までが暗夜撮影のゴールデンタイムです。`;
       else if (astro.moonRS.set !== "なし" && astro.moonRS.set >= "20:00") moonTimingNote = `月の入り(${astro.moonRS.set})後から空が一気に暗くなります。`;
       else moonTimingNote = `月明かり(${illumPct}%)の影響があるため、月と逆方向を狙うと効果的です。`;
 
       let camMain = "ISO 3200 • F2.8 • 15秒";
       let camSub = "暗夜向け標準設定。広角14〜24mm・WB 3800〜4100K・MFで無限遠ピント。";
-      if (illumPct > 55) {
+      if (item.moonAltDeg > 0 && illumPct > 55) {
         camMain = "ISO 1000〜1600 • 10〜15秒";
         camSub = "月明かりで空が明るいためISOを下げて白飛び防止。海面や岩の質感が出やすい夜です。";
       } else if (item.cloudTotal > 45) {
@@ -3528,7 +3653,7 @@
     function renderMeteorEvents(year, month, day, selectedItem) {
       const listEl = document.getElementById("meteorEventList");
       const illumPct = Math.round(selectedItem.moon.illumination * 100);
-      const moonGood = illumPct <= 35;
+      const moonGood = illumPct <= 35 || selectedItem.moonAltDeg <= -2;
 
       let displayEvents = [];
       if (activeMeteorTab === "upcoming") {
@@ -3597,7 +3722,7 @@
           dividerAdded = true;
           const divEl = document.createElement("div");
           divEl.className = "forecast-divider";
-          divEl.textContent = "🔭 17〜30日目：正確な天文計算（月齢・潮汐）＋宮古島月別気候傾向（参考）";
+          divEl.textContent = "🔭 17〜30日目：天文計算（月高度・潮汐）＋連続接続された宮古島月別気候傾向（参考）";
           list.appendChild(divEl);
         }
 
@@ -3784,7 +3909,7 @@
 
     function updateSkySimulation(item) {
       simState.cloudCoverage = item.cloudTotal / 100;
-      simState.moonIllum = item.moon.illumination;
+      simState.moonIllum = item.moonAltDeg > 0 ? item.moon.illumination : 0;
       simState.isNight = item.isNight;
       simState.sunAltDeg = item.sunPos.altDeg;
       simState.starVisibility = item.isNight ? Math.max(0.15, 1 - simState.moonIllum * 0.45) : 0;
