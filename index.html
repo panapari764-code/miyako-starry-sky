@@ -1325,31 +1325,10 @@
       white-space: nowrap;
     }
 
-    .spot-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-bottom: 12px;
-    }
-
-    .spot-tab {
-      cursor: pointer;
-      padding: 7px 12px;
-      min-height: 36px;
-      border-radius: 999px;
-      font-size: 0.77rem;
-      font-weight: 600;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: var(--text-sub);
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-
-    .spot-tab.active {
-      background: rgba(96, 165, 250, 0.25);
-      border-color: var(--accent-blue);
-      color: #fff;
+    .spot-select {
+      display: block; width: 100%; min-height: 48px; margin-bottom: 12px; padding: 5px 9px;
+      border: 1px solid #456180; border-radius: 9px; background: #162942;
+      color: var(--text-main); font-size: 1rem;
     }
 
     .spot-detail {
@@ -1556,19 +1535,6 @@
       .rating-pill {
         padding: 6px 8px;
       }
-      .spot-tabs {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 6px;
-      }
-      .spot-tabs::-webkit-scrollbar {
-        height: 4px;
-      }
-      .spot-tabs::-webkit-scrollbar-thumb {
-        background: rgba(148, 179, 255, 0.28);
-        border-radius: 999px;
-      }
       .spot-meta {
         grid-template-columns: 1fr;
       }
@@ -1765,13 +1731,12 @@
       .score-panel .mini-metrics { grid-column: 1 / -1; gap: 4px; }
       .mini-metrics .metric-box { padding-inline: 4px; }
       .mini-metrics .k { overflow-wrap: anywhere; }
-      .spot-tabs { flex-wrap: wrap; overflow: visible; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
     }
 
-    button.btn, button.time-step-btn, button.nav-arrow-btn, button.spot-tab, button.mini-tab,
+    button.btn, button.time-step-btn, button.nav-arrow-btn, button.mini-tab,
     select.date-select, select.time-select { min-height: 44px; }
     @media (max-width: 640px) {
       .selection-controls .timezone { display: none; }
@@ -1808,7 +1773,7 @@
     .now-weather-wind dt { color: var(--text-sub); font-size: .75rem; }
     .now-weather-wind dd { margin: 0; color: var(--text-main); font-size: .85rem; font-weight: 600; }
     .today-hourly-weather { margin-top: 10px; }
-    .hourly-weather-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+    .hourly-weather-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
     .hourly-weather-grid > div {
       min-width: 0; padding: 6px; border: 1px solid #3e5878; border-radius: 10px; background: #14243c;
     }
@@ -1837,13 +1802,14 @@
     .weather-hour-result strong { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
     .weather-hour-result span { color: #d3e2f5; font-size: .76rem; }
     .weather-hour-result .weather-hour-temp { color: #f4f8ff; font-weight: 700; }
-    @media (max-width: 640px) {
-      .hourly-weather-grid {
-        grid-template-columns: repeat(4, minmax(146px, 1fr));
-        overflow-x: auto; padding: 2px 1px 5px; scroll-snap-type: x proximity;
-      }
-      .hourly-weather-grid > div { scroll-snap-align: start; }
+    .day-night-weather { display: grid; gap: 3px; margin-top: 4px; }
+    .day-night-weather button {
+      display: grid; align-content: center; width: 100%; min-height: 44px; padding: 3px 4px;
+      border: 1px solid #456180; border-radius: 8px; background: #192944;
+      color: var(--text-main); text-align: start; cursor: pointer;
     }
+    .day-night-weather .weather-hour-result { margin-top: 0; }
+    .day-night-weather .weather-hour-result { gap: 1px; }
     @media (max-width: 420px) {
       .hourly-weather-grid { gap: 6px; }
       .hourly-weather-grid > div { padding: 5px; }
@@ -1893,7 +1859,7 @@
       .score-panel .badge-row > span { line-height: 1.35; font-size: .75rem; }
       .mini-metrics .k { font-size: .75rem; }
       .mini-metrics .v { font-size: .9rem; }
-      .forecast-pick, .spot-tab, .mini-tab { font-size: .875rem; }
+      .forecast-pick, .mini-tab { font-size: .875rem; }
       .app-nav a { font-size: .9rem; }
     }
   </style>
@@ -1963,7 +1929,7 @@
           </div>
         </section>
         <section id="todayHourlyWeather" class="today-hourly-weather" aria-label="時間別の天気予報" hidden>
-          <div class="hourly-weather-grid" role="region" aria-label="4日分の時間別予報" tabindex="0">
+          <div class="hourly-weather-grid" role="region" aria-label="4日分の時間別予報">
             <div>
               <div class="weather-day-selection">
                 <time id="todayForecastDate"></time>
@@ -1989,23 +1955,15 @@
             <div>
               <div class="weather-day-selection">
                 <time id="dayAfterTomorrowForecastDate"></time>
-  <div class="weather-hour-field">
-                  <select id="dayAfterTomorrowHourlySelect" class="weather-hour-select" aria-label="予報時刻" aria-controls="dayAfterTomorrowHourlyResult"></select>
-                  <span class="weather-hour-face" aria-hidden="true">—</span>
-                </div>
               </div>
-              <div id="dayAfterTomorrowHourlyResult" class="weather-hour-result" aria-live="polite" hidden></div>
+              <div id="dayAfterTomorrowHourlyResult" class="day-night-weather" hidden></div>
               <p id="dayAfterTomorrowForecastMissing" class="forecast-hours-missing" hidden>予報は未取得です</p>
             </div>
             <div>
               <div class="weather-day-selection">
                 <time id="threeDaysAheadForecastDate"></time>
-  <div class="weather-hour-field">
-                  <select id="threeDaysAheadHourlySelect" class="weather-hour-select" aria-label="予報時刻" aria-controls="threeDaysAheadHourlyResult"></select>
-                  <span class="weather-hour-face" aria-hidden="true">—</span>
-                </div>
               </div>
-              <div id="threeDaysAheadHourlyResult" class="weather-hour-result" aria-live="polite" hidden></div>
+              <div id="threeDaysAheadHourlyResult" class="day-night-weather" hidden></div>
               <p id="threeDaysAheadForecastMissing" class="forecast-hours-missing" hidden>予報は未取得です</p>
             </div>
           </div>
@@ -2404,7 +2362,7 @@
       <h2 class="view-heading" id="spots-heading" tabindex="-1">撮影地</h2>
       <p class="view-source">予報は宮古島の代表地点のデータです。撮影地ごとの方角・アクセスを確認できます。</p>
       <div class="glass-card">
-        <div class="spot-tabs" id="spotTabs"></div>
+        <select class="spot-select" id="spotSelect" aria-label="撮影地を選択" aria-controls="spotDetail"></select>
         <div class="spot-detail" id="spotDetail"></div>
       </div>
     </section>
@@ -2528,9 +2486,11 @@
       { name: "こぐま座流星群", start: [12, 17], peak: [12, 22], end: [12, 26], zhr: "ZHR 10前後", dir: "真北（深夜〜明け方）", note: "冬の夜長、北極星の周囲から穏やかに流れる年の瀬の流星群です。" }
     ];
 
+    const SPOT_DISTRICTS = ["平良市街・周辺","池間・狩俣・島尻","城辺","上野","下地・来間島","伊良部・下地島"];
     const SPOTS = [
       {
         name: "前浜ビーチ",
+        district: "下地・来間島",
         darkness: "ビーチ・夕景・星空 ★4.5",
         desc: "東洋一と称される与那覇前浜の真っ白な砂浜と宮古ブルー、正面の来間大橋が絶景のビーチ。昼のビーチフォト・サンセットはもちろん、夜は橋の柔らかな光と星空のコラボが楽しめます。",
         bestDir: "昼夕:西〜南西 / 夜:南西〜天頂",
@@ -2538,6 +2498,7 @@
       },
       {
         name: "17END",
+        district: "伊良部・下地島",
         darkness: "遠浅の干潟・絶景海 ★5",
         desc: "下地島空港北端の絶景ビーチ。昼の干潮時に真っ白な砂浜と透き通る遠浅の宮古ブルーが現れます。夕暮れのマジックアワーや、夜は滑走路誘導灯と星空の組み合わせも人気です。",
         bestDir: "昼(干潮):西〜南西 / 夜:西〜北西",
@@ -2545,6 +2506,7 @@
       },
       {
         name: "佐和田の浜",
+        district: "伊良部・下地島",
         darkness: "水鏡リフレクション ★4.5",
         desc: "伊良部島北西の遠浅に巨岩が点在する日本の渚百選ビーチ。昼は干潮時の独特の景観、夕方は美しいサンセット、夜は潮だまりを使った『水鏡の星空リフレクション』が狙えます。",
         bestDir: "昼夕:西〜北西 / 夜:潮だまり水鏡",
@@ -2552,6 +2514,7 @@
       },
       {
         name: "トゥリバー",
+        district: "平良市街・周辺",
         darkness: "大橋サンセット・夜景 ★4",
         desc: "伊良部大橋のたもとに広がる海浜公園＆ビーチ（サンセットビーチ）。昼は橋と宮古ブルーの海、夕方は伊良部大橋の向こうへ沈む夕日、夜は橋のライトと星空を気軽に撮影できます。",
         bestDir: "昼夕:西〜北西(伊良部大橋) / 夜:西〜天頂",
@@ -2559,6 +2522,7 @@
       },
       {
         name: "インギャー",
+        district: "城辺",
         darkness: "南天の星空・入江絶景 ★5",
         desc: "南海岸の天然の入り江「インギャーマリンガーデン」。昼は穏やかなエメラルドグリーンの海と展望台パノラマが絶景。夜は南の海上へ視界が開けており、南十字星やカノープス観測に最適です。",
         bestDir: "昼:入り江〜展望台 / 夜:真南〜南東の星空",
@@ -2566,6 +2530,7 @@
       },
       {
         name: "砂山ビーチ",
+        district: "平良市街・周辺",
         darkness: "アーチ岩・サンセット ★4.5",
         desc: "砂山を越えた先に現れる波の浸食でできたアーチ岩がシンボル。昼のコバルトブルーの入り江、夕方のマジックアワー、そして夜はアーチ岩を絡めた天の川や星空撮影が人気です。",
         bestDir: "昼夕:西〜北西 / 夜:アーチ岩×北西〜天頂",
@@ -2573,6 +2538,7 @@
       },
       {
         name: "渡口の浜",
+        district: "伊良部・下地島",
         darkness: "弓なり白砂ビーチ ★4.5",
         desc: "伊良部島南部に約800m続くきめ細やかな白砂の弓なりビーチ。昼は広角で海と砂浜のダイナミックな青さが撮れ、夕方はサンセット、夜は静かな波打ち際で南〜西の星空を楽しめます。",
         bestDir: "昼:南〜南西の海 / 夜:南〜西の星空",
@@ -2580,6 +2546,7 @@
       },
       {
         name: "長間浜",
+        district: "下地・来間島",
         darkness: "光害極小ビーチ ★5",
         desc: "来間島西側に広がる自然豊かなロングビーチ。街灯がなく非常に暗いため、昼のプライベート感ある海撮影から、そのまま砂浜に寝転んでの天体観測・星空撮影まで満喫できます。",
         bestDir: "昼夕:西の水平線 / 夜:西〜南西・全天",
@@ -2587,6 +2554,7 @@
       },
       {
         name: "新城海岸",
+        district: "城辺",
         darkness: "サンライズ・東天の川 ★4.5",
         desc: "宮古島東海岸のサンゴ礁に囲まれた遠浅ビーチ。午前中は順光で海の透明感が際立ち、早朝は水平線から昇る朝日の絶景、夜は東の海から昇り始める天の川の撮影に向いています。",
         bestDir: "朝昼:東の朝日と海 / 夜:東〜南の星空",
@@ -2594,6 +2562,7 @@
       },
       {
         name: "東平安名崎",
+        district: "城辺",
         darkness: "光害極小・岬絶景 ★5",
         desc: "宮古島最東端の細長い岬。昼はエメラルドグリーンの海と白い灯台の大パノラマ（午前中が順光）、夜は光害ゼロで天の川や南十字星（冬季〜初夏）が海上に昇る屈指の観測地です。",
         bestDir: "昼:東〜南の海 / 夜:東〜南の星空",
@@ -2601,11 +2570,27 @@
       },
       {
         name: "池間島",
+        district: "池間・狩俣・島尻",
         darkness: "光害極小・大橋絶景 ★5",
         desc: "昼は池間大橋越しに宮古ブルーと大神島を望むドライブ絶景やフナクスビーチが美しいエリア。夜は市街地から最も離れるため北極星や夏の天の川撮影に最適です。",
         bestDir: "昼:橋上から南東 / 夜:北〜東",
         access: "市街地から車で約25分"
-      }
+      },
+      {"name":"西平安名崎","district":"池間・狩俣・島尻","darkness":"岬・橋のある風景","desc":"池間大橋と伊良部島を望む岬。岬の輪郭を広角で入れると、海の広がりが伝わります。","bestDir":"池間大橋側／伊良部島側","access":"宮古島北西部・岬の展望エリア"},
+      {"name":"比嘉ロードパーク","district":"城辺","darkness":"東海岸の展望","desc":"東海岸の高台にある休憩スポット。海岸線を見下ろす広角風景や、東の空が明るくなる時間帯に向きます。","bestDir":"東の海と空","access":"城辺比嘉・県道沿いの休憩所"},
+      {"name":"パチャビーチ","district":"下地・来間島","darkness":"来間島・海辺","desc":"来間島の港に隣接する浜。砂浜のカーブや対岸の海岸線を入れると構図に奥行きが出ます。","bestDir":"来間漁港側／対岸の宮古島","access":"来間大橋を渡った先の来間漁港周辺"},
+      {"name":"長崎浜","district":"下地・来間島","darkness":"来間島・小さな浜","desc":"来間島南端の小さな浜。波打ち際の形や、岩と海のコントラストを生かした構図が向きます。","bestDir":"沖合と浜の両端","access":"来間島南端"},
+      {"name":"ムスヌン浜","district":"下地・来間島","darkness":"来間島・西海岸","desc":"来間島の西側にある浜。水平線と波打ち際を組み合わせて、夕方の光の変化を撮れます。","bestDir":"西の水平線","access":"来間島西側・来間大橋経由"},
+      {"name":"深江橋","district":"上野","darkness":"橋・海岸風景","desc":"上野宮国の保良上地線にある橋。周辺の通行可能な場所から、橋と海岸線の重なりを狙えます。","bestDir":"橋を引いた構図／海側","access":"上野宮国・保良上地線沿い"},
+      {"name":"うえのドイツ文化村","district":"上野","darkness":"建築・海辺","desc":"海辺にある施設で、城を模した博愛記念館が目印です。建物と海を同じ画面に入れると、場所の特徴が伝わります。","bestDir":"博愛記念館／海岸側","access":"上野宮国・施設の案内に沿って見学"},
+      {"name":"わいわいビーチ","district":"上野","darkness":"入り江・海の色","desc":"博愛漁港に隣接する人工ビーチ。浅瀬から沖へ変わる海の色と、入り江の輪郭が写せます。","bestDir":"入り江の沖側","access":"上野宮国・博愛漁港に隣接するビーチ側"},
+      {"name":"ムイガー","district":"城辺","darkness":"断崖・展望","desc":"七又海岸の断崖を望める場所。手前の崖を入れて、海岸線が続く様子を広角で撮れます。","bestDir":"七又海岸の断崖と沖合","access":"城辺・七又海岸のムイガー展望エリア"},
+      {"name":"保良泉ビーチ","district":"城辺","darkness":"入り江・海岸風景","desc":"保良地区の海岸。浜辺の低い視点と、地形が見渡せる視点で、入り江の印象を変えられます。","bestDir":"入り江の出口と水平線","access":"城辺保良・保良川周辺"},
+      {"name":"間那津ビーチ","district":"池間・狩俣・島尻","darkness":"狩俣・浜辺","desc":"平良狩俣にある浜。波の模様や砂浜から沖へ向かう海の色を、画面の手前から重ねて撮れます。","bestDir":"波打ち際から沖側","access":"平良狩俣"},
+      {"name":"フナクスビーチ","district":"池間・狩俣・島尻","darkness":"池間島・海の色","desc":"池間島のビーチ。澄んだ浅瀬と沖の色の違いを、浜辺から広い構図で写せます。","bestDir":"浅瀬から沖の海","access":"池間島・池間大橋経由"},
+      {"name":"島尻のマングローブ","district":"池間・狩俣・島尻","darkness":"湿地・水面の反射","desc":"島尻のマングローブ林。木の根や、水面に映る枝葉を遊歩道から撮れます。","bestDir":"水路とマングローブ林","access":"平良島尻・マングローブ林の遊歩道"},
+      {"name":"真謝ビーチ","district":"平良市街・周辺","darkness":"平良西原・海岸","desc":"真謝漁港の近くにある海岸。岩場と遠浅の海を同じ構図に入れると、岸辺の地形が伝わります。","bestDir":"東側の海／岩と波打ち際","access":"平良西原・真謝漁港周辺"},
+      {"name":"パイナガマビーチ","district":"平良市街・周辺","darkness":"市街地・港の風景","desc":"平良の市街地に近い浜。砂浜に港の船や防波堤を合わせて、街に近い海辺の景色を撮れます。","bestDir":"沖の海／平良港側","access":"平良下里・平良港近く"}
     ];
 
     let hourlyData = [];
@@ -3756,8 +3741,8 @@
           moonPct: Math.round(bestNight.moon.illumination * 100),
           moonEmoji: bestNight.moon.emoji,
           moonName: bestNight.moon.name,
-          noonWeather: d.isClimateRef ? null : dayHours.find(hour => hour.hourNum === 12)?.weatherCode ?? null,
-          nightWeather: d.isClimateRef ? null : nightHours.find(hour => hour.hourNum === 21)?.weatherCode ?? null,
+          noonWeather: d.isClimateRef ? null : dayHours.find(hour => hour.hourNum === DAY_WEATHER_HOUR)?.weatherCode ?? null,
+          nightWeather: d.isClimateRef ? null : nightHours.find(hour => hour.hourNum === NIGHT_WEATHER_HOUR)?.weatherCode ?? null,
           firstIdxOfDay: hourlyData.findIndex(h => h.dateStr === d.date)
         });
       });
@@ -4376,6 +4361,8 @@
       });
     }
 
+    const DAY_WEATHER_HOUR = 12;
+    const NIGHT_WEATHER_HOUR = 21;
     const HOURLY_FORECAST_DAYS = ["today", "tomorrow", "dayAfterTomorrow", "threeDaysAhead"];
     let renderedHourlyWeather = null;
     let renderedCurrentWeatherHour = "";
@@ -4388,6 +4375,10 @@
         result.replaceChildren();
         return;
       }
+      result.replaceChildren(...buildHourlyWeatherLines(item));
+    }
+
+    function buildHourlyWeatherLines(item) {
       const weather = getWeatherCodeInfo(item.weatherCode, item.isNight);
       const firstLine = document.createElement("div");
       const heading = document.createElement("strong");
@@ -4405,7 +4396,36 @@
       const wind = document.createElement("span");
       wind.textContent = getDirectionName16(item.windDir).jp + " " + item.wind.toFixed(1) + " m/s";
       secondLine.append(rain, wind);
-      result.replaceChildren(firstLine, secondLine);
+      return [firstLine, secondLine];
+    }
+
+    function renderDayNightWeather(result, hours) {
+      const periods = [[DAY_WEATHER_HOUR, "昼間"], [NIGHT_WEATHER_HOUR, "夜間"]];
+      const cards = periods.flatMap(([hour, label]) => {
+        const item = hours.find(forecast => forecast.hourNum === hour);
+        if (!item) return [];
+        const button = document.createElement("button");
+        button.type = "button";
+        const info = getWeatherCodeInfo(item.weatherCode, item.isNight);
+        const weather = document.createElement("div");
+        weather.className = "weather-hour-result";
+        const lines = buildHourlyWeatherLines(item);
+        const heading = lines[0].querySelector("strong");
+        heading.textContent = label + " " + info.icon;
+        heading.setAttribute("aria-label", label + " " + item.hourStr + " " + info.text);
+        button.title = label + " " + item.hourStr + " " + info.text;
+        weather.append(...lines);
+        button.append(weather);
+        button.addEventListener("click", () => selectWeatherConditions(item));
+        return [button];
+      });
+      result.hidden = !cards.length;
+      result.replaceChildren(...cards);
+    }
+
+    function selectWeatherConditions(item) {
+      selectHomePanel("panel-conditions");
+      selectHour(item.idx);
     }
 
     function renderTodayHourly(dailyHours, dates, currentTime) {
@@ -4416,9 +4436,14 @@
         const [, month, day] = dates[offset].split("-").map(Number);
         date.dateTime = dates[offset];
         date.textContent = month + "/" + day;
-        const select = document.getElementById(key + "HourlySelect");
-        select.setAttribute("aria-label", date.textContent + "の予報時刻");
         const result = document.getElementById(key + "HourlyResult");
+        document.getElementById(key + "ForecastMissing").hidden = Boolean(hours.length);
+        const select = document.getElementById(key + "HourlySelect");
+        if (!select) {
+          renderDayNightWeather(result, hours);
+          continue;
+        }
+        select.setAttribute("aria-label", date.textContent + "の予報時刻");
         const previous = select.value;
         const keepSelection = hours.some(item => item.time === previous) &&
           (key !== "today" || previous !== renderedCurrentWeatherHour);
@@ -4438,7 +4463,6 @@
         if (keepSelection) select.value = previous;
         else if (key === "today" && hours.some(item => item.time === currentTime)) select.value = currentTime;
         select.parentElement.hidden = !hours.length;
-        document.getElementById(key + "ForecastMissing").hidden = Boolean(hours.length);
         renderHourlyWeatherResult(select, result);
       }
       renderedHourlyWeather = hourlyData;
@@ -4447,13 +4471,13 @@
 
     for (const key of HOURLY_FORECAST_DAYS) {
       const select = document.getElementById(key + "HourlySelect");
+      if (!select) continue;
       const result = document.getElementById(key + "HourlyResult");
       select.addEventListener("change", () => {
         renderHourlyWeatherResult(select, result);
         const item = hourlyData.find(hour => hour.time === select.value && !hour.isClimateRef);
         if (!item) return;
-        selectHomePanel("panel-conditions");
-        selectHour(item.idx);
+        selectWeatherConditions(item);
       });
     }
 
@@ -4715,11 +4739,7 @@
         resetSwipe();
 
         if (isHorizontal && Math.abs(deltaX) > 48) {
-          if (deltaX < 0 && selectedDayIdx < dailySummaries.length - 1) {
-            selectDay(selectedDayIdx + 1, null, 1);
-          } else if (deltaX > 0 && selectedDayIdx > 0) {
-            selectDay(selectedDayIdx - 1, null, -1);
-          }
+          selectHour(selectedIndex + (deltaX < 0 ? 1 : -1));
         }
       });
 
@@ -4777,23 +4797,21 @@
     // おすすめスポットガイド
     // ==========================================
     function initSpots() {
-      const tabs = document.getElementById("spotTabs");
-      tabs.innerHTML = "";
-      SPOTS.forEach((spot, i) => {
-        const btn = document.createElement("button");
-        btn.className = `spot-tab ${i === 0 ? "active" : ""}`;
-        btn.textContent = spot.name;
-        btn.addEventListener("click", () => showSpot(i));
-        tabs.appendChild(btn);
-      });
-      showSpot(0);
+      const select = document.getElementById("spotSelect");
+      select.replaceChildren(...SPOT_DISTRICTS.map(district => {
+        const group = document.createElement("optgroup");
+        group.label = district;
+        SPOTS.forEach((spot, index) => {
+          if (spot.district === district) group.append(new Option(spot.name, String(index)));
+        });
+        return group;
+      }));
+      select.value = "0";
+      select.addEventListener("change", () => showSpot(Number(select.value)));
+      showSpot(Number(select.value));
     }
 
     function showSpot(index) {
-      document.querySelectorAll(".spot-tab").forEach((el, i) => {
-        el.classList.toggle("active", i === index);
-        el.setAttribute("aria-pressed", String(i === index));
-      });
       const s = SPOTS[index];
       document.getElementById("spotDetail").innerHTML = `
         <div class="spot-header">
