@@ -1387,15 +1387,17 @@
       margin-bottom: 2px;
     }
 
-    .spot-msm header { margin-bottom: 6px; }
-    .spot-msm p { margin: 6px 0; }
-    #spotMsmStatus:empty { margin: 0; }
-    .spot-msm button { min-height: 44px; }
-    .spot-msm-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 8px; }
-    .spot-msm-card { padding: 8px 10px; border: 1px solid var(--border-glass); border-radius: 10px; }
-    .spot-msm-card h4 { font-size: .92rem; }
-    .spot-msm-rating { margin-top: 4px; font-size: .78rem; }
-    .spot-msm-card p { margin: 3px 0 0; font-size: .8rem; overflow-wrap: anywhere; }
+    .spot-forecast header { margin-bottom: 6px; }
+    .spot-forecast p { margin: 6px 0; }
+    #spotForecastStatus:empty { margin: 0; }
+    .spot-forecast button { min-height: 44px; }
+    .spot-forecast-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 8px; }
+    .spot-forecast-card { padding: 8px 10px; border: 1px solid var(--border-glass); border-radius: 10px; }
+    .spot-forecast-card h4 { font-size: .92rem; }
+    .spot-forecast-card-title { display: flex; align-items: baseline; gap: 6px; }
+    .spot-forecast-card-title h4 { min-width: 0; overflow-wrap: anywhere; }
+    .spot-forecast-rating { font-size: .78rem; white-space: nowrap; }
+    .spot-forecast-card p { margin: 3px 0 0; font-size: .8rem; overflow-wrap: anywhere; }
 
     .spot-map-link {
       display: flex;
@@ -2137,14 +2139,14 @@
       </section>
 
     </div>
-        <section class="glass-card spot-msm" id="panel-spot-forecast" role="region" hidden aria-labelledby="spotMsmHeading">
+        <section class="glass-card spot-forecast" id="panel-spot-forecast" role="region" hidden aria-labelledby="spotForecastHeading">
           <header>
-            <h3 id="spotMsmHeading">地点別予報 · JMA MSM</h3>
-            <button type="button" class="btn" id="spotMsmRefresh">予報を更新</button>
+            <h3 id="spotForecastHeading">地点別予報 · Open-Meteo</h3>
+            <button type="button" class="btn" id="spotForecastRefresh">予報を更新</button>
           </header>
-          <p id="spotMsmSelectedTime"></p>
-          <p id="spotMsmStatus" role="status"></p>
-          <div id="spotMsmGrid" class="spot-msm-grid"></div>
+          <p id="spotForecastSelectedTime"></p>
+          <p id="spotForecastStatus" role="status"></p>
+          <div id="spotForecastGrid" class="spot-forecast-grid"></div>
         </section>
       <div class="photo-assist-panel" id="panel-photo-day" role="region" aria-label="撮影アシスト" hidden>
       <section class="glass-card">
@@ -4853,45 +4855,61 @@
     // おすすめスポットガイド
     // ==========================================
     // The two island-wide entries use a representative location on each island.
-    const SPOT_MSM_POINTS = {
+    const SPOT_FORECAST_POINTS = {
       "前浜ビーチ": [24.735495, 125.261485],
       "17END": [24.842210, 125.139903],
       "渡口の浜": [24.81205, 125.181135],
       "東平安名崎": [24.7251784, 125.460735],
       "池間島": [24.9323891, 125.242831, "池間湿原周辺"],
       "来間島": [24.726027, 125.251631, "竜宮城展望台周辺"],
-      "インギャー": [24.725314, 125.357921]
+      "インギャー": [24.725314, 125.357921],
+      "砂山ビーチ": [24.838977, 125.280783],
+      "トゥリバー": [24.797896, 125.257726],
+      "わいわいビーチ": [24.7195, 125.33],
+      "佐和田の浜": [24.857008, 125.156941],
+      "比嘉ロードパーク": [24.785062, 125.384192],
+      "ムイガー": [24.725633, 125.383009]
     };
-    const SPOT_MSM_FIELDS = ["weather_code", "is_day", "temperature_2m", "cloud_cover",
+    const SPOT_FORECAST_FIELDS = ["weather_code", "is_day", "temperature_2m", "cloud_cover",
       "cloud_cover_low", "precipitation", "wind_direction_10m", "wind_speed_10m"];
-    const SPOT_MSM_RATING_FIELDS = ["cloud_cover_mid", "cloud_cover_high", "relative_humidity_2m",
-      "dew_point_2m", "direct_radiation"];
-    const spotMsmCache = new Map();
+    const SPOT_FORECAST_RATING_FIELDS = ["cloud_cover_mid", "cloud_cover_high", "relative_humidity_2m",
+      "dew_point_2m", "direct_radiation", "precipitation_probability"];
+    const spotForecastCache = new Map();
 
-    function spotForecastRating(row, item) {
+    function spotForecastScore(row, item) {
       if (![row.cloud_cover_mid, row.cloud_cover_high].every(Number.isFinite)) return null;
       const inputs = {
         cloudLow: row.cloud_cover_low, cloudMid: row.cloud_cover_mid,
         cloudHigh: row.cloud_cover_high, cloudTotal: row.cloud_cover,
-        precipMm: row.precipitation, weatherCode: row.weather_code, humidity: row.relative_humidity_2m,
+        precipProb: row.precipitation_probability, precipMm: row.precipitation, weatherCode: row.weather_code, humidity: row.relative_humidity_2m,
         dewDiff: row.dew_point_2m == null ? undefined : Math.max(0, row.temperature_2m - row.dew_point_2m),
         directRad: row.direct_radiation, sunAltDeg: item.sunPos.altDeg,
         moonIllum: item.moon.illumination, moonAltDeg: item.moonAltDeg
       };
-      return toHalfStep5(item.isNight ? calcStarryRaw(inputs) : calcBlueSkyRaw(inputs));
+      return item.isNight ? calcStarryRaw(inputs) : calcBlueSkyRaw(inputs);
     }
 
     function renderSpotForecasts(item = hourlyData[selectedIndex]) {
-      const grid = document.getElementById("spotMsmGrid");
+      const grid = document.getElementById("spotForecastGrid");
       const time = item?.time;
-      document.getElementById("spotMsmSelectedTime").textContent = time
+      document.getElementById("spotForecastSelectedTime").textContent = time
         ? time.slice(0, 10).replaceAll("-", "/") + " " + time.slice(11, 16) + " JST"
         : "撮影日・時刻の選択待ち";
-      for (const card of grid.children) {
-        const entry = spotMsmCache.get(card.dataset.spot);
+      const currentOrder = [...grid.children];
+      const cardsByName = new Map(currentOrder.map(card => [card.dataset.spot, card]));
+      const ranked = [];
+      for (const name of Object.keys(SPOT_FORECAST_POINTS)) {
+        const card = cardsByName.get(name);
+        if (!card) continue;
+        const entry = spotForecastCache.get(name);
         const row = entry?.rows.get(time);
-        const metrics = card.querySelector("p");
-        const rating = card.querySelector(".spot-msm-rating");
+        const [metrics, rainWind] = card.querySelectorAll("p");
+        rainWind.hidden = !row;
+        rainWind.textContent = "";
+        const score = row ? spotForecastScore(row, item) : null;
+        const grade = score === null ? null : toHalfStep5(score);
+        ranked.push({ card, score: grade ?? -1 });
+        const rating = card.querySelector(".spot-forecast-rating");
         rating.replaceChildren();
         rating.hidden = !row;
         if (!row) {
@@ -4899,53 +4917,58 @@
             : entry ? "選択時刻の予報データなし" : "予報データ未取得";
           continue;
         }
-        const score = spotForecastRating(row, item);
-        const label = item.isNight ? "星空" : "青空";
-        if (score === null) rating.textContent = label + " · 評価データなし";
-        else rating.innerHTML = label + " " + renderEmojiRating(score, item.isNight);
+        if (score === null) rating.textContent = "評価データなし";
+        else rating.innerHTML = renderEmojiRating(grade, item.isNight) + " " + score + "%";
         const weather = getWeatherCodeInfo(row.weather_code, row.is_day === 0);
         const direction = getDirectionName16(row.wind_direction_10m).jp;
         metrics.textContent = weather.icon + " " + weather.text + " · " + row.temperature_2m.toFixed(1) +
-          "℃ ｜ 雲量 " + row.cloud_cover + "%（低層 " + row.cloud_cover_low + "%） ｜ 降水量 " +
-          row.precipitation.toFixed(1) + " mm ｜ 風 " + direction + " " + row.wind_speed_10m.toFixed(1) + " m/s";
+          "℃ ｜ 雲量 " + row.cloud_cover + "%（低層 " + row.cloud_cover_low + "%）";
+        const rainProbability = Number.isFinite(row.precipitation_probability)
+          ? row.precipitation_probability + "%" : "—%";
+        rainWind.textContent = "降水 " + rainProbability + " / " + row.precipitation.toFixed(1) + " mm ｜ 風 " +
+          direction + " " + row.wind_speed_10m.toFixed(1) + " m/s";
+      }
+      ranked.sort((a, b) => b.score - a.score);
+      if (ranked.some(({ card }, index) => card !== currentOrder[index])) {
+        grid.append(...ranked.map(({ card }) => card));
       }
     }
 
     async function fetchSpotForecast(name, signal) {
-      const [latitude, longitude] = SPOT_MSM_POINTS[name];
+      const [latitude, longitude] = SPOT_FORECAST_POINTS[name];
       const query = new URLSearchParams({
-        latitude, longitude, models: "jma_msm", hourly: [...SPOT_MSM_FIELDS, ...SPOT_MSM_RATING_FIELDS].join(","),
+        latitude, longitude, hourly: [...SPOT_FORECAST_FIELDS, ...SPOT_FORECAST_RATING_FIELDS].join(","),
         forecast_days: "4", timezone: "Asia/Tokyo", wind_speed_unit: "ms", cell_selection: "land"
       });
-      const response = await fetch("https://api.open-meteo.com/v1/jma?" + query, { signal, cache: "no-store" });
+      const response = await fetch("https://api.open-meteo.com/v1/forecast?" + query, { signal, cache: "no-store" });
       if (!response.ok) throw new Error("HTTP " + response.status);
       const { hourly } = await response.json();
       const rows = new Map();
       for (const [index, time] of (hourly?.time ?? []).entries()) {
         if (typeof time !== "string" || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(time)) continue;
-        const values = SPOT_MSM_FIELDS.map(field => [field, hourly[field]?.[index]]);
+        const values = SPOT_FORECAST_FIELDS.map(field => [field, hourly[field]?.[index]]);
         if (values.every(([, value]) => Number.isFinite(value))) {
-          for (const field of SPOT_MSM_RATING_FIELDS) {
+          for (const field of SPOT_FORECAST_RATING_FIELDS) {
             const value = hourly[field]?.[index];
             if (Number.isFinite(value)) values.push([field, value]);
           }
           rows.set(time, Object.fromEntries(values));
         }
       }
-      if (!rows.size) throw new Error("No MSM hours");
-      spotMsmCache.set(name, { rows, savedAt: Date.now() });
+      if (!rows.size) throw new Error("No location forecast hours");
+      spotForecastCache.set(name, { rows, savedAt: Date.now() });
     }
 
     async function loadVisibleSpotForecast(force = false) {
-      const panel = document.querySelector(".spot-msm");
-      const refresh = document.getElementById("spotMsmRefresh");
-      if (panel.closest("[hidden]") || refresh.disabled || !document.getElementById("spotMsmGrid").children.length) return;
-      const names = Object.keys(SPOT_MSM_POINTS).filter(name =>
-        force || Date.now() - (spotMsmCache.get(name)?.savedAt ?? 0) >= AUTO_REFRESH_INTERVAL_MS);
+      const panel = document.querySelector(".spot-forecast");
+      const refresh = document.getElementById("spotForecastRefresh");
+      if (panel.closest("[hidden]") || refresh.disabled || !document.getElementById("spotForecastGrid").children.length) return;
+      const names = Object.keys(SPOT_FORECAST_POINTS).filter(name =>
+        force || Date.now() - (spotForecastCache.get(name)?.savedAt ?? 0) >= AUTO_REFRESH_INTERVAL_MS);
       if (!names.length) return;
       const controller = new AbortController();
       const timeout = setTimeout(() => controller.abort(), 12000);
-      const status = document.getElementById("spotMsmStatus");
+      const status = document.getElementById("spotForecastStatus");
       refresh.disabled = true;
       status.textContent = "予報を取得中…";
       try {
@@ -4953,7 +4976,7 @@
         const missing = names.filter((_, index) => results[index].status === "rejected");
         status.textContent = missing.length
           ? "取得できなかった地点：" + missing.join("、") +
-            (missing.some(name => spotMsmCache.has(name)) ? "。取得済みの予報は引き続き表示します。" : "")
+            (missing.some(name => spotForecastCache.has(name)) ? "。取得済みの予報は引き続き表示します。" : "")
           : "";
         renderSpotForecasts();
       } finally {
@@ -4963,20 +4986,25 @@
     }
 
     function initSpotForecast() {
-      const grid = document.getElementById("spotMsmGrid");
-      for (const name of Object.keys(SPOT_MSM_POINTS)) {
+      const grid = document.getElementById("spotForecastGrid");
+      for (const name of Object.keys(SPOT_FORECAST_POINTS)) {
         const card = document.createElement("section");
-        card.className = "spot-msm-card";
+        card.className = "spot-forecast-card";
         card.dataset.spot = name;
         const heading = document.createElement("h4");
         heading.textContent = name;
         const rating = document.createElement("div");
-        rating.className = "spot-msm-rating";
+        rating.className = "spot-forecast-rating";
         rating.hidden = true;
-        card.append(heading, document.createElement("p"), rating);
+        const title = document.createElement("div");
+        title.className = "spot-forecast-card-title";
+        title.append(heading, rating);
+        const rainWind = document.createElement("p");
+        rainWind.hidden = true;
+        card.append(title, document.createElement("p"), rainWind);
         grid.append(card);
       }
-      document.getElementById("spotMsmRefresh").addEventListener("click", () => loadVisibleSpotForecast(true));
+      document.getElementById("spotForecastRefresh").addEventListener("click", () => loadVisibleSpotForecast(true));
       renderSpotForecasts();
       loadVisibleSpotForecast();
     }
@@ -4984,8 +5012,8 @@
     function initSpots() {
       const select = document.getElementById("spotSelect");
       const forecastGroup = document.createElement("optgroup");
-      forecastGroup.label = "地点別予報あり（JMA MSM）";
-      for (const name of Object.keys(SPOT_MSM_POINTS)) {
+      forecastGroup.label = "地点別予報あり（Open-Meteo）";
+      for (const name of Object.keys(SPOT_FORECAST_POINTS)) {
         const index = SPOTS.findIndex(spot => spot.name === name);
         if (index >= 0) forecastGroup.append(new Option(name, String(index)));
       }
@@ -4993,7 +5021,7 @@
         const group = document.createElement("optgroup");
         group.label = district;
         SPOTS.forEach((spot, index) => {
-          if (spot.district === district && !Object.hasOwn(SPOT_MSM_POINTS, spot.name)) group.append(new Option(spot.name, String(index)));
+          if (spot.district === district && !Object.hasOwn(SPOT_FORECAST_POINTS, spot.name)) group.append(new Option(spot.name, String(index)));
         });
         return group;
       }));
