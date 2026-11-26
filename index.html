@@ -622,6 +622,7 @@
     }
 
     .wind-shelter-tip {
+      text-align: left;
       font-size: 0.76rem;
       color: var(--accent-cyan);
       background: rgba(94, 234, 212, 0.1);
@@ -958,6 +959,12 @@
       height: 60px;
       flex-shrink: 0;
       filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.28));
+    }
+
+    @media (max-width: 480px) {
+      #panel-stars .moon-row { gap: 8px; padding: 9px; }
+      #panel-stars .moon-svg-wrap { width: 42px; height: 42px; }
+      #panel-stars .moon-details h3 { font-size: .88rem; }
     }
 
     .moon-details h3 {
@@ -1537,6 +1544,7 @@
         flex-direction: column;
         text-align: center;
       }
+      .wind-weather-wrap .wind-stats { width: 100%; }
       .tide-grid {
         font-size: 0.8rem;
       }
@@ -1713,6 +1721,11 @@
     .gauge-label { font-size: .625rem; letter-spacing: 0; }
     .gauge-value { font-size: clamp(1.75rem, 6vw, 2.3rem); }
     .score-panel .badge-row { justify-content: flex-start; }
+    .score-panel .badge-row > .selected-time-badge {
+      font-size: clamp(1.05rem, 4.6vw, 1.35rem);
+      font-weight: 700;
+      white-space: nowrap;
+    }
     .score-panel .mini-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
     .mini-metrics .metric-box { min-width: 0; padding: 5px 6px; }
     .metric-box .v { overflow-wrap: anywhere; }
@@ -1786,15 +1799,21 @@
       .recommendation-time strong { font-size: .875rem; }
       .recommendation-rating .emoji-rating { font-size: .48rem; gap: 0; }
     }
-    .now-weather { padding: 8px 9px; background: #164048; border: 1px solid #397b74; border-radius: 9px; }
+    .now-weather { padding: 10px; background: #164048; border: 1px solid #397b74; border-radius: 9px; }
     .now-weather-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
-    .now-weather-header h4 { font-size: .875rem; }
-    .now-weather-header time { color: #b7fff1; font-size: .75rem; }
-    .now-weather-body { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 3px 14px; margin-top: 4px; }
-    .now-weather-summary { margin: 0; font-size: 1.05rem; font-weight: 700; overflow-wrap: anywhere; }
-    .now-weather-wind { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; margin: 0; }
-    .now-weather-wind dt { color: var(--text-sub); font-size: .75rem; }
-    .now-weather-wind dd { margin: 0; color: var(--text-main); font-size: .85rem; font-weight: 600; }
+    .now-weather-header h4 { font-size: .95rem; }
+    .now-weather-header time { color: #b7fff1; font-size: .82rem; font-weight: 600; }
+    .now-weather-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; margin-top: 7px; }
+    .now-weather-summary { margin: 0; color: #fff; line-height: 1.25; overflow-wrap: anywhere; }
+    .now-weather-reading { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 5px 10px; }
+    #nowWeatherIcon { font-size: 1.75rem; line-height: 1; }
+    #nowWeatherTemperature { font-size: .82rem; font-weight: 600; }
+    #nowWeatherTemperature.has-reading { font-size: clamp(1.25rem, 5vw, 1.65rem); font-weight: 750; white-space: nowrap; }
+    #nowWeatherDescription { display: block; margin-top: 3px; color: #d2e8f0; text-align: center; font-size: .75rem; }
+    #nowWeatherObservationNote { display: block; margin-top: 3px; color: #d1e6ed; font-size: .72rem; }
+    .now-weather-wind { display: grid; grid-template-columns: auto auto; align-items: baseline; gap: 4px 6px; margin: 0; padding-left: 8px; border-left: 1px solid #56838a; }
+    .now-weather-wind dt { color: #d2e8f0; font-size: .75rem; }
+    .now-weather-wind dd { margin: 0; color: #fff; font-size: .88rem; font-weight: 700; white-space: nowrap; }
     .today-hourly-weather { margin-top: 10px; }
     .hourly-weather-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
     .hourly-weather-grid > div {
@@ -1833,6 +1852,7 @@
     }
     .day-night-weather .weather-hour-result { margin-top: 0; }
     .day-night-weather .weather-hour-result { gap: 1px; }
+    .weather-period-description { display: block; white-space: normal; font-weight: 600; }
     @media (max-width: 420px) {
       .hourly-weather-grid { gap: 6px; }
       .hourly-weather-grid > div { padding: 5px; }
@@ -1840,7 +1860,7 @@
       .weather-hour-result > div { gap: 2px; }
       .weather-hour-result span { font-size: .69rem; }
     }
-    #todayWeatherDate, #todayWeatherStatus { color: var(--text-sub); font-size: .8rem; }
+    #todayWeatherStatus { color: var(--text-sub); font-size: .8rem; }
     #recommendationsSource { color: var(--text-sub); font-size: .8rem; }
     .home-details { margin-top: 14px; }
     .home-detail-picker { display: grid; gap: 4px; max-width: 420px; margin-bottom: 8px; }
@@ -1932,22 +1952,24 @@
     </header>
 
     <main id="app-main">
-      <section id="todayWeatherCard" class="glass-card today-weather" aria-labelledby="todayWeatherHeading">
-        <div class="recommendations-header">
-          <h3 id="todayWeatherHeading">今日から4日間の気象情報</h3>
-          <span id="todayWeatherDate">日本時間</span>
-        </div>
+      <section id="todayWeatherCard" class="glass-card today-weather" aria-label="4日間の気象情報">
         <p id="todayWeatherStatus">気象データ取得待ち</p>
-        <section class="now-weather" id="nowWeather" aria-labelledby="nowWeatherHeading" hidden>
+        <section class="now-weather" id="nowWeather" aria-labelledby="nowWeatherHeading">
           <div class="now-weather-header">
             <h4 id="nowWeatherHeading">現在の時間帯</h4>
             <time id="nowWeatherTime"></time>
           </div>
           <div class="now-weather-body">
-            <p id="nowWeatherSummary" class="now-weather-summary"></p>
+            <p id="nowWeatherSummary" class="now-weather-summary">
+              <span class="now-weather-reading"><span id="nowWeatherIcon" aria-hidden="true" hidden></span><span id="nowWeatherTemperature"></span></span>
+              <span id="nowWeatherDescription" hidden></span>
+              <span id="nowWeatherObservationNote" hidden>前回の観測値</span>
+            </p>
             <dl class="now-weather-wind">
               <dt>風向/風速</dt>
               <dd id="nowWeatherWind"></dd>
+              <dt title="降水確率は予報、降水量は直近1時間の観測値">降水確率/量</dt>
+              <dd id="nowWeatherRain"></dd>
             </dl>
           </div>
         </section>
@@ -2033,7 +2055,7 @@
               <span class="recommendation-rating" hidden></span>
             </button>
             <button type="button" class="recommendation-card" data-recommend="blue" aria-pressed="false" disabled>
-              <span class="recommendation-time"><span>青空</span><strong>—</strong></span>
+              <span class="recommendation-time"><span>日中</span><strong>—</strong></span>
               <span class="recommendation-rating" hidden></span>
             </button>
             <button type="button" class="recommendation-card" data-recommend="sunset" aria-pressed="false" disabled>
@@ -2253,7 +2275,7 @@
           <div class="moon-svg-wrap" id="moonSvgContainer"></div>
           <div class="moon-details">
             <h3 id="moonName">月齢 --</h3>
-            <p id="moonDetail">輝面率 --% • 月明かり影響: --</p>
+            <p id="moonDetail">輝面率 —% · 月明かり —</p>
           </div>
         </div>
 
@@ -3890,12 +3912,13 @@
       document.getElementById("radiationText").textContent = `${item.directRad} / ${item.radiation} W/m²`;
 
       document.getElementById("moonSvgContainer").innerHTML = renderMoonSvg(item.moon.phase);
-      document.getElementById("moonName").textContent = `${item.moon.emoji} 月齢 ${item.moon.age.toFixed(1)} • ${item.moon.name}`;
+      const moonPhaseName = item.moon.name.split("（")[0];
+      document.getElementById("moonName").textContent = `月齢 ${item.moon.age.toFixed(1)} · ${moonPhaseName}`;
       const illumPct = Math.round(item.moon.illumination * 100);
       const moonStateText = item.moonAltDeg <= -2
-        ? "月没中（月明かり影響なし）"
-        : (illumPct > 70 ? "強め" : illumPct > 30 ? "中程度" : "弱い (好条件)");
-      document.getElementById("moonDetail").textContent = `輝面率 ${illumPct}% • ${moonStateText}`;
+        ? "月没中"
+        : (illumPct > 70 ? "月明かり 強" : illumPct > 30 ? "月明かり 中" : "月明かり 弱");
+      document.getElementById("moonDetail").textContent = `輝面率 ${illumPct}% · ${moonStateText}`;
 
       renderCloudLayer("valHigh", item.cloudHigh);
       renderCloudLayer("valMid", item.cloudMid);
@@ -4466,6 +4489,10 @@
         const lines = buildHourlyWeatherLines(item);
         const heading = lines[0].querySelector("strong");
         heading.textContent = label + " " + info.icon;
+        const description = document.createElement("span");
+        description.className = "weather-period-description";
+        description.textContent = info.text;
+        heading.append(description);
         heading.setAttribute("aria-label", label + " " + item.hourStr + " " + info.text);
         button.title = label + " " + item.hourStr + " " + info.text;
         weather.append(...lines);
@@ -4508,7 +4535,7 @@
           const temperature = item.temp.toFixed(1);
           const direction = getDirectionName16(item.windDir).jp;
           const speed = item.wind.toFixed(1);
-          option.textContent = item.hourStr + " " + weather.icon + " " + temperature + "° " + item.precip +
+          option.textContent = item.hourStr + " " + weather.icon + " " + weather.text + " " + temperature + "° " + item.precip +
             "% · " + direction + " " + speed + " m/s";
           option.setAttribute("aria-label", item.hourStr + " " + weather.text + "、気温" + temperature +
             "度、降水確率" + item.precip + "パーセント、風向" + direction + "、風速" + speed + "メートル毎秒");
@@ -4535,15 +4562,99 @@
       });
     }
 
-    function renderCurrentWeather(item) {
-      document.getElementById("nowWeather").hidden = !item;
-      if (!item) return;
-      const info = getWeatherCodeInfo(item.weatherCode, item.isNight);
+    const AMEDAS_ROOT = "https://www.jma.go.jp/bosai/amedas/data/";
+    const AMEDAS_MAX_AGE_MS = 60 * 60000;
+    let lastObservation = null;
+    let lastObservationAttempt = 0;
+    let observationLoading = false;
+    let observationFailed = false;
+
+    function renderCurrentObservation() {
       const time = document.getElementById("nowWeatherTime");
-      time.dateTime = item.time + "+09:00";
-      time.textContent = item.hourStr + " の予報";
-      document.getElementById("nowWeatherSummary").textContent = info.icon + " " + info.text + " · " + item.temp.toFixed(1) + "℃";
-      document.getElementById("nowWeatherWind").textContent = getDirectionName16(item.windDir).jp + " / " + item.wind.toFixed(1) + " m/s";
+      const forecast = hourlyData.find(item => item.time === getMiyakoNow().isoHour && !item.isClimateRef);
+      const icon = document.getElementById("nowWeatherIcon");
+      const weather = forecast ? getWeatherCodeInfo(forecast.weatherCode, forecast.isNight) : null;
+      icon.hidden = !weather;
+      icon.textContent = weather?.icon ?? "";
+      icon.title = weather ? "天気予報：" + weather.text : "";
+      const description = document.getElementById("nowWeatherDescription");
+      description.hidden = !weather;
+      description.textContent = weather ? weather.text + "（予報）" : "";
+      const amount = lastObservation?.precipitation;
+      const rain = document.getElementById("nowWeatherRain");
+      const probability = forecast ? forecast.precip + "%" : "—";
+      const observedRain = Number.isFinite(amount) ? amount.toFixed(1) + " mm" : "—";
+      rain.textContent = probability + " / " + observedRain;
+      rain.setAttribute("aria-label", "降水確率（予報）" + probability + "、1時間降水量（観測）" + observedRain);
+      const summary = document.getElementById("nowWeatherTemperature");
+      summary.classList.toggle("has-reading", Boolean(lastObservation));
+      const wind = document.getElementById("nowWeatherWind");
+      if (!lastObservation) {
+        summary.textContent = observationFailed ? "観測値を取得できませんでした" : "観測値を取得中…";
+        wind.textContent = "—";
+        return;
+      }
+      const { stamp, temperature, speed, direction } = lastObservation;
+      const stale = Date.now() - Date.parse(stamp) >= AMEDAS_MAX_AGE_MS;
+      time.dateTime = stamp;
+      time.textContent = stamp.slice(5, 10).replace("-", "/") + " " + stamp.slice(11, 16) + " 観測";
+      summary.textContent = temperature.toFixed(1) + "℃";
+      document.getElementById("nowWeatherObservationNote").hidden = !(stale || observationFailed);
+      wind.textContent = direction === 0 ? "静穏 / " + speed.toFixed(1) + " m/s"
+        : getDirectionName16(direction * 22.5).jp + " / " + speed.toFixed(1) + " m/s";
+    }
+
+    async function fetchObservationFile(path) {
+      const local = location.protocol === "http:" && location.hostname === "127.0.0.1";
+      const url = local ? "/amedas/" + path : AMEDAS_ROOT + path;
+      const response = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout(8000) });
+      if (!response.ok) throw new Error("AMeDAS HTTP " + response.status);
+      return path.endsWith(".json") ? response.json() : response.text();
+    }
+
+    async function refreshCurrentObservation(force = false) {
+      if (observationLoading || (!force && Date.now() - lastObservationAttempt < 10 * 60000)) return;
+      observationLoading = true;
+      lastObservationAttempt = Date.now();
+      try {
+        const latest = (await fetchObservationFile("latest_time.txt")).trim();
+        if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\+09:00$/.test(latest)) throw new Error("Invalid AMeDAS timestamp");
+        const latestMs = Date.parse(latest);
+        if (!Number.isFinite(latestMs)) throw new Error("Invalid AMeDAS date");
+        const latestKey = latest.slice(0, 19).replace(/\D/g, "");
+        for (const offset of [0, 3]) {
+          const jst = new Date(latestMs + (9 - offset) * 3600000).toISOString();
+          const date = jst.slice(0, 10).replaceAll("-", "");
+          const block = String(Math.floor(Number(jst.slice(11, 13)) / 3) * 3).padStart(2, "0");
+          let rows;
+          try { rows = await fetchObservationFile("point/93041/" + date + "_" + block + ".json"); }
+          catch { continue; }
+          for (const key of Object.keys(rows).filter(key => /^\d{14}$/.test(key) && key <= latestKey).sort().reverse()) {
+            const row = rows[key];
+            const usable = key => row?.[key]?.[1] === 0 && Number.isFinite(row[key][0]);
+            if (!["temp", "wind", "windDirection"].every(usable)) continue;
+            const [direction] = row.windDirection;
+            const [speed] = row.wind;
+            if (!Number.isInteger(direction) || direction < 0 || direction > 16 || speed < 0) continue;
+            const stamp = key.slice(0, 4) + "-" + key.slice(4, 6) + "-" + key.slice(6, 8) +
+              "T" + key.slice(8, 10) + ":" + key.slice(10, 12) + ":" + key.slice(12, 14) + "+09:00";
+            if (!lastObservation || stamp >= lastObservation.stamp) {
+              lastObservation = {
+                stamp, temperature: row.temp[0], speed, direction,
+                precipitation: usable("precipitation1h") && row.precipitation1h[0] >= 0 ? row.precipitation1h[0] : null
+              };
+            }
+            observationFailed = false;
+            return;
+          }
+        }
+        throw new Error("No valid AMeDAS observations");
+      } catch {
+        observationFailed = true;
+      } finally {
+        observationLoading = false;
+        renderCurrentObservation();
+      }
     }
 
     function renderTodayWeather() {
@@ -4553,10 +4664,8 @@
       const dates = HOURLY_FORECAST_DAYS.map((_, offset) =>
         new Date(start + offset * 86400000).toISOString().slice(0, 10));
       const summaries = dailySummaries.filter(day => !day.isClimateRef && dates.includes(day.date));
-      renderCurrentWeather(hourlyData.find(item => item.time === currentTime && !item.isClimateRef));
+      renderCurrentObservation();
       const status = document.getElementById("todayWeatherStatus");
-      const date = document.getElementById("todayWeatherDate");
-      date.textContent = "日本時間 · Open-Meteo";
       status.hidden = summaries.length > 0;
       document.getElementById("todayHourlyWeather").hidden = summaries.length === 0;
       if (summaries.length === 0) {
@@ -4577,7 +4686,8 @@
       const comment = getUmiJudgeInfo(item.rawScore).text;
       const score = item.rawScore;
       const badge = document.getElementById("sourceTypeBadge");
-      badge.textContent = item.isClimateRef ? "気候参考値" : "Open-Meteo予報";
+      badge.textContent = item.isClimateRef ? "気候参考値" : "";
+      badge.hidden = !item.isClimateRef;
       badge.classList.toggle("is-reference", item.isClimateRef);
       renderRecommendations(summary, item);
       const rating = item.score5;
@@ -4707,7 +4817,7 @@
               .map(([code, isNight, label]) => {
                 if (code === null) return '<span>' + label + ' —</span>';
                 const weather = getWeatherCodeInfo(code, isNight);
-                return '<span>' + label + ' <span role="img" aria-label="' + weather.text + '">' + weather.icon + '</span></span>';
+                return '<span>' + label + ' <span role="img" aria-hidden="true">' + weather.icon + '</span> ' + weather.text + '</span>';
               }).join("") + '</div>';
           row.innerHTML = '<h4 class="day-name">' + summary.dayLabel + '</h4>' + weatherIcons +
             '<p class="day-sub">' + (reference ? "気候参考値 · " : "") +
@@ -4835,6 +4945,7 @@
       setInterval(() => {
         if (!document.hidden) {
           fetchWeather(true);
+          refreshCurrentObservation();
           loadVisibleSpotForecast();
         }
       }, AUTO_REFRESH_INTERVAL_MS);
@@ -4842,6 +4953,7 @@
       const handleWakeUp = () => {
         if (document.hidden) return;
         loadVisibleSpotForecast();
+        refreshCurrentObservation();
         if (Date.now() - lastFetchMs >= VISIBILITY_STALE_MS) {
           fetchWeather(true);
         }
@@ -5053,6 +5165,7 @@
     // ==========================================
 
     document.getElementById("refreshBtn").addEventListener("click", () => {
+      refreshCurrentObservation(true);
       selectCurrentHour();
       fetchWeather(false);
     });
@@ -5233,6 +5346,7 @@
     initSpots();
     initSpotForecast();
     initAutoRefresh();
+    refreshCurrentObservation();
     setInterval(() => {
       if (!document.hidden && !document.getElementById("todayWeatherCard").hidden && renderedCurrentWeatherHour !== getMiyakoNow().isoHour) {
         renderTodayWeather();
