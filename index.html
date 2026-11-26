@@ -195,8 +195,6 @@
     /* スワイプ対応 メイン指数カード */
     .swipe-card {
       position: relative;
-      touch-action: pan-y pinch-zoom;
-      user-select: none;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -246,20 +244,46 @@
       box-shadow: 0 0 10px rgba(94, 234, 212, 0.25);
     }
 
-    /* 時間帯コントロールバー */
-    .time-control-bar {
-      margin-bottom: 14px;
-      background: rgba(96, 165, 250, 0.08);
-      border: 1px solid rgba(96, 165, 250, 0.24);
-      border-radius: 12px;
-      padding: 7px 10px;
-    }
-
-    .time-control-top {
+    .condition-ratings { margin-bottom: 12px; }
+    .condition-ratings h3 { color: var(--text-sub); font-size: .85rem; margin-bottom: 6px; }
+    .condition-rating-hours { display: flex; gap: 6px; overflow-x: auto; padding: 2px 2px 7px; }
+    .condition-rating-hours button {
+      flex: 0 0 56px;
+      min-width: 0;
       display: flex;
+      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      justify-content: space-between;
-      gap: 8px;
+      gap: 2px;
+      padding: 2px 3px;
+      min-height: 48px;
+      border: 1px solid var(--border-glass);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, .24);
+      color: var(--text-main);
+      font: inherit;
+      font-size: .78rem;
+      cursor: pointer;
+    }
+    .condition-rating-hours .emoji-rating { font-size: .44rem; line-height: 9px; gap: 0; }
+    .condition-hour-score { font-weight: 700; color: #b7fff1; }
+    .condition-hour-score.is-high {
+      color: #211606;
+      background: #fbbf24;
+      border-radius: 5px;
+      padding: 0 6px;
+      font-size: .9rem;
+      font-weight: 800;
+    }
+    .condition-rating-hours button[aria-current="time"] { border-color: #5eead4; background: #164048; }
+    .condition-rating-hours button:focus-visible { outline: 2px solid #a5f3fc; outline-offset: -3px; }
+
+    .selection-controls .condition-date-step {
+      flex: 0 0 44px;
+      width: 44px;
+      min-height: 44px;
+      padding: 0;
+      font-size: .9rem;
     }
 
     .time-step-btn {
@@ -284,27 +308,6 @@
     .time-step-btn:disabled {
       opacity: 0.3;
       cursor: not-allowed;
-    }
-
-    .time-select-wrap {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex: 1;
-      justify-content: center;
-    }
-
-    .time-select {
-      min-height: 36px;
-      background: rgba(15, 23, 42, 0.94);
-      color: var(--accent-cyan);
-      border: 1px solid rgba(94, 234, 212, 0.38);
-      border-radius: 9px;
-      padding: 5px 10px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      cursor: pointer;
-      outline: none;
     }
 
     .nav-arrow-btn {
@@ -584,6 +587,14 @@
     }
 
     /* 風向コンパス・詳細気象・潮位（2番目パネル） */
+    .condition-weather { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border-glass); }
+    .condition-tide h3 { font-size: .9rem; }
+    .condition-weather .wind-weather-wrap { flex-direction: row; text-align: left; }
+    .condition-weather .wind-stats { width: auto; }
+    .condition-weather .compass-box { width: 58px; height: 58px; }
+    .condition-weather .compass-box svg { width: 100%; height: 100%; }
+    .condition-tide { margin-top: 14px; }
+
     .wind-panel-stack {
       display: flex;
       flex-direction: column;
@@ -607,12 +618,6 @@
     .wind-stats {
       flex: 1;
       min-width: 0;
-    }
-
-    .wind-main {
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 3px;
     }
 
     .wind-sub {
@@ -749,7 +754,7 @@
 
     .rise-set-quad {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
     }
 
@@ -772,21 +777,19 @@
       border-color: rgba(94, 234, 212, 0.5);
     }
 
-    .rs-box.sun {
-      border-color: rgba(251, 146, 60, 0.34);
-      background: rgba(251, 146, 60, 0.08);
-    }
-
-    .rs-box.moon {
-      border-color: rgba(251, 191, 36, 0.34);
-      background: rgba(251, 191, 36, 0.08);
+    .rs-box[data-jumptime] {
+      text-align: center;
+      border-color: color-mix(in srgb, var(--umi-color) var(--umi-emphasis), #263347);
+      background: color-mix(in srgb, var(--umi-color) calc(var(--umi-emphasis) * .27), #101d33);
     }
 
     .rs-label {
-      font-size: 0.74rem;
-      font-weight: 600;
-      color: var(--text-sub);
+      font-size: .82rem;
+      font-weight: 750;
+      color: #fff;
+      line-height: 1.2;
     }
+    .rs-event-icon { display: block; margin-bottom: 2px; }
 
     .rs-time {
       font-size: 1.04rem;
@@ -795,13 +798,13 @@
     }
 
     .rs-az {
-      font-size: 0.68rem;
-      color: var(--text-muted);
+      font-size: .75rem;
+      color: #e0ecfa;
     }
 
     .umi-sub-caption {
-      font-size: 0.68rem;
-      color: var(--text-sub);
+      font-size: .75rem;
+      color: #e0ecfa;
       margin-top: 2px;
     }
 
@@ -809,21 +812,6 @@
       font-size: 1.42rem;
       font-weight: 800;
       line-height: 1.1;
-    }
-
-    .umi-meter-bg {
-      width: 100%;
-      height: 7px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.12);
-      overflow: hidden;
-      margin: 2px 0;
-    }
-
-    .umi-meter-fill {
-      height: 100%;
-      border-radius: 999px;
-      transition: width 0.45s ease;
     }
 
     .umi-prob-badge {
@@ -834,34 +822,13 @@
       white-space: nowrap;
     }
 
-    .umi-prob-high {
-      background: rgba(94, 234, 212, 0.18);
-      border: 1px solid rgba(94, 234, 212, 0.44);
-      color: #5eead4;
-    }
-
-    .umi-prob-mid {
-      background: rgba(251, 191, 36, 0.18);
-      border: 1px solid rgba(251, 191, 36, 0.44);
-      color: #fde68a;
-    }
-
-    .umi-prob-low {
-      background: rgba(248, 113, 113, 0.16);
-      border: 1px solid rgba(248, 113, 113, 0.36);
-      color: #fca5a5;
-    }
-
-    .umi-prob-none {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      color: var(--text-muted);
-    }
+    .rs-box .umi-big-prob, .rs-box .umi-prob-badge { color: color-mix(in srgb, var(--umi-color) 40%, #fff); }
+    .rs-box .umi-prob-badge { background: color-mix(in srgb, var(--umi-color) calc(var(--umi-emphasis) * .18), #101d33); }
 
     /* マジックアワー統合行 */
     .magic-rows {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 8px;
     }
 
@@ -883,7 +850,7 @@
     }
 
     .magic-box.dark {
-      grid-column: span 4;
+      grid-column: 1 / -1;
       border-color: rgba(94, 234, 212, 0.34);
       background: linear-gradient(135deg, rgba(15, 23, 42, 0.78), rgba(94, 234, 212, 0.09));
       display: flex;
@@ -1394,10 +1361,16 @@
       margin-bottom: 2px;
     }
 
-    .spot-forecast header { margin-bottom: 6px; }
     .spot-forecast p { margin: 6px 0; }
     #spotForecastStatus:empty { margin: 0; }
     .spot-forecast button { min-height: 44px; }
+    .spot-forecast-days { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin-bottom: 8px; }
+    .spot-forecast-days button { padding: 4px 2px; white-space: nowrap; font-size: .75rem; }
+    .spot-forecast-days button[aria-pressed="true"] { background: #164048; color: #b7fff1; border-color: #5eead4; }
+    .spot-forecast-time { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .spot-forecast-time label { font-size: .82rem; font-weight: 700; white-space: nowrap; }
+    .spot-forecast-time select { flex: 1; width: auto; min-width: 0; margin: 0; }
+    .spot-forecast-time button { flex-shrink: 0; white-space: nowrap; }
     .spot-forecast-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 8px; }
     .spot-forecast-card { padding: 8px 10px; border: 1px solid var(--border-glass); border-radius: 10px; }
     .spot-forecast-card h4 { font-size: .92rem; }
@@ -1442,12 +1415,11 @@
         grid-template-columns: 1fr;
         gap: 6px;
       }
-      .magic-rows {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .magic-box.dark {
-        grid-column: span 2;
-      }
+      .magic-rows { gap: 4px; }
+      .magic-box:is(.blue, .golden) { min-width: 0; padding: 7px 3px; text-align: center; }
+      .magic-box:is(.blue, .golden) .magic-label { color: #e8f2ff; overflow-wrap: anywhere; }
+      .magic-box:is(.blue, .golden) .magic-time { white-space: normal; }
+      .magic-box:is(.blue, .golden) .magic-note { color: #d3e2f5; overflow-wrap: anywhere; }
     }
 
     @media (max-width: 600px) {
@@ -1477,9 +1449,6 @@
       .date-select {
         font-size: 0.88rem;
         min-height: 40px;
-      }
-      .time-select {
-        min-height: 38px;
       }
       .time-step-btn {
         min-height: 38px;
@@ -1520,19 +1489,13 @@
       .metric-box .v {
         font-size: 0.83rem;
       }
-      .rise-set-quad {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-      }
-      .rs-box {
-        padding: 11px 8px;
-      }
-      .rs-time {
-        font-size: 1.08rem;
-      }
-      .umi-big-prob {
-        font-size: 1.48rem;
-      }
+      .rise-set-quad { gap: 4px; }
+      .rs-box { min-width: 0; padding: 7px 2px; }
+      .rs-label { font-size: .75rem; }
+      .rs-az, .umi-sub-caption { font-size: .69rem; }
+      .rs-time { font-size: .98rem; }
+      .umi-big-prob { font-size: 1.25rem; }
+      .umi-prob-badge { max-width: 100%; padding: 2px 2px; font-size: .69rem; white-space: normal; }
       .sun-pos-box {
         gap: 6px;
         padding: 9px 8px;
@@ -1652,51 +1615,10 @@
     .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
     button, select { min-height: 44px; font: inherit; }
     button:disabled { opacity: .55; cursor: default; }
-    .selection-controls { --datetime-font: 1rem; display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr) auto; align-items: center; gap: 8px 16px; }
-    #view-home > .selection-controls { margin-bottom: 12px; }
-    .selection-controls .date-nav-bar, .selection-controls .time-control-bar { margin: 0; width: 100%; }
-    .selection-controls .time-control-top { width: 100%; justify-content: space-between; flex-wrap: nowrap; }
-    .mobile-datetime-label { font-size: .82rem; font-weight: 700; color: var(--text-main); white-space: nowrap; }
-    .hour-select-display { position: relative; width: 100%; min-width: 0; }
-    .rating-picker { position: relative; width: 100%; min-width: 0; }
-    .rating-picker[open] { z-index: 4; }
-    .rating-picker summary {
-      position: relative; display: flex; align-items: center; min-height: 46px; padding: 4px 9px;
-      border: 1px solid #456180; border-radius: 8px; background: #162942;
-      color: var(--text-main); cursor: pointer; list-style: none;
-    }
-    .rating-picker summary::-webkit-details-marker { display: none; }
-    .rating-picker summary:focus-visible { outline: 2px solid #fce18b; outline-offset: 2px; }
-    .rating-picker-options {
-      position: absolute; inset-inline-end: 0; top: calc(100% + 4px);
-      width: max(100%, 235px); max-width: calc(100vw - 24px);
-      max-height: min(48vh, 340px); overflow-y: auto; padding: 4px;
-      border: 1px solid #456180; border-radius: 9px; background: #101d33;
-      box-shadow: 0 8px 20px #0008;
-    }
-    .rating-picker-options button {
-      width: 100%; display: flex; align-items: center; gap: 8px; min-height: 44px;
-      padding: 4px 7px; border: 0; border-radius: 6px; background: transparent;
-      color: var(--text-main); font-size: .85rem; text-align: start; cursor: pointer;
-    }
-    .rating-picker-options button:is(:hover, [aria-current="true"]) { background: #164048; }
-    .rating-picker-options .emoji-rating { margin-inline-start: auto; }
-    .rating-picker-options .option-percent { min-width: 3em; text-align: end; }
-    #hourSelectFace {
-      position: absolute; inset: 0; display: flex; gap: 3px; align-items: center; justify-content: center;
-      pointer-events: none; padding-inline: 2px 10px; color: var(--accent-cyan); font-size: var(--datetime-font); font-weight: 700; white-space: nowrap;
-    }
-    #hourSelectFace::after {
-      content: ""; position: absolute; inset-inline-end: 4px; top: 45%; width: 4px; height: 4px;
-      border-inline-end: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg);
-    }
-    #hourSelectFace .emoji-rating { font-size: .66rem; }
-    .hour-select-percent { color: var(--text-main); font-weight: 700; }
-    @media (max-width: 420px) {
-      #hourSelectFace { gap: 2px; padding-inline-start: 5px; }
-      #hourSelectFace .emoji-rating { font-size: .46rem; gap: 0; }
-    }
-    .selection-controls .date-select-wrap, .selection-controls .time-select-wrap { min-width: 0; flex: 1; }
+    .selection-controls { --datetime-font: 1rem; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px 16px; }
+    .glass-card > .selection-controls { margin-bottom: 10px; }
+    .selection-controls .date-nav-bar { margin: 0; width: 100%; }
+    .selection-controls .date-select-wrap { min-width: 0; flex: 1; gap: 8px; }
     .selection-controls select { width: 100%; min-width: 0; font-size: var(--datetime-font); text-align: center; }
     .selection-controls .nav-arrow-btn { min-width: 44px; }
     .timezone { color: var(--text-sub); font-size: .75rem; }
@@ -1726,11 +1648,10 @@
       font-weight: 700;
       white-space: nowrap;
     }
-    .score-panel .mini-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+    .condition-weather .mini-metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
     .mini-metrics .metric-box { min-width: 0; padding: 5px 6px; }
     .metric-box .v { overflow-wrap: anywhere; }
-    #heroSwipeCard > .cloud-layers { margin-top: 12px; }
-    #heroSwipeCard > .sky-summary-tip { margin-top: 8px; }
+
     .score-panel .rank-title {
       color: var(--text-main); font-size: clamp(1.15rem, 4vw, 1.45rem);
       line-height: 1.4; margin: 0; overflow-wrap: anywhere;
@@ -1742,7 +1663,12 @@
     .emoji-rating { display: inline-flex; align-items: center; gap: 1px; white-space: nowrap; line-height: 1.2; font-size: .75rem; }
     .gauge-max .emoji-rating { font-size: .625rem; }
     .emoji-rating .emoji-off { opacity: .42; }
-    .forecast-pick .forecast-rating { display: block; }
+    .forecast-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+    .forecast-pair .forecast-pick {
+      display: grid; justify-items: center; align-content: center; gap: 2px;
+      min-width: 0; min-height: 44px; padding: 5px 2px; font-size: .78rem;
+    }
+    .forecast-pair .forecast-rating .emoji-rating { font-size: .6rem; gap: 0; }
     .forecast-moon { white-space: nowrap; }
     .forecast-weather { display: flex; flex-wrap: wrap; gap: 2px 10px; font-size: .82rem; color: var(--text-sub); }
     .forecast-weather > span { white-space: nowrap; }
@@ -1757,14 +1683,14 @@
     .forecast-pick { font-size: .8rem; }
     .rs-box { color: var(--text-main); text-align: inherit; }
     @media (max-width: 640px) {
-      .selection-controls { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 8px; }
+      .selection-controls { grid-template-columns: minmax(0, 1fr); gap: 8px; }
       .score-panel { grid-template-columns: 94px minmax(0, 1fr); }
       .score-panel .gauge-wrap { width: 94px; height: 94px; }
       .score-panel .gauge-label { font-size: .54rem; }
       .score-panel .score-info { display: contents; }
       .score-panel .rank-title { grid-column: 2; grid-row: 2; }
       .score-panel .rank-desc { grid-column: 2; grid-row: 3; font-size: .875rem; padding: 6px 7px; margin-bottom: 0; }
-      .score-panel .mini-metrics { grid-column: 1 / -1; gap: 4px; }
+      .condition-weather .mini-metrics { gap: 4px; }
       .mini-metrics .metric-box { padding-inline: 4px; }
       .mini-metrics .k { overflow-wrap: anywhere; }
     }
@@ -1773,32 +1699,14 @@
     }
 
     button.btn, button.time-step-btn, button.nav-arrow-btn, button.mini-tab,
-    select.date-select, select.time-select { min-height: 44px; }
+    select.date-select { min-height: 44px; }
     @media (max-width: 640px) {
       .selection-controls .timezone { display: none; }
       .score-panel { row-gap: 5px; }
       .score-panel .rank-desc:empty { display: none; }
     }
 
-    .home-recommendations, .today-weather { margin-bottom: 12px; }
-    .recommendations-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
-    .recommendation-card {
-      display: grid; align-content: center; justify-items: center; gap: 4px; min-height: 55px;
-      padding: 5px 4px; border: 1px solid #456180; border-radius: 8px;
-      background: #162942; color: var(--text-main); cursor: pointer;
-    }
-    .recommendation-card:disabled { cursor: default; }
-    .recommendation-card[aria-pressed="true"] { border-color: #5eead4; background: #164048; box-shadow: inset 0 0 0 1px #5eead4; }
-    .recommendation-time { display: inline-flex; gap: 4px; align-items: baseline; font-size: .85rem; }
-    .recommendation-time strong { color: #b7fff1; font-size: 1rem; }
-    .recommendation-rating { display: flex; }
-    @media (max-width: 480px) {
-      .recommendations-grid { gap: 4px; }
-      .recommendation-card { gap: 2px; padding-inline: 2px; }
-      .recommendation-time { flex-direction: column; align-items: center; gap: 0; white-space: nowrap; }
-      .recommendation-time strong { font-size: .875rem; }
-      .recommendation-rating .emoji-rating { font-size: .48rem; gap: 0; }
-    }
+    .today-weather { margin-bottom: 12px; }
     .now-weather { padding: 10px; background: #164048; border: 1px solid #397b74; border-radius: 9px; }
     .now-weather-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 8px; }
     .now-weather-header h4 { font-size: .95rem; }
@@ -1861,12 +1769,37 @@
       .weather-hour-result span { font-size: .69rem; }
     }
     #todayWeatherStatus { color: var(--text-sub); font-size: .8rem; }
-    #recommendationsSource { color: var(--text-sub); font-size: .8rem; }
     .home-details { margin-top: 14px; }
-    .home-detail-picker { display: grid; gap: 4px; max-width: 420px; margin-bottom: 8px; }
-    .home-detail-picker select {
-      min-height: 48px; width: 100%; padding: 6px 10px; border: 1px solid #456180;
-      border-radius: 9px; background: #162942; color: var(--text-main); font-size: 1rem; font-weight: 600;
+    .home-detail-tabs {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+    .home-detail-tabs button {
+      min-height: 48px;
+      padding: 6px 4px;
+      border: 1px solid #456180;
+      border-radius: 8px;
+      background: #162942;
+      color: var(--text-sub);
+      font: inherit;
+      font-size: .85rem;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+      cursor: pointer;
+    }
+    .home-detail-tabs button[aria-selected="true"] {
+      background: #164048;
+      border-color: #5eead4;
+      color: #b7fff1;
+      font-weight: 700;
+    }
+    .home-detail-tabs button:focus-visible { outline: 2px solid #a5f3fc; outline-offset: -3px; }
+    @media (max-width: 560px) {
+      .home-detail-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(90px, 1.5fr) repeat(2, minmax(0, 1fr)); gap: 3px; }
+      #tab-panel-events { white-space: nowrap; }
+      .home-detail-tabs button { padding-inline: 2px; font-size: .75rem; }
     }
     #panel-stars > .astro-stack { grid-column: 1 / -1; }
     .photo-assist-panel { display: grid; gap: 12px; }
@@ -1884,19 +1817,14 @@
       .header-controls .dot { width: 6px; height: 6px; }
       .header-controls .btn { min-width: 44px; padding: 0 6px; font-size: .75rem; }
       .header-controls .refresh-icon { display: none; }
-      .selection-controls .date-nav-bar, .selection-controls .time-control-bar {
+      .selection-controls .date-nav-bar {
         padding: 0; min-width: 0; border: 0; background: transparent;
-      }
-      .selection-controls :is(.date-select-wrap, .time-select-wrap) {
-        display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center;
-        justify-content: stretch; gap: 4px;
       }
       .selection-controls select { max-width: none; padding-inline: 4px; min-height: 46px; }
       @media (max-width: 420px) {
-        .selection-controls { --datetime-font: .78rem; grid-template-columns: minmax(0, 1fr) minmax(0, 1.32fr); }
         #dateSelect { padding-inline: 2px; }
       }
-      .selection-controls .nav-arrow-btn, .selection-controls .time-step-btn { display: none; }
+      .selection-controls .nav-arrow-btn { display: none; }
       .score-panel .badge-row { grid-column: 1 / -1; grid-row: 1; }
       .score-panel .gauge-wrap { grid-column: 1; grid-row: 2 / 4; align-self: start; }
       .score-panel .badge-row > span { line-height: 1.35; font-size: .75rem; }
@@ -2016,72 +1944,33 @@
       </section>
       <section id="view-home" aria-labelledby="home-heading">
         <h2 class="view-heading visually-hidden" id="home-heading" tabindex="-1">ホーム</h2>
-        <div class="selection-controls" role="group" aria-label="撮影日時（日本時間）">
-            <div class="date-nav-bar">
-              <button class="nav-arrow-btn" id="prevDayBtn" aria-label="前日">◀</button>
-              <div class="date-select-wrap">
-                <label class="mobile-datetime-label" for="dateSelect">撮影日</label>
-                <select class="date-select" id="dateSelect" aria-label="日付選択"></select>
-              </div>
-              <button class="nav-arrow-btn" id="nextDayBtn" aria-label="翌日">▶</button>
-            </div>
-  
-            <div class="time-control-bar">
-              <div class="time-control-top">
-                <button class="time-step-btn" id="prevHourBtn" aria-label="1時間前">◀ 1h前</button>
-                <div class="time-select-wrap">
-                  <label class="mobile-datetime-label" for="hourSelect">時刻</label>
-                  <div class="hour-select-display">
-                  <select class="time-select" id="hourSelect" aria-label="時刻選択（日本時間）" hidden></select>
-                  <details class="rating-picker" id="hourRatingPicker">
-                    <summary aria-label="時刻選択（日本時間）"><span id="hourSelectFace">—</span></summary>
-                    <div class="rating-picker-options" role="group" aria-label="時刻の候補"></div>
-                  </details>
-                </div>
-                </div>
-                <button class="time-step-btn" id="nextHourBtn" aria-label="1時間後">1h後 ▶</button>
-              </div>
-            </div>
-          <span class="timezone">日本時間</span>
-        </div>
-        <section class="glass-card home-recommendations" aria-labelledby="recommendations-heading">
-          <div class="recommendations-header">
-            <h3 id="recommendations-heading">おすすめ撮影時刻</h3>
-            <span id="recommendationsSource">日本時間 · データ待ち</span>
-          </div>
-          <div class="recommendations-grid">
-            <button type="button" class="recommendation-card" data-recommend="sunrise" aria-pressed="false" disabled>
-              <span class="recommendation-time"><span>朝景</span><strong>—</strong></span>
-              <span class="recommendation-rating" hidden></span>
-            </button>
-            <button type="button" class="recommendation-card" data-recommend="blue" aria-pressed="false" disabled>
-              <span class="recommendation-time"><span>日中</span><strong>—</strong></span>
-              <span class="recommendation-rating" hidden></span>
-            </button>
-            <button type="button" class="recommendation-card" data-recommend="sunset" aria-pressed="false" disabled>
-              <span class="recommendation-time"><span>夕景</span><strong>—</strong></span>
-              <span class="recommendation-rating" hidden></span>
-            </button>
-            <button type="button" class="recommendation-card" data-recommend="stars" aria-pressed="false" disabled>
-              <span class="recommendation-time"><span>星空</span><strong>—</strong></span>
-              <span class="recommendation-rating" hidden></span>
-            </button>
-          </div>
-        </section>
         <div class="home-details">
-          <div class="home-detail-picker">
-            <select id="homePanelSelect" aria-label="ホームの表示項目" aria-controls="homePanelSlot">
-              <option value="panel-conditions">撮影コンディション</option>
-              <option value="panel-spot-forecast">地点別予報</option>
-              <option value="panel-wind">気象情報</option>
-              <option value="panel-events">マジックアワー</option>
-              <option value="panel-stars">星空ナビ</option>
-              <option value="panel-photo-day">撮影アシスト</option>
-            </select>
+          <div id="homePanelTabs" class="home-detail-tabs" role="tablist" aria-label="ホームの表示項目">
+            <button type="button" role="tab" id="tab-panel-conditions" aria-controls="panel-conditions" aria-selected="true" tabindex="0">気象情報</button>
+            <button type="button" role="tab" id="tab-panel-spot-forecast" aria-controls="panel-spot-forecast" aria-selected="false" tabindex="-1">地点別予報</button>
+            <button type="button" role="tab" id="tab-panel-events" aria-controls="panel-events" aria-selected="false" tabindex="-1">マジックアワー</button>
+            <button type="button" role="tab" id="tab-panel-stars" aria-controls="panel-stars" aria-selected="false" tabindex="-1">星空ナビ</button>
+            <button type="button" role="tab" id="tab-panel-photo-day" aria-controls="panel-photo-day" aria-selected="false" tabindex="-1">撮影アシスト</button>
           </div>
           <div id="homePanelSlot">
-    <div class="hero-grid" id="panel-conditions" role="region" aria-label="撮影コンディション">
+    <div class="hero-grid" id="panel-conditions" role="tabpanel" aria-labelledby="tab-panel-conditions" tabindex="0">
       <section class="glass-card swipe-card" id="heroSwipeCard" aria-labelledby="mainIndexCardTitle">
+        <div class="selection-controls" id="homeDateControls" role="group" aria-label="撮影日（日本時間）">
+            <div class="date-nav-bar">
+              <button type="button" class="time-step-btn condition-date-step" id="prevDayBtn" aria-label="前日" title="前日" disabled>◀</button>
+              <div class="date-select-wrap">
+                <select class="date-select" id="dateSelect" aria-label="日付選択"></select>
+              </div>
+              <button type="button" class="time-step-btn condition-date-step" id="nextDayBtn" aria-label="翌日" title="翌日" disabled>▶</button>
+            </div>
+  
+          <span class="timezone">日本時間</span>
+        </div>
+        <section class="condition-ratings" aria-labelledby="conditionRatingsHeading">
+          <h3 id="conditionRatingsHeading">時間別の撮影評価</h3>
+          <div class="condition-rating-hours" id="conditionRatingHours"></div>
+        </section>
+
         <div>
           <div class="section-title">
             <span id="mainIndexCardTitle">星空撮影</span>
@@ -2122,92 +2011,55 @@
               <h2 class="rank-title" id="rankTitle">データ取得中...</h2>
               <p class="rank-desc" id="rankDesc">宮古島の雲層・直達日射・月高度・視程・露点差から指数を計算しています。</p>
 
-              <div class="mini-metrics">
-                <div class="metric-box">
-                  <div class="k">気温</div>
-                  <div class="v" id="metricTemp">—</div>
-                </div>
-                <div class="metric-box">
-                  <div class="k">湿度</div>
-                  <div class="v" id="metricHumidity">—</div>
-                </div>
-                <div class="metric-box">
-                  <div class="k">風向/風速</div>
-                  <div class="v" id="metricWind">—</div>
-                </div>
-                <div class="metric-box">
-                  <div class="k">降水確率/量</div>
-                  <div class="v" id="metricRain">—</div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
 
-        <section class="sky-summary-tip" id="cloudSummaryTip" aria-labelledby="cloudSummaryHeading">
-          <h3 id="cloudSummaryHeading">雲の傾向</h3>
-          <p id="cloudSummaryText">雲の層別の見え方を解析中...</p>
-        </section>
-
-        <section class="cloud-layers" aria-labelledby="cloud-layers-title">
-          <h3 id="cloud-layers-title">高度別の雲の広がり</h3>
-          <dl>
-            <div><dt>高層雲<wbr><span>（巻雲）</span></dt><dd id="valHigh"><span class="cloud-percent">—</span><span class="cloud-emoji" aria-hidden="true"></span></dd></div>
-            <div><dt>中層雲</dt><dd id="valMid"><span class="cloud-percent">—</span><span class="cloud-emoji" aria-hidden="true"></span></dd></div>
-            <div><dt>低層雲<wbr><span>（厚雲）</span></dt><dd id="valLow"><span class="cloud-percent">—</span><span class="cloud-emoji" aria-hidden="true"></span></dd></div>
-          </dl>
-        </section>
-
-      </section>
-
-    </div>
-        <section class="glass-card spot-forecast" id="panel-spot-forecast" role="region" hidden aria-labelledby="spotForecastHeading">
-          <header>
-            <h3 id="spotForecastHeading">地点別予報 · Open-Meteo</h3>
-            <button type="button" class="btn" id="spotForecastRefresh">予報を更新</button>
-          </header>
-          <p id="spotForecastSelectedTime"></p>
-          <p id="spotForecastStatus" role="status"></p>
-          <div id="spotForecastGrid" class="spot-forecast-grid"></div>
-        </section>
-      <div class="photo-assist-panel" id="panel-photo-day" role="region" aria-label="撮影アシスト" hidden>
-      <section class="glass-card">
-        <div class="section-title">
-          <span>📸 日中・青空撮影アシスト</span>
-          <span id="dayPhotoDateBadge" style="font-size:0.76rem; color:var(--accent-cyan);">—</span>
-        </div>
-        <div class="photo-grid" id="dayPhotoGrid"></div>
-      </section>
-    <section class="glass-card">
-      <div class="section-title">
-        <span id="photoSectionTitle">📸 星空撮影アシスト</span>
-        <span id="photoDateBadge" style="font-size:0.76rem; color:var(--accent-cyan);">--月--日の撮影条件</span>
-      </div>
-      <div class="photo-grid" id="photoGrid"></div>
-    </section>
-      </div>
-      <section class="glass-card wind-panel-stack" id="panel-wind" role="region" aria-label="気象情報" hidden>
-        <div>
-          <div class="section-title">
-            <span>🧭 WIND, WEATHER & TIDE / 気象情報</span>
-            <span id="weatherTimeBadge" style="font-size:0.76rem; color:var(--accent-cyan);">--:--</span>
+        <section class="wind-panel-stack condition-weather" id="conditionWeather" aria-label="気象情報">
+        <div class="mini-metrics">
+          <div class="metric-box">
+            <div class="k">気温</div>
+            <div class="v" id="metricTemp">—</div>
           </div>
-
+          <div class="metric-box">
+            <div class="k">湿度</div>
+            <div class="v" id="metricHumidity">—</div>
+          </div>
+          <div class="metric-box">
+            <div class="k">風向/風速</div>
+            <div class="v" id="metricWind">—</div>
+          </div>
+          <div class="metric-box">
+            <div class="k">降水確率/量</div>
+            <div class="v" id="metricRain">—</div>
+          </div>
+        </div>
+          <section class="sky-summary-tip" id="cloudSummaryTip" aria-labelledby="cloudSummaryHeading">
+            <h3 id="cloudSummaryHeading">雲の傾向</h3>
+            <p id="cloudSummaryText">雲の層別の見え方を解析中...</p>
+          </section>
+  
+          <section class="cloud-layers" aria-labelledby="cloud-layers-title">
+            <h3 id="cloud-layers-title">高度別の雲の広がり</h3>
+            <dl>
+              <div><dt>高層雲<wbr><span>（巻雲）</span></dt><dd id="valHigh"><span class="cloud-percent">—</span><span class="cloud-emoji" aria-hidden="true"></span></dd></div>
+              <div><dt>中層雲</dt><dd id="valMid"><span class="cloud-percent">—</span><span class="cloud-emoji" aria-hidden="true"></span></dd></div>
+              <div><dt>低層雲<wbr><span>（厚雲）</span></dt><dd id="valLow"><span class="cloud-percent">—</span><span class="cloud-emoji" aria-hidden="true"></span></dd></div>
+            </dl>
+          </section>
           <div class="wind-weather-wrap">
             <div class="compass-box" id="windCompassSvg"></div>
             <div class="wind-stats">
-              <div class="wind-main" id="windMainText">--風 -- m/s</div>
               <div class="wind-sub" id="windSubText">最大瞬間風速: -- m/s • 風向: --°</div>
-              <div class="wind-shelter-tip" id="windShelterTip">風向に応じた撮影・観測ポイントアドバイスを計算中...</div>
             </div>
           </div>
-        </div>
+          <div class="wind-shelter-tip" id="windShelterTip">風向に応じた撮影・観測ポイントアドバイスを計算中...</div>
+          <div class="weather-detail-grid" id="weatherDetailGrid"></div>
+        </section>
 
-        <div class="weather-detail-grid" id="weatherDetailGrid"></div>
-
-        <div class="tide-box">
+        <section class="tide-box condition-tide" aria-labelledby="conditionTideHeading">
           <div class="tide-header">
-            <span>🌊 潮位・満干潮（宮古島・平良推算）</span>
+            <h3 id="conditionTideHeading">潮位・満干潮（平良推算）</h3>
             <span class="tide-name-badge" id="tideNameBadge">--潮</span>
           </div>
           <div class="tide-grid">
@@ -2228,13 +2080,44 @@
             <span style="left:75%">18:00</span>
             <span style="left:100%">24:00</span>
           </div>
-        </div>
+        </section>
       </section>
 
-      <section class="glass-card sun-magic-stack" id="panel-events" role="region" aria-label="マジックアワー" hidden>
+    </div>
+        <section class="glass-card spot-forecast" id="panel-spot-forecast" role="tabpanel" aria-labelledby="tab-panel-spot-forecast" tabindex="0" hidden>
+          <div class="spot-forecast-days" id="spotForecastDays" role="group" aria-label="地点別予報の日付">
+            <button type="button" class="btn" aria-pressed="false" disabled>今日</button>
+            <button type="button" class="btn" aria-pressed="false" disabled>明日</button>
+            <button type="button" class="btn" aria-pressed="false" disabled>明後日</button>
+            <button type="button" class="btn" aria-pressed="false" disabled>明々後日</button>
+          </div>
+          <div class="spot-forecast-time">
+            <label for="spotForecastHour">時刻</label>
+            <select id="spotForecastHour" class="spot-select" aria-label="地点別予報の時刻（日本時間）" disabled></select>
+            <button type="button" class="btn" id="spotForecastRefresh">予報を更新</button>
+          </div>
+          <p id="spotForecastStatus" role="status"></p>
+          <div id="spotForecastGrid" class="spot-forecast-grid"></div>
+        </section>
+      <div class="photo-assist-panel" id="panel-photo-day" role="tabpanel" aria-labelledby="tab-panel-photo-day" tabindex="0" hidden>
+      <section class="glass-card">
+        <div class="section-title">
+          <span>📸 日中・青空撮影アシスト</span>
+          <span id="dayPhotoDateBadge" style="font-size:0.76rem; color:var(--accent-cyan);">—</span>
+        </div>
+        <div class="photo-grid" id="dayPhotoGrid"></div>
+      </section>
+    <section class="glass-card">
+      <div class="section-title">
+        <span id="photoSectionTitle">📸 星空撮影アシスト</span>
+        <span id="photoDateBadge" style="font-size:0.76rem; color:var(--accent-cyan);">--月--日の撮影条件</span>
+      </div>
+      <div class="photo-grid" id="photoGrid"></div>
+    </section>
+      </div>
+      <section class="glass-card sun-magic-stack" id="panel-events" role="tabpanel" aria-labelledby="tab-panel-events" tabindex="0" hidden>
         <div>
           <div class="section-title">
-            <span>☀️🌙 SUN, MOON & MAGIC HOURS / マジックアワー</span>
             <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
               <span class="auto-sync-note" id="umiAutoSyncBadge">🔄 自動更新中</span>
               <span id="magicDateBadge" style="font-size:0.76rem; color:var(--accent-gold);">--月--日</span>
@@ -2265,11 +2148,8 @@
         </div>
       </section>
 
-    <div class="celestial-grid" id="panel-stars" role="region" aria-label="星空ナビ" hidden>
-      <section class="glass-card astro-stack" aria-labelledby="homeMoonHeading">
-        <div class="section-title" style="margin-bottom:0;">
-          <span id="homeMoonHeading">🌗 MOON / 月齢</span>
-        </div>
+    <div class="celestial-grid" id="panel-stars" role="tabpanel" aria-labelledby="tab-panel-stars" tabindex="0" hidden>
+      <section class="glass-card astro-stack" aria-label="月齢">
 
         <div class="moon-row">
           <div class="moon-svg-wrap" id="moonSvgContainer"></div>
@@ -2408,7 +2288,7 @@
     </section>
     <section id="view-forecast" aria-labelledby="forecast-heading" hidden>
       <h2 class="view-heading" id="forecast-heading" tabindex="-1">30日撮影予報</h2>
-      <p class="view-source">天気の絵文字は日中（12時）と夜間（21時）の予報です。時刻は日本時間です。</p>
+      <p class="view-source">天気の絵文字は日中（12時）と夜間（21時）の予報です。</p>
       <div class="glass-card">
         <div class="weekly-list" id="weeklyList"></div>
       </div>
@@ -2987,13 +2867,13 @@
 
     function getUmiJudgeInfo(prob) {
       if (prob === null) {
-        return { text: "本日なし", color: "#93a7cc", barColor: "#334155", cls: "umi-prob-none" };
+        return { text: "本日なし", color: "#93a7cc", emphasis: 16 };
       }
-      if (prob >= 90) return { text: "★ 絶好", color: "#5eead4", barColor: "linear-gradient(90deg,#38bdf8,#5eead4)", cls: "umi-prob-high" };
-      if (prob >= 75) return { text: "◎ 期待大", color: "#5eead4", barColor: "linear-gradient(90deg,#38bdf8,#5eead4)", cls: "umi-prob-high" };
-      if (prob >= 55) return { text: "○ チャンス", color: "#38bdf8", barColor: "#38bdf8", cls: "umi-prob-high" };
-      if (prob >= 35) return { text: "△ 雲次第", color: "#fbbf24", barColor: "#fbbf24", cls: "umi-prob-mid" };
-      return { text: "× 厳しい", color: "#f87171", barColor: "#f87171", cls: "umi-prob-low" };
+      if (prob >= 90) return { text: "★ 絶好", color: "#5eead4", emphasis: 95 };
+      if (prob >= 75) return { text: "◎ 期待大", color: "#a3e635", emphasis: 75 };
+      if (prob >= 55) return { text: "○ チャンス", color: "#38bdf8", emphasis: 52 };
+      if (prob >= 35) return { text: "△ 雲次第", color: "#fbbf24", emphasis: 34 };
+      return { text: "× 厳しい", color: "#f87171", emphasis: 22 };
     }
 
     function jumpToApproxTime(dateStr, hhmm) {
@@ -3008,10 +2888,10 @@
 
     function renderUmipochaSection(dateStr, sunriseTime, sunsetTime, astro) {
       const events = [
-        { key: "sunrise",  icon: "🌅", label: "日の出",   time: sunriseTime,       type: "sun" },
-        { key: "sunset",   icon: "🌇", label: "日の入り", time: sunsetTime,        type: "sun" },
-        { key: "moonrise", icon: "🌔", label: "月の出",   time: astro.moonRS.rise, type: "moon" },
-        { key: "moonset",  icon: "🌘", label: "月の入り", time: astro.moonRS.set,  type: "moon" }
+        { key: "sunrise",  icon: "🌅", label: "日の出",   time: sunriseTime },
+        { key: "sunset",   icon: "🌇", label: "日の入り", time: sunsetTime },
+        { key: "moonrise", icon: "🌔", label: "月の出",   time: astro.moonRS.rise },
+        { key: "moonset",  icon: "🌘", label: "月の入り", time: astro.moonRS.set }
       ];
 
       const detailQuad = document.getElementById("detailUmipochaQuad");
@@ -3021,19 +2901,15 @@
         const az = getAzimuthAtEvent(dateStr, ev.time, ev.key);
         const azText = az ? `${az.jp} ${az.deg}°` : "―";
         const probDisplay = prob === null ? "--%" : `${prob}%`;
-        const fillWidth = prob === null ? 0 : prob;
 
         return `
-          <button type="button" ${/^\d{2}:\d{2}$/.test(ev.time) ? "" : "disabled"} class="rs-box ${ev.type}" data-jumptime="${ev.time}" title="${ev.label} (${ev.time} • ${azText}) の時刻へ移動">
-            <span class="rs-label">${ev.icon} ${ev.label}</span>
+          <button type="button" ${/^\d{2}:\d{2}$/.test(ev.time) ? "" : "disabled"} class="rs-box" style="--umi-color: ${judge.color}; --umi-emphasis: ${judge.emphasis}%;" data-jumptime="${ev.time}" title="${ev.label} (${ev.time} • ${azText}) の時刻へ移動">
+            <span class="rs-label"><span class="rs-event-icon" aria-hidden="true">${ev.icon}</span>${ev.label}</span>
             <span class="rs-time">${ev.time}</span>
             <span class="rs-az">🧭 ${azText}</span>
             <span class="umi-sub-caption">海ぽちゃ率</span>
-            <span class="umi-big-prob" style="color:${judge.color};">${probDisplay}</span>
-            <div class="umi-meter-bg">
-              <div class="umi-meter-fill" style="width:${fillWidth}%; background:${judge.barColor};"></div>
-            </div>
-            <span class="umi-prob-badge ${judge.cls}">${judge.text}</span>
+            <span class="umi-big-prob">${probDisplay}</span>
+            <span class="umi-prob-badge">${judge.text}</span>
           </button>
         `;
       }).join("");
@@ -3474,7 +3350,6 @@
         if (syncBadge) syncBadge.textContent = "⚠️ 通信待機中";
         renderTodayWeather();
         if (hourlyData.length === 0) {
-          document.getElementById("recommendationsSource").textContent = "気象データ取得待ち · 更新で再試行";
           document.getElementById("weeklyList").textContent = "気象データを取得できませんでした。「更新」で再試行できます。";
           document.getElementById("rankTitle").textContent = "データの取得に失敗しました";
           document.getElementById("rankDesc").textContent = "「更新」で再試行してください。アプリ内で取得できない場合は、HTMLをEdgeやChromeで開いてください。";
@@ -3726,25 +3601,6 @@
       selectDay(selectedDayIdx, startIdx);
     }
 
-    function renderHourSelectOptions(summary) {
-      const select = document.getElementById("hourSelect");
-      const start = summary.firstIdxOfDay;
-      const hours = hourlyData.slice(start, start + 24);
-      select.replaceChildren(...hours.map(item => {
-        const option = document.createElement("option");
-        const comment = getUmiJudgeInfo(item.rawScore).text;
-        option.value = String(item.hourNum);
-        option.textContent = item.hourStr + " " + formatOptionRating(item.score5, item.isNight) + " " + item.rawScore + "%";
-        option.dataset.caption = item.hourStr;
-        option.dataset.rating = item.score5;
-        option.dataset.night = String(item.isNight);
-        option.dataset.percent = item.rawScore + "%";
-        option.setAttribute("aria-label", item.hourStr + "、適性 " + item.rawScore +
-          "パーセント、" + comment + "、5段階中 " + item.score5.toFixed(1));
-        return option;
-      }));
-    }
-
     function initDateSelectOptions() {
       const sel = document.getElementById("dateSelect");
       sel.innerHTML = "";
@@ -3843,25 +3699,18 @@
       updateDayHeaderUI(dayIdx);
 
       let pickIdx = specificHourIdx;
-      if (pickIdx === null) pickIdx = recommendedHour(summary)?.idx ?? summary.firstIdxOfDay;
+      if (pickIdx === null) {
+        const best = shootingMode === "stars" ? summary.bestNightIdx : summary.bestDayIdx;
+        pickIdx = hourlyData[best]?.idx ?? summary.firstIdxOfDay;
+      }
 
       selectHour(pickIdx);
     }
 
     function updateDayHeaderUI(dayIdx) {
-      renderHourSelectOptions(dailySummaries[dayIdx]);
       document.getElementById("dateSelect").value = String(dayIdx);
       document.getElementById("prevDayBtn").disabled = dayIdx <= 0;
       document.getElementById("nextDayBtn").disabled = dayIdx >= dailySummaries.length - 1;
-    }
-
-    function selectHourByDayAndHour(dayIdx, hourNum) {
-      const summary = dailySummaries[dayIdx];
-      if (!summary) return;
-      const targetIdx = hourlyData.findIndex(h => h.dateStr === summary.date && h.hourNum === hourNum);
-      if (targetIdx >= 0) {
-        selectHour(targetIdx);
-      }
     }
 
     function updateSkyBackground(item) {
@@ -3883,15 +3732,6 @@
         selectedDayIdx = matchingDayIdx;
         updateDayHeaderUI(matchingDayIdx);
       }
-
-      const hourMenu = document.getElementById("hourSelect");
-      hourMenu.value = String(item.hourNum);
-      document.querySelector("#hourRatingPicker summary").setAttribute("aria-label",
-        "時刻選択、日本時間 " + (hourMenu.selectedOptions[0]?.getAttribute("aria-label") ?? item.hourStr));
-      document.getElementById("hourSelectFace").innerHTML = "<span>" + item.hourStr + "</span>" +
-        renderEmojiRating(item.score5, item.isNight) + '<span class="hour-select-percent">' + item.rawScore + "%</span>";
-      document.getElementById("prevHourBtn").disabled = idx <= 0;
-      document.getElementById("nextHourBtn").disabled = idx >= hourlyData.length - 1;
 
       const [yyyy, mm, dd] = item.dateStr.split("-").map(Number);
       document.getElementById("selectedTimeBadge").textContent =
@@ -3933,7 +3773,7 @@
       document.querySelectorAll(".day-row").forEach(el => el.classList.toggle("selected", el.dataset.date === item.dateStr));
 
       renderMagicHoursPanel(astro.sunMagic, mm, dd);
-      renderWindWeatherAndTidePanel(item, astro.tides, mm, dd);
+      renderWindWeatherAndTidePanel(item, astro.tides);
       const summary = dailySummaries[selectedDayIdx];
       const dayPhotoHour = item.isNight ? hourlyData[summary.bestDayIdx] : item;
       const nightPhotoHour = item.isNight ? item : hourlyData[summary.bestNightIdx];
@@ -3948,23 +3788,23 @@
       document.getElementById("magicDateBadge").textContent = `${mm}月${dd}日`;
       document.getElementById("magicRows").innerHTML = `
         <div class="magic-box blue">
-          <div class="magic-label">🌅 朝:ブルーアワー</div>
-          <div class="magic-time">${sunMagic.mornBlue}</div>
+          <div class="magic-label">🌅 朝:ブルー</div>
+          <div class="magic-time">${sunMagic.mornBlue.replace("〜", "〜<wbr>")}</div>
           <div class="magic-note">日の出前の蒼</div>
         </div>
         <div class="magic-box golden">
           <div class="magic-label">✨ 朝:ゴールデン</div>
-          <div class="magic-time">${sunMagic.mornGold}</div>
+          <div class="magic-time">${sunMagic.mornGold.replace("〜", "〜<wbr>")}</div>
           <div class="magic-note">日の出後の黄金光</div>
         </div>
         <div class="magic-box golden">
           <div class="magic-label">🌇 夕:ゴールデン</div>
-          <div class="magic-time">${sunMagic.eveGold}</div>
+          <div class="magic-time">${sunMagic.eveGold.replace("〜", "〜<wbr>")}</div>
           <div class="magic-note">夕暮れの黄金光</div>
         </div>
         <div class="magic-box blue">
-          <div class="magic-label">🌌 夕:ブルーアワー</div>
-          <div class="magic-time">${sunMagic.eveBlue}</div>
+          <div class="magic-label">🌌 夕:ブルー</div>
+          <div class="magic-time">${sunMagic.eveBlue.replace("〜", "〜<wbr>")}</div>
           <div class="magic-note">日没後の蒼</div>
         </div>
         <div class="magic-box dark">
@@ -3977,8 +3817,7 @@
       `;
     }
 
-    function renderWindWeatherAndTidePanel(item, tides, mm, dd) {
-      document.getElementById("weatherTimeBadge").textContent = `${mm}/${dd} ${item.hourStr}`;
+    function renderWindWeatherAndTidePanel(item, tides) {
       const wd = getDirectionName16(item.windDir);
       const arrowRot = (wd.deg + 180) % 360;
 
@@ -3998,7 +3837,6 @@
         </svg>
       `;
 
-      document.getElementById("windMainText").textContent = `${wd.jp} (${wd.en}) ${item.wind.toFixed(1)} m/s`;
       document.getElementById("windSubText").textContent = `風向 ${wd.deg}°から吹く風 • 最大瞬間風速 ${item.windGust.toFixed(1)} m/s`;
       document.getElementById("windShelterTip").textContent = getWindShelterAdvice(item.windDir, item.wind);
 
@@ -4007,16 +3845,16 @@
 
       document.getElementById("weatherDetailGrid").innerHTML = `
         <div class="wd-item">
-          <div class="k">気温 / 露点</div>
-          <div class="v">${item.temp.toFixed(1)}℃ / ${item.dewPoint.toFixed(1)}℃</div>
+          <div class="k">露点</div>
+          <div class="v">${item.dewPoint.toFixed(1)}℃</div>
         </div>
         <div class="wd-item">
           <div class="k">結露リスク</div>
           <div class="v" style="color:${dewDiff <= 2.2 ? '#f87171' : dewDiff <= 4.0 ? '#fbbf24' : '#5eead4'}">${dewStatus} (${dewDiff.toFixed(1)}℃)</div>
         </div>
         <div class="wd-item">
-          <div class="k">気圧 / 湿度</div>
-          <div class="v">${item.pressure}hPa / ${item.humidity}%</div>
+          <div class="k">気圧</div>
+          <div class="v">${item.pressure}hPa</div>
         </div>
         <div class="wd-item">
           <div class="k">見通し(視程)</div>
@@ -4234,7 +4072,6 @@
     }
 
     let shootingMode = "stars";
-    let selectedRecommendation = null;
     function usableForecast({ hourly, daily }, startDate = getMiyakoNow().isoHour.slice(0, 10)) {
       const keys = "cloud_cover cloud_cover_low cloud_cover_mid cloud_cover_high precipitation_probability precipitation relative_humidity_2m wind_speed_10m wind_direction_10m wind_gusts_10m temperature_2m dew_point_2m surface_pressure visibility uv_index shortwave_radiation direct_radiation weather_code".split(" ");
       const firstDay = daily?.time?.indexOf(startDate) ?? -1;
@@ -4284,63 +4121,11 @@
     function selectCurrentHour() {
       const idx = hourlyData.findIndex(item => item.time === getMiyakoNow().isoHour);
       if (idx < 0) return;
-      selectedRecommendation = null;
       setMode(hourlyData[idx].isNight ? "stars" : "blue");
       selectHour(idx);
     }
 
-    function appendRatingChoice(target, option) {
-      const caption = document.createElement("span");
-      caption.textContent = option.dataset.caption;
-      target.append(caption);
-      if (option.dataset.rating) {
-        caption.insertAdjacentHTML("afterend", renderEmojiRating(Number(option.dataset.rating), option.dataset.night === "true"));
-      }
-      if (option.dataset.percent) {
-        const percent = document.createElement("span");
-        percent.className = "option-percent";
-        percent.textContent = option.dataset.percent;
-        target.append(percent);
-      }
-    }
-
-    function initRatingPicker(pickerId, selectId) {
-      const picker = document.getElementById(pickerId);
-      const select = document.getElementById(selectId);
-      const trigger = picker.querySelector("summary");
-      const list = picker.querySelector(".rating-picker-options");
-      trigger.addEventListener("click", event => {
-        if (select.disabled || !select.options.length) event.preventDefault();
-        if (picker.open) return;
-        list.replaceChildren(...Array.from(select.options).filter(option => option.value !== "").map(option => {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.disabled = option.disabled;
-          if (option.selected) button.setAttribute("aria-current", "true");
-          appendRatingChoice(button, option);
-          button.addEventListener("click", () => {
-            select.value = option.value;
-            picker.open = false;
-            trigger.focus({ preventScroll: true });
-            select.dispatchEvent(new Event("change"));
-          });
-          return button;
-        }));
-      });
-      picker.addEventListener("keydown", event => {
-        if (event.key === "Escape" && picker.open) {
-          event.preventDefault();
-          picker.open = false;
-          trigger.focus({ preventScroll: true });
-        }
-      });
-      document.addEventListener("pointerdown", event => {
-        if (picker.open && !picker.contains(event.target)) picker.open = false;
-      });
-    }
-
     function initNavigation() {
-      initRatingPicker("hourRatingPicker", "hourSelect");
       const route = focus => {
         const view = location.hash.slice(1);
         if (view === "local-forecast") {
@@ -4357,29 +4142,46 @@
           if (location.hash === link.hash) showView(link.dataset.view);
         });
       });
-      const homePicker = document.getElementById("homePanelSelect");
-      homePicker.addEventListener("change", () => selectHomePanel(homePicker.value));
-      route(false);
-      document.querySelectorAll("[data-recommend]").forEach(card => {
-        card.addEventListener("click", () => {
-          const mode = card.dataset.recommend;
-          const best = recommendedHour(dailySummaries[selectedDayIdx], mode);
-          if (!best) return;
-          selectHomePanel("panel-conditions");
-          selectedRecommendation = { mode, time: hourlyData[best.idx].time };
-          setMode(mode);
-          selectHour(best.idx);
+      const tabs = [...document.querySelectorAll("#homePanelTabs [role=tab]")];
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => selectHomePanel(tab.getAttribute("aria-controls")));
+        tab.addEventListener("keydown", event => {
+          const targets = { ArrowLeft: (index - 1 + tabs.length) % tabs.length,
+            ArrowRight: (index + 1) % tabs.length, Home: 0, End: tabs.length - 1 };
+          if (!Object.hasOwn(targets, event.key)) return;
+          event.preventDefault();
+          const next = tabs[targets[event.key]];
+          selectHomePanel(next.getAttribute("aria-controls"));
+          next.focus();
         });
       });
+      route(false);
     }
 
     function selectHomePanel(panelId) {
-      const picker = document.getElementById("homePanelSelect");
-      picker.value = panelId;
-      for (const option of picker.options) {
-        document.getElementById(option.value).hidden = option.value !== panelId;
+      for (const tab of document.querySelectorAll("#homePanelTabs [role=tab]")) {
+        const id = tab.getAttribute("aria-controls");
+        const active = id === panelId;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+        document.getElementById(id).hidden = !active;
       }
-      if (panelId === "panel-spot-forecast") loadVisibleSpotForecast();
+      const panel = document.getElementById(panelId);
+      const card = panel?.matches(".glass-card") ? panel : panel?.querySelector(".glass-card");
+      const dateControls = document.getElementById("homeDateControls");
+      const spotForecast = panelId === "panel-spot-forecast";
+      dateControls.hidden = spotForecast;
+      if (!spotForecast && card && dateControls.parentElement !== card) card.prepend(dateControls);
+      if (spotForecast) {
+        const dates = getFourForecastDates();
+        const current = hourlyData[selectedIndex];
+        if (current && !dates.includes(current.dateStr)) {
+          const today = dailySummaries.find(day => day.date === dates[0]);
+          if (today) selectDay(today.dayIdx, today.firstIdxOfDay + current.hourNum);
+        }
+        renderSpotForecasts();
+        loadVisibleSpotForecast();
+      }
     }
 
     function setMode(mode) {
@@ -4392,50 +4194,10 @@
       layer.querySelector(".cloud-emoji").innerHTML = '<span class="emoji-rating">' + buildEmojiStars(toHalfStep5(percent), "☁️") + "</span>";
     }
 
-    function formatOptionRating(rating, isNight) {
-      const emoji = isNight ? "⭐" : "☀️";
-      const full = Math.floor(rating);
-      const half = rating % 1 !== 0;
-      return emoji.repeat(full) + (half ? "◐" : "") + "○".repeat(5 - full - Number(half));
-    }
-
     function renderEmojiRating(rating, isNight) {
       const label = "5段階中 " + rating.toFixed(1);
       return '<span class="emoji-rating" role="img" aria-label="' + label + '">' +
         buildEmojiStars(rating, isNight ? "⭐" : "☀️") + '</span>';
-    }
-
-    function recommendedHour(summary, mode = shootingMode) {
-      if (!summary) return null;
-      if (mode === "stars" || mode === "blue") {
-        const item = hourlyData[mode === "stars" ? summary.bestNightIdx : summary.bestDayIdx];
-        return item ? { idx: item.idx, time: item.hourStr, rating: mode === "stars" ? item.starIndex5 : item.blueSkyIndex5 } : null;
-      }
-      const item = hourlyData[summary.firstIdxOfDay];
-      const time = item[mode];
-      if (!/^\d{2}:\d{2}$/.test(time)) return null;
-      const score = calcHorizonProbAtTime(item.dateStr, time, mode);
-      if (score === null) return null;
-      const [hour, minute] = time.split(":").map(Number);
-      return { idx: item.idx + Math.min(23, Math.round(hour + minute / 60)), time, rating: toHalfStep5(score) };
-    }
-
-    function renderRecommendations(summary, item) {
-      if (selectedRecommendation?.time !== item.time) selectedRecommendation = null;
-      document.getElementById("recommendationsSource").textContent =
-        summary.dayLabel + " · 日本時間 · " + (summary.isClimateRef ? "気候参考値" : "気象予報");
-      document.querySelectorAll("[data-recommend]").forEach(card => {
-        const mode = card.dataset.recommend;
-        const best = recommendedHour(summary, mode);
-        const active = selectedRecommendation?.mode === mode && best?.idx === item.idx;
-        if (selectedRecommendation?.mode === mode && !active) selectedRecommendation = null;
-        card.disabled = !best;
-        card.setAttribute("aria-pressed", String(active));
-        card.querySelector("strong").textContent = best ? best.time.replace(":", "：") : "—";
-        const grade = card.querySelector(".recommendation-rating");
-        grade.hidden = !best;
-        grade.innerHTML = best ? renderEmojiRating(best.rating, mode === "stars") : "";
-      });
     }
 
     const DAY_WEATHER_HOUR = 12;
@@ -4554,12 +4316,7 @@
       const select = document.getElementById(key + "HourlySelect");
       if (!select) continue;
       const result = document.getElementById(key + "HourlyResult");
-      select.addEventListener("change", () => {
-        renderHourlyWeatherResult(select, result);
-        const item = hourlyData.find(hour => hour.time === select.value && !hour.isClimateRef);
-        if (!item) return;
-        selectWeatherConditions(item);
-      });
+      select.addEventListener("change", () => renderHourlyWeatherResult(select, result));
     }
 
     const AMEDAS_ROOT = "https://www.jma.go.jp/bosai/amedas/data/";
@@ -4657,12 +4414,15 @@
       }
     }
 
+    function getFourForecastDates(currentTime = getMiyakoNow().isoHour) {
+      const start = Date.parse(currentTime.slice(0, 10) + "T00:00:00Z");
+      return HOURLY_FORECAST_DAYS.map((_, offset) =>
+        new Date(start + offset * 86400000).toISOString().slice(0, 10));
+    }
+
     function renderTodayWeather() {
       const currentTime = getMiyakoNow().isoHour;
-      const today = currentTime.slice(0, 10);
-      const start = Date.parse(today + "T00:00:00Z");
-      const dates = HOURLY_FORECAST_DAYS.map((_, offset) =>
-        new Date(start + offset * 86400000).toISOString().slice(0, 10));
+      const dates = getFourForecastDates(currentTime);
       const summaries = dailySummaries.filter(day => !day.isClimateRef && dates.includes(day.date));
       renderCurrentObservation();
       const status = document.getElementById("todayWeatherStatus");
@@ -4679,17 +4439,56 @@
       renderTodayHourly(dates.map(hoursFor), dates, currentTime);
     }
 
+    let conditionRatingData;
+    let conditionRatingDate;
+
+    function renderConditionRatings(summary, item) {
+      const strip = document.getElementById("conditionRatingHours");
+      if (conditionRatingData !== hourlyData || conditionRatingDate !== item.dateStr) {
+        const start = summary.firstIdxOfDay;
+        strip.replaceChildren(...hourlyData.slice(start, start + 24).map(hour => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.dataset.hourIndex = String(hour.idx);
+          const time = document.createElement("strong");
+          time.textContent = hour.hourStr;
+          const score = document.createElement("span");
+          score.className = "condition-hour-score";
+          score.classList.toggle("is-high", hour.score5 >= 3.5 && hour.rawScore >= 70);
+          score.textContent = hour.rawScore + "%";
+          button.setAttribute("aria-label", hour.hourStr + "の撮影適性 " + hour.rawScore + "%、5段階中 " + hour.score5.toFixed(1));
+          button.append(time, score);
+          button.insertAdjacentHTML("beforeend", renderEmojiRating(hour.score5, hour.isNight));
+          button.addEventListener("click", () => selectHour(hour.idx));
+          return button;
+        }));
+        conditionRatingData = hourlyData;
+        conditionRatingDate = item.dateStr;
+      }
+      const current = strip.querySelector('[data-hour-index="' + item.idx + '"]');
+      const previous = strip.querySelector("[aria-current]");
+      if (!current || current === previous) return;
+      previous?.removeAttribute("aria-current");
+      current.setAttribute("aria-current", "time");
+      if (strip.clientWidth) {
+        const viewport = strip.getBoundingClientRect();
+        const bounds = current.getBoundingClientRect();
+        if (bounds.left < viewport.left) strip.scrollLeft -= viewport.left - bounds.left + 2;
+        else if (bounds.right > viewport.right) strip.scrollLeft += bounds.right - viewport.right + 2;
+      }
+    }
+
     function renderHome(item) {
       renderSpotForecasts(item);
       renderTodayWeather();
       const summary = dailySummaries[selectedDayIdx];
+      renderConditionRatings(summary, item);
       const comment = getUmiJudgeInfo(item.rawScore).text;
       const score = item.rawScore;
       const badge = document.getElementById("sourceTypeBadge");
       badge.textContent = item.isClimateRef ? "気候参考値" : "";
       badge.hidden = !item.isClimateRef;
       badge.classList.toggle("is-reference", item.isClimateRef);
-      renderRecommendations(summary, item);
       const rating = item.score5;
       const rank = getRankInfo(rating, item.isNight, Number(item.dateStr.slice(5, 7)));
       const title = document.getElementById("rankTitle");
@@ -4801,12 +4600,15 @@
       [false, true].forEach(reference => {
         const days = dailySummaries.filter(day => day.isClimateRef === reference);
         if (!days.length) return;
-        const heading = document.createElement("h3");
-        heading.className = reference ? "forecast-divider is-reference" : "forecast-divider";
-        heading.textContent = reference ? "気候参考値 · 月別気候と天文計算" : "Open-Meteo";
+        if (reference) {
+          const heading = document.createElement("h3");
+          heading.className = "forecast-divider is-reference";
+          heading.textContent = "気候参考値 · 月別気候と天文計算";
+          list.append(heading);
+        }
         const grid = document.createElement("div");
         grid.className = "forecast-grid";
-        list.append(heading, grid);
+        list.append(grid);
 
         days.forEach(summary => {
           const row = document.createElement("article");
@@ -4823,8 +4625,10 @@
             '<p class="day-sub">' + (reference ? "気候参考値 · " : "") +
             '<span class="forecast-moon"><span role="img" aria-label="' + summary.moonName + '">' +
             summary.moonEmoji + '</span> 月 ' + summary.moonPct + '%</span></p>';
+          const pair = document.createElement("div");
+          pair.className = "forecast-pair";
           [
-            ["blue", "青空", summary.bestDayIdx, summary.bestDayStr, summary.dayPeakRaw, summary.dayPeak5],
+            ["blue", "日中", summary.bestDayIdx, summary.bestDayStr, summary.dayPeakRaw, summary.dayPeak5],
             ["stars", "星空", summary.bestNightIdx, summary.bestNightStr, summary.nightPeakRaw, summary.nightPeak5]
           ].forEach(([mode, label, idx, time, score, rating]) => {
             const button = document.createElement("button");
@@ -4834,7 +4638,13 @@
             const grade = document.createElement("span");
             grade.className = "forecast-rating";
             grade.innerHTML = renderEmojiRating(rating, mode === "stars");
-            button.append(caption, grade);
+            const name = document.createElement("strong");
+            name.textContent = label;
+            const selectedTime = document.createElement("span");
+            selectedTime.textContent = time;
+            const percentage = document.createElement("span");
+            percentage.textContent = score + "%";
+            button.append(name, selectedTime, percentage, grade);
             button.setAttribute("aria-label", summary.dayLabel + " " + caption + "、5段階中 " + rating.toFixed(1));
             button.addEventListener("click", () => {
               selectHomePanel("panel-conditions");
@@ -4843,8 +4653,9 @@
               if (location.hash === "#home") showView("home");
               else location.hash = "home";
             });
-            row.append(button);
+            pair.append(button);
           });
+          row.append(pair);
           grid.append(row);
         });
       });
@@ -4855,66 +4666,13 @@
     // スワイプ＆時間・日付コントロール操作
     // ==========================================
     function initHeroControls() {
-      const card = document.getElementById("heroSwipeCard");
-      const content = document.getElementById("swipeContent");
-      let startX = 0, startY = 0, deltaX = 0, tracking = false, isHorizontal = null;
-
-      card.addEventListener("touchstart", (e) => {
-        if (e.touches.length !== 1) {
-          resetSwipe();
-          return;
-        }
-        if (e.target.closest(".time-control-bar") ||
-            e.target.closest("button") || e.target.closest("select")) {
-          tracking = false;
-          return;
-        }
-        startX = e.touches[0].clientX;
-        startY = e.touches[0].clientY;
-        deltaX = 0;
-        isHorizontal = null;
-        tracking = true;
-        content.style.transition = "none";
-      }, { passive: true });
-
-      card.addEventListener("touchmove", (e) => {
-        if (!tracking) return;
-        const dx = e.touches[0].clientX - startX;
-        const dy = e.touches[0].clientY - startY;
-
-        if (isHorizontal === null && (Math.abs(dx) > 8 || Math.abs(dy) > 8)) {
-          isHorizontal = Math.abs(dx) > Math.abs(dy);
-        }
-        if (isHorizontal) {
-          deltaX = dx;
-          const clamped = Math.max(-75, Math.min(75, dx * 0.45));
-          content.style.transform = `translateX(${clamped}px)`;
-        }
-      }, { passive: true });
-
-      function resetSwipe() {
-        tracking = false;
-        content.style.transition = "transform 0.22s ease-out";
-        content.style.transform = "translateX(0)";
-      }
-
-      card.addEventListener("touchcancel", resetSwipe);
-      card.addEventListener("touchend", () => {
-        if (!tracking) return;
-        resetSwipe();
-
-        if (isHorizontal && Math.abs(deltaX) > 48) {
-          selectHour(selectedIndex + (deltaX < 0 ? 1 : -1));
-        }
-      });
-
-      document.getElementById("prevDayBtn").addEventListener("click", () => {
-        if (selectedDayIdx > 0) selectDay(selectedDayIdx - 1, null, -1);
-      });
-
-      document.getElementById("nextDayBtn").addEventListener("click", () => {
-        if (selectedDayIdx < dailySummaries.length - 1) selectDay(selectedDayIdx + 1, null, 1);
-      });
+      const moveDay = offset => {
+        const target = dailySummaries[selectedDayIdx + offset];
+        const current = hourlyData[selectedIndex];
+        if (target && current) selectDay(selectedDayIdx + offset, target.firstIdxOfDay + current.hourNum, offset);
+      };
+      document.getElementById("prevDayBtn").addEventListener("click", () => moveDay(-1));
+      document.getElementById("nextDayBtn").addEventListener("click", () => moveDay(1));
 
       document.getElementById("dateSelect").addEventListener("change", (e) => {
         const targetDayIdx = Number(e.target.value);
@@ -4923,17 +4681,6 @@
         }
       });
 
-      document.getElementById("prevHourBtn").addEventListener("click", () => {
-        if (selectedIndex > 0) selectHour(selectedIndex - 1);
-      });
-
-      document.getElementById("nextHourBtn").addEventListener("click", () => {
-        if (selectedIndex < hourlyData.length - 1) selectHour(selectedIndex + 1);
-      });
-
-      document.getElementById("hourSelect").addEventListener("change", (e) => {
-        selectHourByDayAndHour(selectedDayIdx, Number(e.target.value));
-      });
 
 
     }
@@ -4980,7 +4727,10 @@
       "わいわいビーチ": [24.7195, 125.33],
       "佐和田の浜": [24.857008, 125.156941],
       "比嘉ロードパーク": [24.785062, 125.384192],
-      "ムイガー": [24.725633, 125.383009]
+      "ムイガー": [24.725633, 125.383009],
+      "通り池": [24.824917, 125.13602],
+      "白鳥崎公園": [24.863636, 125.16963],
+      "ムスヌン浜": [24.717897, 125.240156]
     };
     const SPOT_FORECAST_FIELDS = ["weather_code", "is_day", "temperature_2m", "cloud_cover",
       "cloud_cover_low", "precipitation", "wind_direction_10m", "wind_speed_10m"];
@@ -5004,9 +4754,18 @@
     function renderSpotForecasts(item = hourlyData[selectedIndex]) {
       const grid = document.getElementById("spotForecastGrid");
       const time = item?.time;
-      document.getElementById("spotForecastSelectedTime").textContent = time
-        ? time.slice(0, 10).replaceAll("-", "/") + " " + time.slice(11, 16) + " JST"
-        : "撮影日・時刻の選択待ち";
+      const dates = getFourForecastDates();
+      [...document.getElementById("spotForecastDays").children].forEach((button, index) => {
+        const date = dates[index];
+        const [, month, day] = date.split("-").map(Number);
+        button.textContent = month + "/" + day;
+        button.setAttribute("aria-label", date.replaceAll("-", "/"));
+        button.disabled = !dailySummaries.some(day => day.date === date);
+        button.setAttribute("aria-pressed", String(date === item?.dateStr));
+      });
+      const hourSelect = document.getElementById("spotForecastHour");
+      hourSelect.disabled = !item;
+      if (item) hourSelect.value = String(item.hourNum);
       const currentOrder = [...grid.children];
       const cardsByName = new Map(currentOrder.map(card => [card.dataset.spot, card]));
       const ranked = [];
@@ -5020,7 +4779,7 @@
         rainWind.textContent = "";
         const score = row ? spotForecastScore(row, item) : null;
         const grade = score === null ? null : toHalfStep5(score);
-        ranked.push({ card, score: grade ?? -1 });
+        ranked.push({ card, grade: grade ?? -1, score: score ?? -1 });
         const rating = card.querySelector(".spot-forecast-rating");
         rating.replaceChildren();
         rating.hidden = !row;
@@ -5040,7 +4799,7 @@
         rainWind.textContent = "降水 " + rainProbability + " / " + row.precipitation.toFixed(1) + " mm ｜ 風 " +
           direction + " " + row.wind_speed_10m.toFixed(1) + " m/s";
       }
-      ranked.sort((a, b) => b.score - a.score);
+      ranked.sort((a, b) => b.grade - a.grade || b.score - a.score);
       if (ranked.some(({ card }, index) => card !== currentOrder[index])) {
         grid.append(...ranked.map(({ card }) => card));
       }
@@ -5098,6 +4857,20 @@
     }
 
     function initSpotForecast() {
+      [...document.getElementById("spotForecastDays").children].forEach((button, index) => {
+        button.addEventListener("click", () => {
+          const date = getFourForecastDates()[index];
+          const day = dailySummaries.find(summary => summary.date === date);
+          if (day) selectDay(day.dayIdx, day.firstIdxOfDay + (hourlyData[selectedIndex]?.hourNum ?? 0));
+        });
+      });
+      const hourSelect = document.getElementById("spotForecastHour");
+      hourSelect.replaceChildren(...Array.from({ length: 24 }, (_, hour) =>
+        new Option(String(hour).padStart(2, "0") + ":00", String(hour))));
+      hourSelect.addEventListener("change", () => {
+        const day = dailySummaries[selectedDayIdx];
+        if (day) selectHour(day.firstIdxOfDay + Number(hourSelect.value));
+      });
       const grid = document.getElementById("spotForecastGrid");
       for (const name of Object.keys(SPOT_FORECAST_POINTS)) {
         const card = document.createElement("section");
