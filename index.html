@@ -867,6 +867,8 @@
       margin-bottom: 3px;
     }
 
+    .magic-kind { white-space: nowrap; }
+
     .magic-time {
       font-size: clamp(0.78rem, 3.3vw, 0.9rem);
       font-weight: 800;
@@ -880,28 +882,8 @@
       margin-top: 2px;
     }
 
-    .sun-pos-box {
-      background: rgba(251, 191, 36, 0.08);
-      border: 1px solid rgba(251, 191, 36, 0.24);
-      border-radius: 12px;
-      padding: 10px 12px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      text-align: center;
-    }
 
-    .sun-pos-box .k {
-      font-size: 0.7rem;
-      color: var(--text-sub);
-    }
 
-    .sun-pos-box .v {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: #fde68a;
-      margin-top: 2px;
-    }
 
     /* 月齢・雲層カード */
     .astro-stack {
@@ -1367,10 +1349,8 @@
     .spot-forecast-days { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin-bottom: 8px; }
     .spot-forecast-days button { padding: 4px 2px; white-space: nowrap; font-size: .75rem; }
     .spot-forecast-days button[aria-pressed="true"] { background: #164048; color: #b7fff1; border-color: #5eead4; }
-    .spot-forecast-time { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .spot-forecast-time label { font-size: .82rem; font-weight: 700; white-space: nowrap; }
-    .spot-forecast-time select { flex: 1; width: auto; min-width: 0; margin: 0; }
-    .spot-forecast-time button { flex-shrink: 0; white-space: nowrap; }
+    .spot-forecast-rating-header { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 5px; }
+    .spot-forecast-rating-header h3 { margin: 0; }
     .spot-forecast-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 8px; }
     .spot-forecast-card { padding: 8px 10px; border: 1px solid var(--border-glass); border-radius: 10px; }
     .spot-forecast-card h4 { font-size: .92rem; }
@@ -1417,9 +1397,8 @@
       }
       .magic-rows { gap: 4px; }
       .magic-box:is(.blue, .golden) { min-width: 0; padding: 7px 3px; text-align: center; }
-      .magic-box:is(.blue, .golden) .magic-label { color: #e8f2ff; overflow-wrap: anywhere; }
+      .magic-box:is(.blue, .golden) .magic-label { color: #e8f2ff; font-size: .68rem; }
       .magic-box:is(.blue, .golden) .magic-time { white-space: normal; }
-      .magic-box:is(.blue, .golden) .magic-note { color: #d3e2f5; overflow-wrap: anywhere; }
     }
 
     @media (max-width: 600px) {
@@ -1496,13 +1475,6 @@
       .rs-time { font-size: .98rem; }
       .umi-big-prob { font-size: 1.25rem; }
       .umi-prob-badge { max-width: 100%; padding: 2px 2px; font-size: .69rem; white-space: normal; }
-      .sun-pos-box {
-        gap: 6px;
-        padding: 9px 8px;
-      }
-      .sun-pos-box .v {
-        font-size: 0.82rem;
-      }
       .wind-weather-wrap {
         flex-direction: column;
         text-align: center;
@@ -1776,7 +1748,7 @@
       gap: 5px;
       margin-bottom: 8px;
     }
-    .home-detail-tabs button {
+    :is(.home-detail-tabs, .photo-assist-tabs) button {
       min-height: 48px;
       padding: 6px 4px;
       border: 1px solid #456180;
@@ -1789,20 +1761,24 @@
       overflow-wrap: anywhere;
       cursor: pointer;
     }
-    .home-detail-tabs button[aria-selected="true"] {
+    :is(.home-detail-tabs, .photo-assist-tabs) button[aria-selected="true"] {
       background: #164048;
       border-color: #5eead4;
       color: #b7fff1;
       font-weight: 700;
     }
-    .home-detail-tabs button:focus-visible { outline: 2px solid #a5f3fc; outline-offset: -3px; }
+    :is(.home-detail-tabs, .photo-assist-tabs) button:focus-visible { outline: 2px solid #a5f3fc; outline-offset: -3px; }
     @media (max-width: 560px) {
       .home-detail-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(90px, 1.5fr) repeat(2, minmax(0, 1fr)); gap: 3px; }
       #tab-panel-events { white-space: nowrap; }
       .home-detail-tabs button { padding-inline: 2px; font-size: .75rem; }
     }
     #panel-stars > .astro-stack { grid-column: 1 / -1; }
-    .photo-assist-panel { display: grid; gap: 12px; }
+    .photo-assist-panel { display: grid; gap: 8px; }
+    .photo-assist-tabs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+    .photo-assist-time { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .photo-assist-time label { font-size: .82rem; font-weight: 700; white-space: nowrap; }
+    .photo-assist-time select { min-width: 0; width: auto; flex: 1; margin: 0; }
     @media (max-width: 640px) {
       .app-container {
         padding-left: max(10px, env(safe-area-inset-left));
@@ -2091,28 +2067,42 @@
             <button type="button" class="btn" aria-pressed="false" disabled>明後日</button>
             <button type="button" class="btn" aria-pressed="false" disabled>明々後日</button>
           </div>
-          <div class="spot-forecast-time">
-            <label for="spotForecastHour">時刻</label>
-            <select id="spotForecastHour" class="spot-select" aria-label="地点別予報の時刻（日本時間）" disabled></select>
-            <button type="button" class="btn" id="spotForecastRefresh">予報を更新</button>
-          </div>
+          <section class="condition-ratings" aria-labelledby="spotForecastRatingHeading">
+            <div class="spot-forecast-rating-header">
+              <h3 id="spotForecastRatingHeading">時間別の撮影評価</h3>
+              <button type="button" class="btn" id="spotForecastRefresh">予報を更新</button>
+            </div>
+            <div class="condition-rating-hours" id="spotForecastRatingHours"></div>
+          </section>
           <p id="spotForecastStatus" role="status"></p>
           <div id="spotForecastGrid" class="spot-forecast-grid"></div>
         </section>
-      <div class="photo-assist-panel" id="panel-photo-day" role="tabpanel" aria-labelledby="tab-panel-photo-day" tabindex="0" hidden>
-      <section class="glass-card">
+      <div class="glass-card photo-assist-panel" id="panel-photo-day" role="tabpanel" aria-labelledby="tab-panel-photo-day" tabindex="0" hidden>
+        <div class="photo-assist-tabs" id="photoAssistTabs" role="tablist" aria-label="撮影アシストの種類">
+          <button type="button" role="tab" id="tab-photo-assist-day" aria-controls="photo-assist-day" aria-selected="true" tabindex="0">日中</button>
+          <button type="button" role="tab" id="tab-photo-assist-night" aria-controls="photo-assist-night" aria-selected="false" tabindex="-1">星空</button>
+        </div>
+      <section id="photo-assist-day" role="tabpanel" aria-labelledby="tab-photo-assist-day" tabindex="0">
         <div class="section-title">
           <span>📸 日中・青空撮影アシスト</span>
           <span id="dayPhotoDateBadge" style="font-size:0.76rem; color:var(--accent-cyan);">—</span>
         </div>
+        <div class="photo-assist-time">
+          <label for="dayPhotoHourSelect">基準時刻</label>
+          <select id="dayPhotoHourSelect" class="spot-select" aria-label="日中撮影の基準時刻" disabled><option value="">自動</option></select>
+        </div>
         <div class="photo-grid" id="dayPhotoGrid"></div>
       </section>
-    <section class="glass-card">
+    <section id="photo-assist-night" role="tabpanel" aria-labelledby="tab-photo-assist-night" tabindex="0" hidden>
       <div class="section-title">
         <span id="photoSectionTitle">📸 星空撮影アシスト</span>
         <span id="photoDateBadge" style="font-size:0.76rem; color:var(--accent-cyan);">--月--日の撮影条件</span>
       </div>
-      <div class="photo-grid" id="photoGrid"></div>
+      <div class="photo-assist-time">
+          <label for="nightPhotoHourSelect">基準時刻</label>
+          <select id="nightPhotoHourSelect" class="spot-select" aria-label="星空撮影の基準時刻" disabled><option value="">自動</option></select>
+        </div>
+        <div class="photo-grid" id="photoGrid"></div>
     </section>
       </div>
       <section class="glass-card sun-magic-stack" id="panel-events" role="tabpanel" aria-labelledby="tab-panel-events" tabindex="0" hidden>
@@ -2131,21 +2121,6 @@
         <!-- ゴールデンアワー・ブルーアワー・完全暗夜 -->
         <div class="magic-rows" id="magicRows"></div>
 
-        <!-- 太陽位置・UV・日射量 -->
-        <div class="sun-pos-box">
-          <div>
-            <div class="k">☀️ 太陽高度 / 方位</div>
-            <div class="v" id="sunPosText">--° / --</div>
-          </div>
-          <div>
-            <div class="k">🕶️ UV指数</div>
-            <div class="v" id="uvIndexText">--</div>
-          </div>
-          <div>
-            <div class="k">⚡ 直達 / 全天日射</div>
-            <div class="v" id="radiationText">-- W/m²</div>
-          </div>
-        </div>
       </section>
 
     <div class="celestial-grid" id="panel-stars" role="tabpanel" aria-labelledby="tab-panel-stars" tabindex="0" hidden>
@@ -2906,7 +2881,7 @@
           <button type="button" ${/^\d{2}:\d{2}$/.test(ev.time) ? "" : "disabled"} class="rs-box" style="--umi-color: ${judge.color}; --umi-emphasis: ${judge.emphasis}%;" data-jumptime="${ev.time}" title="${ev.label} (${ev.time} • ${azText}) の時刻へ移動">
             <span class="rs-label"><span class="rs-event-icon" aria-hidden="true">${ev.icon}</span>${ev.label}</span>
             <span class="rs-time">${ev.time}</span>
-            <span class="rs-az">🧭 ${azText}</span>
+            <span class="rs-az">${azText}</span>
             <span class="umi-sub-caption">海ぽちゃ率</span>
             <span class="umi-big-prob">${probDisplay}</span>
             <span class="umi-prob-badge">${judge.text}</span>
@@ -3713,6 +3688,42 @@
       document.getElementById("nextDayBtn").disabled = dayIdx >= dailySummaries.length - 1;
     }
 
+    const cloudSummaryAdvice = {
+      "朝": {
+        low: "低層雲が多めです。日の出を狙うなら、東側の水平線に雲の切れ間があるか確認しましょう。",
+        high: "高層雲が目立ちます。東の空で雲に朝の光が当たると、色づく空を狙えます。",
+        clear: "雲が少なめです。東の水平線が開けた場所で、日の出前後の光の変化を狙えます。",
+        mixed: "雲があります。東の空の切れ間と、雲に朝の光が当たるタイミングを見ましょう。"
+      },
+      "日中": {
+        low: "低層雲が多めです。青空や明るい海を撮るなら、日差しが戻る切れ間を待ちましょう。",
+        high: "高層雲が目立ちます。青空に雲の筋を入れたり、日差しのある方向で海の色を狙ったりできます。",
+        clear: "雲が少なめです。青空と海の色を一緒に狙いやすい時間帯です。",
+        mixed: "雲があります。海に日差しが届くタイミングを選ぶと、色を出しやすくなります。"
+      },
+      "夕方": {
+        low: "低層雲が多めです。夕日や水平線への沈み込みを狙うなら、西側に雲の切れ間があるか確認しましょう。",
+        high: "高層雲が目立ちます。夕日が雲を照らせば色づくことがあるため、日没後の空も確認しましょう。",
+        clear: "雲が少なめです。西の水平線が開けた場所で、夕日と日没後の空の色を狙えます。",
+        mixed: "雲があります。西の空の切れ間や、雲の縁に夕日が差すタイミングを見ましょう。"
+      },
+      "夜": {
+        low: "低層雲が多めです。星が隠れやすいため、撮りたい星座の方向に雲の切れ間が来るのを待ちましょう。",
+        high: "高層雲が目立ちます。明るい星が見えても、淡い星や天の川のコントラストは落ちることがあります。",
+        clear: "雲が少なめです。撮りたい星座の方向を確認し、月明かりや街灯の影響も見ておきましょう。",
+        mixed: "雲があります。撮りたい星座の方向を優先して、雲が途切れる時刻を狙いましょう。"
+      }
+    };
+
+    function getCloudSummary(item) {
+      const altitude = item.sunPos.altDeg;
+      const period = altitude < -12 ? "夜" : altitude >= 12 ? "日中" : item.hourNum < 12 ? "朝" : "夕方";
+      const clouds = item.cloudLow >= 50 ? "low"
+        : item.cloudHigh >= 40 && item.cloudLow < 25 && item.cloudMid < 40 ? "high"
+        : item.cloudTotal < 20 ? "clear" : "mixed";
+      return (item.isClimateRef ? "気候参考値 · " : "") + cloudSummaryAdvice[period][clouds];
+    }
+
     function updateSkyBackground(item) {
       const altitude = item.sunPos.altDeg;
       let sky = "night";
@@ -3744,13 +3755,6 @@
 
       renderUmipochaSection(item.dateStr, item.sunrise, item.sunset, astro);
 
-      const sunDir = getDirectionName16(item.sunPos.azDeg);
-      document.getElementById("sunPosText").textContent = item.sunPos.altDeg > 0
-        ? `${Math.round(item.sunPos.altDeg)}° (${sunDir.jp})`
-        : `地平線下 (${Math.round(item.sunPos.altDeg)}°)`;
-      document.getElementById("uvIndexText").textContent = `${item.uvIndex.toFixed(1)} ${item.uvIndex >= 6 ? "(強)" : item.uvIndex >= 3 ? "(中)" : "(弱)"}`;
-      document.getElementById("radiationText").textContent = `${item.directRad} / ${item.radiation} W/m²`;
-
       document.getElementById("moonSvgContainer").innerHTML = renderMoonSvg(item.moon.phase);
       const moonPhaseName = item.moon.name.split("（")[0];
       document.getElementById("moonName").textContent = `月齢 ${item.moon.age.toFixed(1)} · ${moonPhaseName}`;
@@ -3764,21 +3768,13 @@
       renderCloudLayer("valMid", item.cloudMid);
       renderCloudLayer("valLow", item.cloudLow);
 
-      let cloudTip = "空の透明度は良好です。";
-      if (item.cloudLow >= 50) cloudTip = "低層雲（低い厚雲）が多めです。水平線や天頂の視界が遮られやすいため、雲の切れ間を待ちましょう。";
-      else if (item.cloudHigh >= 40 && item.cloudLow < 25) cloudTip = "高い巻雲が中心です。昼は薄いベール越しに青空が透け、夕暮れは赤く染まりやすい綺麗な空模様です。";
-      else if (item.cloudTotal < 20) cloudTip = "全高度で雲が非常に少なく、昼の宮古ブルーも夜の天の川・海ぽちゃも最高の見通しです！";
-      document.getElementById("cloudSummaryText").textContent = cloudTip;
+      document.getElementById("cloudSummaryText").textContent = getCloudSummary(item);
 
       document.querySelectorAll(".day-row").forEach(el => el.classList.toggle("selected", el.dataset.date === item.dateStr));
 
       renderMagicHoursPanel(astro.sunMagic, mm, dd);
       renderWindWeatherAndTidePanel(item, astro.tides);
-      const summary = dailySummaries[selectedDayIdx];
-      const dayPhotoHour = item.isNight ? hourlyData[summary.bestDayIdx] : item;
-      const nightPhotoHour = item.isNight ? item : hourlyData[summary.bestNightIdx];
-      renderPhotoGuide(dayPhotoHour, astro, mm, dd, dayPhotoHour !== item);
-      renderPhotoGuide(nightPhotoHour, astro, mm, dd, nightPhotoHour !== item);
+      renderPhotoAssist(item, astro, mm, dd);
       renderConstellations(mm, dd);
       renderMeteorEvents(yyyy, mm, dd, item);
       renderHome(item);
@@ -3788,24 +3784,20 @@
       document.getElementById("magicDateBadge").textContent = `${mm}月${dd}日`;
       document.getElementById("magicRows").innerHTML = `
         <div class="magic-box blue">
-          <div class="magic-label">🌅 朝:ブルー</div>
-          <div class="magic-time">${sunMagic.mornBlue.replace("〜", "〜<wbr>")}</div>
-          <div class="magic-note">日の出前の蒼</div>
+          <div class="magic-label"><span aria-hidden="true">🌅</span> 朝<br><span class="magic-kind">ブルー</span></div>
+          <div class="magic-time">${sunMagic.mornBlue.replace("〜", "<br>～<br>")}</div>
         </div>
         <div class="magic-box golden">
-          <div class="magic-label">✨ 朝:ゴールデン</div>
-          <div class="magic-time">${sunMagic.mornGold.replace("〜", "〜<wbr>")}</div>
-          <div class="magic-note">日の出後の黄金光</div>
+          <div class="magic-label"><span aria-hidden="true">✨</span> 朝<br><span class="magic-kind">ゴールデン</span></div>
+          <div class="magic-time">${sunMagic.mornGold.replace("〜", "<br>～<br>")}</div>
         </div>
         <div class="magic-box golden">
-          <div class="magic-label">🌇 夕:ゴールデン</div>
-          <div class="magic-time">${sunMagic.eveGold.replace("〜", "〜<wbr>")}</div>
-          <div class="magic-note">夕暮れの黄金光</div>
+          <div class="magic-label"><span aria-hidden="true">🌇</span> 夕<br><span class="magic-kind">ゴールデン</span></div>
+          <div class="magic-time">${sunMagic.eveGold.replace("〜", "<br>～<br>")}</div>
         </div>
         <div class="magic-box blue">
-          <div class="magic-label">🌌 夕:ブルー</div>
-          <div class="magic-time">${sunMagic.eveBlue.replace("〜", "〜<wbr>")}</div>
-          <div class="magic-note">日没後の蒼</div>
+          <div class="magic-label"><span aria-hidden="true">🌌</span> 夕<br><span class="magic-kind">ブルー</span></div>
+          <div class="magic-time">${sunMagic.eveBlue.replace("〜", "<br>～<br>")}</div>
         </div>
         <div class="magic-box dark">
           <div>
@@ -3911,6 +3903,37 @@
         <line x1="${curX.toFixed(1)}" y1="2" x2="${curX.toFixed(1)}" y2="52" stroke="rgba(255,255,255,0.6)" stroke-width="1.5" stroke-dasharray="2 2" />
         ${markers}
       `;
+    }
+
+    const photoAssistPickers = [
+      { select: document.getElementById("dayPhotoHourSelect"), isNight: false, hour: "" },
+      { select: document.getElementById("nightPhotoHourSelect"), isNight: true, hour: "" }
+    ];
+
+    for (const picker of photoAssistPickers) {
+      picker.select.addEventListener("change", () => {
+        picker.hour = picker.select.value;
+        const item = hourlyData[selectedIndex];
+        if (!item) return;
+        const [, month, day] = item.dateStr.split("-").map(Number);
+        renderPhotoAssist(item, getDayAstroData(item.dateStr), month, day);
+      });
+    }
+
+    function renderPhotoAssist(item, astro, month, day) {
+      const summary = dailySummaries[selectedDayIdx];
+      const start = summary.firstIdxOfDay;
+      const hours = hourlyData.slice(start, start + 24);
+      for (const picker of photoAssistPickers) {
+        const candidates = hours.filter(hour => hour.isNight === picker.isNight);
+        picker.select.replaceChildren(new Option("自動", ""), ...candidates.map(hour => new Option(hour.hourStr, hour.hourStr)));
+        const chosen = candidates.find(hour => hour.hourStr === picker.hour);
+        picker.select.value = chosen?.hourStr ?? "";
+        picker.select.disabled = !candidates.length;
+        const basis = chosen ?? (item.isNight === picker.isNight ? item :
+          hourlyData[picker.isNight ? summary.bestNightIdx : summary.bestDayIdx]);
+        if (basis) renderPhotoGuide(basis, astro, month, day, !chosen && basis !== item);
+      }
     }
 
     function renderPhotoGuide(item, astro, mm, dd, isRecommended) {
@@ -4142,20 +4165,35 @@
           if (location.hash === link.hash) showView(link.dataset.view);
         });
       });
-      const tabs = [...document.querySelectorAll("#homePanelTabs [role=tab]")];
+      bindTabs("#homePanelTabs", selectHomePanel);
+      bindTabs("#photoAssistTabs", selectPhotoAssistPanel);
+      route(false);
+    }
+
+    function bindTabs(selector, activate) {
+      const tabs = [...document.querySelectorAll(selector + " [role=tab]")];
       tabs.forEach((tab, index) => {
-        tab.addEventListener("click", () => selectHomePanel(tab.getAttribute("aria-controls")));
+        tab.addEventListener("click", () => activate(tab.getAttribute("aria-controls")));
         tab.addEventListener("keydown", event => {
           const targets = { ArrowLeft: (index - 1 + tabs.length) % tabs.length,
             ArrowRight: (index + 1) % tabs.length, Home: 0, End: tabs.length - 1 };
           if (!Object.hasOwn(targets, event.key)) return;
           event.preventDefault();
           const next = tabs[targets[event.key]];
-          selectHomePanel(next.getAttribute("aria-controls"));
+          activate(next.getAttribute("aria-controls"));
           next.focus();
         });
       });
-      route(false);
+    }
+
+    function selectPhotoAssistPanel(panelId) {
+      for (const tab of document.querySelectorAll("#photoAssistTabs [role=tab]")) {
+        const id = tab.getAttribute("aria-controls");
+        const active = id === panelId;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+        document.getElementById(id).hidden = !active;
+      }
     }
 
     function selectHomePanel(panelId) {
@@ -4167,7 +4205,7 @@
         document.getElementById(id).hidden = !active;
       }
       const panel = document.getElementById(panelId);
-      const card = panel?.matches(".glass-card") ? panel : panel?.querySelector(".glass-card");
+      const card = panel?.matches(".glass-card") ? panel : panel?.querySelector(".glass-card:not([hidden])");
       const dateControls = document.getElementById("homeDateControls");
       const spotForecast = panelId === "panel-spot-forecast";
       dateControls.hidden = spotForecast;
@@ -4439,12 +4477,13 @@
       renderTodayHourly(dates.map(hoursFor), dates, currentTime);
     }
 
-    let conditionRatingData;
-    let conditionRatingDate;
+    const hourlyRatingState = new WeakMap();
 
-    function renderConditionRatings(summary, item) {
-      const strip = document.getElementById("conditionRatingHours");
-      if (conditionRatingData !== hourlyData || conditionRatingDate !== item.dateStr) {
+    function renderConditionRatings(strip, item) {
+      const summary = dailySummaries[selectedDayIdx];
+      if (!summary || !item) return;
+      const state = hourlyRatingState.get(strip);
+      if (state?.data !== hourlyData || state.date !== item.dateStr) {
         const start = summary.firstIdxOfDay;
         strip.replaceChildren(...hourlyData.slice(start, start + 24).map(hour => {
           const button = document.createElement("button");
@@ -4462,8 +4501,7 @@
           button.addEventListener("click", () => selectHour(hour.idx));
           return button;
         }));
-        conditionRatingData = hourlyData;
-        conditionRatingDate = item.dateStr;
+        hourlyRatingState.set(strip, { data: hourlyData, date: item.dateStr });
       }
       const current = strip.querySelector('[data-hour-index="' + item.idx + '"]');
       const previous = strip.querySelector("[aria-current]");
@@ -4481,8 +4519,7 @@
     function renderHome(item) {
       renderSpotForecasts(item);
       renderTodayWeather();
-      const summary = dailySummaries[selectedDayIdx];
-      renderConditionRatings(summary, item);
+      renderConditionRatings(document.getElementById("conditionRatingHours"), item);
       const comment = getUmiJudgeInfo(item.rawScore).text;
       const score = item.rawScore;
       const badge = document.getElementById("sourceTypeBadge");
@@ -4763,9 +4800,7 @@
         button.disabled = !dailySummaries.some(day => day.date === date);
         button.setAttribute("aria-pressed", String(date === item?.dateStr));
       });
-      const hourSelect = document.getElementById("spotForecastHour");
-      hourSelect.disabled = !item;
-      if (item) hourSelect.value = String(item.hourNum);
+      renderConditionRatings(document.getElementById("spotForecastRatingHours"), item);
       const currentOrder = [...grid.children];
       const cardsByName = new Map(currentOrder.map(card => [card.dataset.spot, card]));
       const ranked = [];
@@ -4863,13 +4898,6 @@
           const day = dailySummaries.find(summary => summary.date === date);
           if (day) selectDay(day.dayIdx, day.firstIdxOfDay + (hourlyData[selectedIndex]?.hourNum ?? 0));
         });
-      });
-      const hourSelect = document.getElementById("spotForecastHour");
-      hourSelect.replaceChildren(...Array.from({ length: 24 }, (_, hour) =>
-        new Option(String(hour).padStart(2, "0") + ":00", String(hour))));
-      hourSelect.addEventListener("change", () => {
-        const day = dailySummaries[selectedDayIdx];
-        if (day) selectHour(day.firstIdxOfDay + Number(hourSelect.value));
       });
       const grid = document.getElementById("spotForecastGrid");
       for (const name of Object.keys(SPOT_FORECAST_POINTS)) {
