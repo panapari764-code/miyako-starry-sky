@@ -1042,7 +1042,7 @@
     }
     .constellation-index details { border: 1px solid var(--border-glass); border-radius: 9px; }
     .observation-months { color: var(--text-sub); font-size: .8rem; font-weight: 500; }
-    #starGuideTabs { margin-bottom: 8px; }
+    #starGuideTabs { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-bottom: 8px; }
     .constellation-diagram {
       margin: 10px 0;
     }
@@ -1171,7 +1171,6 @@
       padding-inline-start: 1.25rem;
       font-size: .88rem;
     }
-    #constellationSearch { width: 100%; font-size: max(16px, 1rem); }
     .constellation-guide a { color: #bceaff; }
 
     .constellation-list {
@@ -2493,27 +2492,13 @@
         </label>
         <div id="constellationStory" class="constellation-list" aria-live="polite" aria-atomic="true"></div>
       </section>
-      <section class="glass-card constellation-guide" aria-labelledby="constellationIndexHeading">
-        <h3 id="constellationIndexHeading">88星座図鑑</h3>
-        <label for="constellationSearch">星座を検索</label>
-        <input id="constellationSearch" class="spot-select" type="search" placeholder="和名・学名・略符" aria-controls="constellationCatalogSelect">
-        <p id="constellationSearchCount" class="view-source" role="status"></p>
-        <label class="constellation-month" for="constellationCatalogSelect">
-          <span>星座を選択</span>
-          <select id="constellationCatalogSelect" class="spot-select" aria-controls="constellationIndex"></select>
-        </label>
-        <div id="constellationIndex" class="constellation-list" aria-live="polite" aria-atomic="true"></div>
-        <p class="view-source">観測月は、宮古島の完全暗夜に星座の領域全体が同時に地平線より上に出る月です。</p>
-        <p class="view-source">星図は北を上にした形の目安です。恒星名は日本語で表示し、固有名の資料がない星にはHIP番号を使っています。</p>
-        <p class="view-source">資料提供　星座線は d3-celestial（Olaf Frohn）、恒星名は国際天文学連合の星名カタログ。</p>
-      </section>
-      <section class="glass-card constellation-guide" aria-labelledby="starGuideHeading">
-        <h3 id="starGuideHeading">恒星と星の並び</h3>
-        <div id="starGuideTabs" class="photo-assist-tabs" role="tablist" aria-labelledby="starGuideHeading">
-          <button type="button" id="starPatternsTab" role="tab" aria-controls="starPatternsPanel" aria-selected="true">星の並び</button>
+      <section class="glass-card constellation-guide" aria-label="星の図鑑">
+        <div id="starGuideTabs" class="photo-assist-tabs" role="tablist" aria-label="星の図鑑の表示項目">
+          <button type="button" id="constellationCatalogTab" role="tab" aria-controls="constellationCatalogPanel" aria-selected="true">88星座図鑑</button>
+          <button type="button" id="starPatternsTab" role="tab" aria-controls="starPatternsPanel" aria-selected="false" tabindex="-1">星の目印</button>
           <button type="button" id="individualStarsTab" role="tab" aria-controls="individualStarsPanel" aria-selected="false" tabindex="-1">恒星</button>
         </div>
-        <div id="starPatternsPanel" role="tabpanel" aria-labelledby="starPatternsTab">
+        <div id="starPatternsPanel" role="tabpanel" aria-labelledby="starPatternsTab" hidden>
           <div class="constellation-month">
             <select class="spot-select" aria-labelledby="starPatternsTab" aria-controls="starPatternsDetail"></select>
           </div>
@@ -2525,7 +2510,17 @@
           </div>
           <div id="individualStarsDetail" class="constellation-list" aria-live="polite" aria-atomic="true"></div>
         </div>
-        <p class="view-source">観測月は、宮古島の完全暗夜に主な星が同時に高度3°以上になる月です。南十字星は低いため、主な星が地平線より上に出る月を表示します。</p>
+        <div id="constellationCatalogPanel" role="tabpanel" aria-labelledby="constellationCatalogTab">
+          <label class="constellation-month" for="constellationCatalogSelect">
+            <span>星座を選択</span>
+            <select id="constellationCatalogSelect" class="spot-select" aria-controls="constellationIndex"></select>
+          </label>
+          <div id="constellationIndex" class="constellation-list" aria-live="polite" aria-atomic="true"></div>
+          <p class="view-source">観測月は、宮古島の完全暗夜に星座の領域全体が同時に地平線より上に出る月です。</p>
+          <p class="view-source">星図は北を上にした形の目安です。恒星名は日本語で表示し、固有名の資料がない星にはHIP番号を使っています。</p>
+          <p class="view-source">資料提供　星座線は d3-celestial（Olaf Frohn）、恒星名は国際天文学連合の星名カタログ。</p>
+        </div>
+        <p id="starGuideObservationNote" class="view-source" hidden>観測月は、宮古島の完全暗夜に主な星が同時に高度3°以上になる月です。南十字星は低いため、主な星が地平線より上に出る月を表示します。</p>
       </section>
     </section>
 
@@ -6580,8 +6575,6 @@
     function initConstellationCatalog() {
       const catalog = document.getElementById("constellationIndex");
       const select = document.getElementById("constellationCatalogSelect");
-      const search = document.getElementById("constellationSearch");
-      const count = document.getElementById("constellationSearchCount");
       const render = () => {
         const entry = CONSTELLATIONS_BY_CODE.get(select.value);
         catalog.hidden = !entry;
@@ -6608,26 +6601,11 @@
         </div>
         `;
       };
-      const normalize = value => value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().trim();
-      const entries = CONSTELLATION_CATALOG.map(([name, code, latin]) => {
-        const kana = name.replace(/[ぁ-ゖ]/g, letter => String.fromCharCode(letter.charCodeAt(0) + 0x60));
-        return { name, code, keywords: normalize(`${name}座 ${kana}座 ${latin} ${code}`) };
-      });
-      const filter = () => {
-        const terms = normalize(search.value).split(/\s+/).filter(Boolean);
-        const selected = select.value;
-        const matches = entries.filter(({ keywords }) => terms.every(term => keywords.includes(term)));
-        select.replaceChildren(...matches.map(({ name, code }) =>
-          new Option(`${name}座（${MONTHS_BY_CONSTELLATION.get(code)}）`, code)
-        ));
-        select.disabled = !matches.length;
-        if (matches.some(({ code }) => code === selected)) select.value = selected;
-        count.textContent = matches.length ? `${matches.length} / ${entries.length}星座` : "一致する星座はありません";
-        render();
-      };
-      search.addEventListener("input", filter);
+      select.replaceChildren(...CONSTELLATION_CATALOG.map(([name, code]) =>
+        new Option(name + "座（" + MONTHS_BY_CONSTELLATION.get(code) + "）", code)
+      ));
       select.addEventListener("change", render);
-      filter();
+      render();
     }
 
     function initStarGuide() {
@@ -6666,7 +6644,9 @@
         render();
       }
       const tabs = document.querySelectorAll("#starGuideTabs [role=tab]");
+      const observationNote = document.getElementById("starGuideObservationNote");
       bindTabs("#starGuideTabs", panelId => {
+        observationNote.hidden = panelId === "constellationCatalogPanel";
         for (const tab of tabs) {
           const id = tab.getAttribute("aria-controls");
           const active = id === panelId;
